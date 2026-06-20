@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
@@ -5,4 +6,7 @@ import react from '@vitejs/plugin-react';
 // Выходной render остаётся агностичным к React (ванильный TS из render-core).
 export default defineConfig({
   plugins: [react()],
+  test: {
+    include: ['src/**/*.test.ts'],
+  },
 });
