@@ -14,7 +14,9 @@
     "export": "tsx scripts/export.mts",
     "pretest": "npm run tokens",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "spike": "vite --config spikes/editor/vite.config.ts",
+    "spike:verify": "tsx spikes/editor/verify.mts"
   },
   "dependencies": {
     "fractional-indexing": "^3.2.0",
@@ -25,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@measured/puck": "^0.20.2",
     "@types/node": "^26.0.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",

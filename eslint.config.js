@@ -8,7 +8,8 @@ import prettier from 'eslint-config-prettier';
 // Flat-config ESLint. Prettier подключён последним — отключает правила
 // форматирования, чтобы не конфликтовать с самим Prettier.
 export default tseslint.config(
-  { ignores: ['dist'] },
+  // spikes/ — одноразовые спайки (напр. STUDIO-008), вне прод-сборки и линта.
+  { ignores: ['dist', 'spikes'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
