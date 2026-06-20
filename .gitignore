@@ -1,0 +1,8 @@
+# Зависимости и сборка
+node_modules
+dist
+
+# Логи и кэши
+*.log
+.DS_Store
+.vite
