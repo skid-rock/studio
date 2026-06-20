@@ -2,7 +2,6 @@ import type { StudioDocument } from "./document";
 import { sortedSections } from "./document";
 import type { BlockRegistry } from "./registry";
 import type { RenderContext, RenderResult } from "./types";
-import { resolveThemeCss } from "../tokens/theme";
 
 export interface RenderOptions {
   registry: BlockRegistry;
@@ -28,7 +27,7 @@ export function renderDocument(doc: StudioDocument, opts: RenderOptions): Render
 
   return {
     html: htmlParts.join("\n"),
-    css: [resolveThemeCss(doc.theme), ...cssParts.values()].join("\n"),
+    css: [...cssParts.values()].join("\n"),
   };
 }
 

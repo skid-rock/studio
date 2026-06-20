@@ -13,6 +13,6 @@ export const envelopeModule: BlockModule<EnvelopeState> = {
   label: "Конверт-заставка",
   schema: ENVELOPE_SCHEMA,
   defaults: ENVELOPE_DEFAULTS,
-  render: (props) => renderEnvelopeHtml(props),
+  render: (props) => renderEnvelopeHtml({ ...ENVELOPE_DEFAULTS, ...props }),
   css: envelopeCss,
 };

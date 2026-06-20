@@ -1,0 +1,21 @@
+/* Минимальный reset для превью и статического экспорта. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+button {
+  font: inherit;
+}

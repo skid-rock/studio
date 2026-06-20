@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "theme": { "id": "cream-navy" },
+  "motion": { "preset": "subtle" },
+  "sections": [
+    { "id": "s_intro", "type": "intro/envelope", "order": "a0", "props": {} },
+    {
+      "id": "s_hero",
+      "type": "hero",
+      "order": "a1",
+      "props": {
+        "eyebrow": "Мы женимся",
+        "names": "Полина & Илья",
+        "date": "05.08.2026"
+      }
+    },
+    {
+      "id": "s_closing",
+      "type": "closing",
+      "order": "a2",
+      "props": {
+        "signature": "С любовью, Полина & Илья",
+        "ps": "Будем рады видеть вас!"
+      }
+    }
+  ]
+}

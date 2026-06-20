@@ -1,10 +1,35 @@
-// Минимальная заглушка приложения «studio».
-// Оболочка редактора (холст, панели, DnD) — задача Фазы 1.
+import { useMemo } from "react";
+
+import landingSample from "../examples/landing.sample.json";
+import { parseDocument } from "./render-core/document.schema";
+import { renderDocument } from "./render-core/render";
+import { defaultRegistry } from "./sections/registry.default";
+import creamNavyCss from "./tokens/dist/cream-navy.css?raw";
+import baseCss from "./render-core/styles/base.css?raw";
+import fontsCss from "./render-core/styles/fonts.css?raw";
+
+/** CSS тем по id — в превью через Vite ?raw (без node:fs). */
+const THEME_CSS: Record<string, string> = {
+  "cream-navy": creamNavyCss,
+};
+
+/**
+ * Превью демо-лендинга Фазы 0.
+ * React — только оболочка; HTML/CSS собирает агностичный renderDocument.
+ */
 export function App() {
+  const preview = useMemo(() => {
+    const doc = parseDocument(landingSample);
+    const result = renderDocument(doc, { registry: defaultRegistry });
+    const theme = THEME_CSS[doc.theme.id] ?? creamNavyCss;
+    const css = [baseCss, fontsCss, theme, result.css].join("\n");
+    return { body: result.html, css };
+  }, []);
+
   return (
-    <main style={{ fontFamily: 'system-ui, sans-serif', padding: '2rem' }}>
-      <h1>studio</h1>
-      <p>Каркас Фазы 0. Редактор появится на Фазе 1.</p>
-    </main>
+    <>
+      <style>{preview.css}</style>
+      <div dangerouslySetInnerHTML={{ __html: preview.body }} />
+    </>
   );
 }
