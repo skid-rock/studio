@@ -65,3 +65,5 @@ type → { schema, defaults, render, css? }
 - [roadmap.md](../../../gd-brain/docs/studio/roadmap.md) — «Сквозные принципы», п.1.
 - [extra-insights.md](../../../gd-brain/docs/studio/extra-insights.md) — §5–6.
 - [ADR-0001](ADR-0001-repo-structure.md) — граница render-core vs editor.
+- [improvements.md](../improvements.md) — IMP-001: устранение `any` в реестре
+  (стирание `P` / экзистенциальный тип модулей).

@@ -1,0 +1,27 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`renderEnvelopeHtml > стабилен по снапшоту на дефолтах 1`] = `
+"
+<div class="envelope-overlay" id="envelope" role="dialog" aria-modal="true" aria-label="Открыть приглашение" style="--envelope-panel-fill: rgba(255, 255, 255, 0.38); --envelope-bg: #fffaf1; --envelope-line-color: #275889; --envelope-line-width: 1; --envelope-line-opacity: 0.85; --envelope-delivery-top: 24%; --envelope-delivery-size: 1.2rem; --envelope-initials-top: 76%; --envelope-initials-size: 1.5rem; --envelope-seal-top: 50%; --envelope-seal-size: 140px; --envelope-seal-text-top: 44%; --envelope-seal-text-size: 1.05rem; --envelope-flap-shift-x: clamp(120px, 50.00vmin, 220px); --envelope-flap-shift-y: clamp(210px, 100.00vmin, 360px);">
+  <div class="envelope__flaps" aria-hidden="true">
+    <div class="envelope__quarter envelope__quarter--left">
+      <svg class="envelope__svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path class="envelope__flap" d="M 0,0 L 0,100 L 47.000,53.000 Q 50.000,50 47.000,47.000 Z" /></svg></div>
+    <div class="envelope__quarter envelope__quarter--right">
+      <svg class="envelope__svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path class="envelope__flap" d="M 100,0 L 100,100 L 53.000,53.000 Q 50.000,50 53.000,47.000 Z" /></svg></div>
+    <div class="envelope__quarter envelope__quarter--bottom">
+      <svg class="envelope__svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path class="envelope__flap" d="M 0,100 L 100,100 L 53.000,53.000 Q 50,50.000 47.000,53.000 Z" /></svg></div>
+    <div class="envelope__quarter envelope__quarter--top">
+      <svg class="envelope__svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path class="envelope__flap" d="M 0,0 L 100,0 L 53.000,47.000 Q 50,50.000 47.000,47.000 Z" /></svg></div>
+  </div>
+  <p class="envelope__delivery">Вам доставлено<br>приглашение</p>
+  <button type="button" class="envelope__seal" id="envelope-seal" aria-label="Открыть приглашение">
+    <img class="envelope__seal-img" src="img/seal.png" alt="" aria-hidden="true" />
+    <span class="envelope__seal-text">открыть</span>
+  </button>
+  <p class="envelope__initials">П&nbsp;&amp;&nbsp;И</p>
+</div>"
+`;
