@@ -1,0 +1,9 @@
+{
+  "ease": {
+    "out": { "$type": "cubicBezier", "$value": [0.22, 1, 0.36, 1] }
+  },
+  "duration": {
+    "reveal": { "$type": "duration", "$value": "1.2s" },
+    "fast": { "$type": "duration", "$value": "0.35s" }
+  }
+}

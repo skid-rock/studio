@@ -4,8 +4,16 @@
  *
  * Содержимое перенесено из wed/src/styles/envelope.css. CSS-переменные
  * перекрываются инлайновым style в разметке (см. markup.ts).
+ *
+ * Тайминги раскрытия — параметры модуля, не темы (см. STUDIO-007 §3).
  */
 export const envelopeCss = `
+:root {
+  --envelope-open-delay: 200ms;
+  --envelope-open-duration: 1.8s;
+  --envelope-fade-duration: 1s;
+}
+
 .envelope-overlay {
   position: fixed;
   inset: 0;

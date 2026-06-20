@@ -1,0 +1,29 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-cream: #fffaf1;
+  --color-cream-alt: #fcfaf5;
+  --color-navy: #275889;
+  --color-navy-dark: #1e4568;
+  --color-terracotta: #a3313a;
+  --color-terracotta-light: #a4313a;
+  --color-text-muted: #595b4e;
+  --color-white: #ffffff;
+  --color-overlay: rgba(39, 88, 137, 0.08);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-reveal: 1.2s;
+  --duration-fast: 0.35s;
+  --container-max: 420px;
+  --container-wide: 960px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-pill: 999px;
+  --section-pad-y: clamp(3rem, 8vw, 5rem);
+  --section-pad-x: clamp(1.25rem, 5vw, 2rem);
+  --font-display: "Source Serif Pro", "Cormorant Garamond", Georgia, serif;
+  --font-script: "Florisel", "Felidae", cursive;
+  --font-body: "Inter", system-ui, sans-serif;
+  --color-text: var(--color-navy);
+}

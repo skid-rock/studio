@@ -73,7 +73,8 @@ describe("renderDocument", () => {
 
     const result = renderDocument(doc, { registry });
 
-    expect(result.css).toBe(".demo { color: red; }");
+    expect(result.css).toContain("--color-navy:");
+    expect(result.css).toContain(".demo { color: red; }");
   });
 
   it("собирает CSS только от использованных модулей", () => {
@@ -89,8 +90,20 @@ describe("renderDocument", () => {
 
     const result = renderDocument(doc, { registry });
 
-    expect(result.css).toBe(".demo { color: red; }");
+    expect(result.css).toContain("--color-navy:");
+    expect(result.css).toContain(".demo { color: red; }");
     expect(result.css).not.toContain(".hero");
+  });
+
+  it("подключает CSS темы cream-navy из doc.theme.id", () => {
+    const registry = createRegistry([makeDemoModule()]);
+    const doc = makeDoc([{ id: "s", type: "demo", order: "a0", props: { title: "X" } }]);
+
+    const result = renderDocument(doc, { registry });
+
+    expect(result.css).toContain(":root {");
+    expect(result.css).toContain("--color-navy: #275889");
+    expect(result.css).toContain("--font-display:");
   });
 
   it("передаёт контекст документа в render", () => {

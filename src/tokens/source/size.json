@@ -1,0 +1,15 @@
+{
+  "container": {
+    "max": { "$type": "dimension", "$value": "420px" },
+    "wide": { "$type": "dimension", "$value": "960px" }
+  },
+  "radius": {
+    "sm": { "$type": "dimension", "$value": "8px" },
+    "md": { "$type": "dimension", "$value": "16px" },
+    "pill": { "$type": "dimension", "$value": "999px" }
+  },
+  "section": {
+    "pad-y": { "$type": "dimension", "$value": "clamp(3rem, 8vw, 5rem)" },
+    "pad-x": { "$type": "dimension", "$value": "clamp(1.25rem, 5vw, 2rem)" }
+  }
+}

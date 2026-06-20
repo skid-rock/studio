@@ -2,7 +2,7 @@
 # Короткие команды-обёртки над npm-скриптами.
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview lint format clean
+.PHONY: help install dev build preview lint format tokens clean
 
 help: ## Показать список доступных команд
 	@echo "Доступные команды:"
@@ -26,6 +26,9 @@ lint: ## Проверить код линтером (ESLint)
 
 format: ## Отформатировать код (Prettier)
 	npm run format
+
+tokens: ## Сгенерировать CSS-токены из DTCG JSON
+	npm run tokens
 
 clean: ## Удалить node_modules и dist
 	rm -rf node_modules dist
