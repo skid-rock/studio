@@ -10,44 +10,51 @@
  *
  * Это одноразовый спайк: НЕ в src/, в прод-сборку не входит.
  */
-import { useMemo, useRef, useState } from "react";
-import { Puck } from "@measured/puck";
-import type { Data } from "@measured/puck";
-import "@measured/puck/puck.css";
+import { useMemo, useRef, useState } from 'react';
+import { Puck } from '@measured/puck';
+import type { Data } from '@measured/puck';
+import '@measured/puck/puck.css';
 
-import type { StudioDocument } from "../../src/render-core/document";
-import { renderDocument } from "../../src/render-core/render";
-import { defaultRegistry } from "../../src/sections/registry.default";
-import { documentToPuck, makeConfig, puckToDocument } from "./puck-adapter";
+import type { StudioDocument } from '../../src/render-core/document';
+import { renderDocument } from '../../src/render-core/render';
+import { defaultRegistry } from '../../src/sections/registry.default';
+import { documentToPuck, makeConfig, puckToDocument } from './puck-adapter';
 
-import baseCss from "../../src/render-core/styles/base.css?raw";
-import fontsCss from "../../src/render-core/styles/fonts.css?raw";
-import creamNavyCss from "../../src/tokens/dist/cream-navy.css?raw";
+import baseCss from '../../src/render-core/styles/base.css?raw';
+import fontsCss from '../../src/render-core/styles/fonts.css?raw';
+import creamNavyCss from '../../src/tokens/dist/cream-navy.css?raw';
 
 /** Стартовый документ спайка: конверт + hero + closing (есть что переставлять). */
 const INITIAL_DOC: StudioDocument = {
-  schemaVersion: 1,
-  theme: { id: "cream-navy" },
-  motion: { preset: "subtle" },
-  sections: [
-    { id: "s_intro", type: "intro/envelope", order: "a0", props: {} },
-    {
-      id: "s_hero",
-      type: "hero",
-      order: "a1",
-      props: { eyebrow: "Мы женимся", names: "Полина & Илья", date: "05.08.2026" },
-    },
-    {
-      id: "s_closing",
-      type: "closing",
-      order: "a2",
-      props: { signature: "С любовью, Полина & Илья", ps: "Будем рады видеть вас!" },
-    },
-  ],
+    schemaVersion: 1,
+    theme: { id: 'cream-navy' },
+    motion: { preset: 'subtle' },
+    sections: [
+        { id: 's_intro', type: 'intro/envelope', order: 'a0', props: {} },
+        {
+            id: 's_hero',
+            type: 'hero',
+            order: 'a1',
+            props: {
+                eyebrow: 'Мы женимся',
+                names: 'Полина & Илья',
+                date: '05.08.2026',
+            },
+        },
+        {
+            id: 's_closing',
+            type: 'closing',
+            order: 'a2',
+            props: {
+                signature: 'С любовью, Полина & Илья',
+                ps: 'Будем рады видеть вас!',
+            },
+        },
+    ],
 };
 
 /** CSS темы/базы для холста превью (как в src/App.tsx — через ?raw). */
-const FRAME_CSS = [baseCss, fontsCss, creamNavyCss].join("\n");
+const FRAME_CSS = [baseCss, fontsCss, creamNavyCss].join('\n');
 
 /**
  * Локальные правки для спайка: конверт в проде — полноэкранный fixed-оверлей;
@@ -98,45 +105,47 @@ const SPIKE_CSS = `
 `;
 
 export function App() {
-  // Документ держим в ref — обёртки блоков читают актуальный doc для RenderContext.
-  const docRef = useRef<StudioDocument>(INITIAL_DOC);
-  const [data, setData] = useState<Data>(() => documentToPuck(INITIAL_DOC));
-  const [exported, setExported] = useState<string | null>(null);
+    // Документ держим в ref — обёртки блоков читают актуальный doc для RenderContext.
+    const docRef = useRef<StudioDocument>(INITIAL_DOC);
+    const [data, setData] = useState<Data>(() => documentToPuck(INITIAL_DOC));
+    const [exported, setExported] = useState<string | null>(null);
 
-  const config = useMemo(
-    () => makeConfig(defaultRegistry, () => docRef.current),
-    [],
-  );
-
-  function handleChange(next: Data) {
-    setData(next);
-    docRef.current = puckToDocument(next, INITIAL_DOC);
-  }
-
-  // Агностичный экспорт: Puck Data → StudioDocument → renderDocument (строка HTML).
-  function handleExport() {
-    const doc = puckToDocument(data, INITIAL_DOC);
-    const { html, css } = renderDocument(doc, { registry: defaultRegistry });
-    const hasReact = /data-reactroot|__reactProps|<script/i.test(html);
-    setExported(
-      `// секций: ${doc.sections.length} · React в выводе: ${hasReact ? "ДА (ошибка!)" : "нет"}\n` +
-        `// html: ${html.length} байт · css: ${css.length} байт\n\n` +
-        html.slice(0, 900) +
-        (html.length > 900 ? "\n…" : ""),
+    const config = useMemo(
+        () => makeConfig(defaultRegistry, () => docRef.current),
+        [],
     );
-  }
 
-  return (
-    <>
-      <style>{FRAME_CSS}</style>
-      <style>{SPIKE_CSS}</style>
-      <Puck config={config} data={data} onChange={handleChange} />
-      <div className="spike-export">
-        {exported && <pre>{exported}</pre>}
-        <button type="button" onClick={handleExport}>
-          Экспорт (агностичный renderDocument)
-        </button>
-      </div>
-    </>
-  );
+    function handleChange(next: Data) {
+        setData(next);
+        docRef.current = puckToDocument(next, INITIAL_DOC);
+    }
+
+    // Агностичный экспорт: Puck Data → StudioDocument → renderDocument (строка HTML).
+    function handleExport() {
+        const doc = puckToDocument(data, INITIAL_DOC);
+        const { html, css } = renderDocument(doc, {
+            registry: defaultRegistry,
+        });
+        const hasReact = /data-reactroot|__reactProps|<script/i.test(html);
+        setExported(
+            `// секций: ${doc.sections.length} · React в выводе: ${hasReact ? 'ДА (ошибка!)' : 'нет'}\n` +
+                `// html: ${html.length} байт · css: ${css.length} байт\n\n` +
+                html.slice(0, 900) +
+                (html.length > 900 ? '\n…' : ''),
+        );
+    }
+
+    return (
+        <>
+            <style>{FRAME_CSS}</style>
+            <style>{SPIKE_CSS}</style>
+            <Puck config={config} data={data} onChange={handleChange} />
+            <div className="spike-export">
+                {exported && <pre>{exported}</pre>}
+                <button type="button" onClick={handleExport}>
+                    Экспорт (агностичный renderDocument)
+                </button>
+            </div>
+        </>
+    );
 }

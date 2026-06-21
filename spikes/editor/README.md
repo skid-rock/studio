@@ -11,14 +11,14 @@ React в прод-выводе.
 
 ## Что показано
 
-| Критерий ADR | Где видно |
-|---|---|
-| Модель Puck ↔ `StudioDocument`/`SectionNode[]` | `puck-adapter.tsx` → `documentToPuck` / `puckToDocument`; round-trip в `verify.mts` |
-| Панель свойств из нашей `ParamSchema` | `fieldsFromSchema` (range→number, text→textarea, select→select, color→custom `<input type=color>`); скрин `screenshots/02-*.png` |
-| Превью через агностичный render | `BlockPreview` зовёт `mod.render(props, ctx)` → `dangerouslySetInnerHTML`; скрин `screenshots/01-*.png` |
-| DnD: добавить/переставить/удалить + дробный `order` | палитра/Outline Puck; `verify.mts` (add + reorder, order пересчитан через fractional-indexing) |
-| Экспорт остаётся агностичным | кнопка «Экспорт» в `App.tsx` гонит `renderDocument` → строка HTML без React; `verify.mts` [4] |
-| Анти-drift (один путь рендера) | `verify.mts` [5]: `renderToStaticMarkup(BlockPreview)` содержит ровно строковый `mod.render` |
+| Критерий ADR                                        | Где видно                                                                                                                        |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Модель Puck ↔ `StudioDocument`/`SectionNode[]`      | `puck-adapter.tsx` → `documentToPuck` / `puckToDocument`; round-trip в `verify.mts`                                              |
+| Панель свойств из нашей `ParamSchema`               | `fieldsFromSchema` (range→number, text→textarea, select→select, color→custom `<input type=color>`); скрин `screenshots/02-*.png` |
+| Превью через агностичный render                     | `BlockPreview` зовёт `mod.render(props, ctx)` → `dangerouslySetInnerHTML`; скрин `screenshots/01-*.png`                          |
+| DnD: добавить/переставить/удалить + дробный `order` | палитра/Outline Puck; `verify.mts` (add + reorder, order пересчитан через fractional-indexing)                                   |
+| Экспорт остаётся агностичным                        | кнопка «Экспорт» в `App.tsx` гонит `renderDocument` → строка HTML без React; `verify.mts` [4]                                    |
+| Анти-drift (один путь рендера)                      | `verify.mts` [5]: `renderToStaticMarkup(BlockPreview)` содержит ровно строковый `mod.render`                                     |
 
 ## Запуск
 

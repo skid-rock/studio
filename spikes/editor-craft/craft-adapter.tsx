@@ -16,28 +16,33 @@
  * пишутся: resolver-компоненты, сериализация дерево↔плоский документ и панель
  * свойств — это и есть предмет эмпирического сравнения (см. README спайка).
  */
-import { createElement } from "react";
-import type { ReactElement } from "react";
-import { useNode } from "@craftjs/core";
-import type { UserComponent } from "@craftjs/core";
+import { createElement } from 'react';
+import type { ReactElement } from 'react';
+import { useNode } from '@craftjs/core';
+import type { UserComponent } from '@craftjs/core';
 
-import { SchemaFields } from "./SchemaFields";
-import type { StudioDocument, SectionNode } from "../../src/render-core/document";
-import { sortedSections } from "../../src/render-core/document";
-import { orderBetween } from "../../src/render-core/order";
-import type { BlockRegistry } from "../../src/render-core/registry";
-import type { BlockModule, RenderContext } from "../../src/render-core/types";
+import { SchemaFields } from './SchemaFields';
+import type {
+    StudioDocument,
+    SectionNode,
+} from '../../src/render-core/document';
+import { sortedSections } from '../../src/render-core/document';
+import { orderBetween } from '../../src/render-core/order';
+import type { BlockRegistry } from '../../src/render-core/registry';
+import type { BlockModule, RenderContext } from '../../src/render-core/types';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 0. Имена типов: ключ resolver'а Craft держим без "/" (как Puck-ключ), чтобы не
 //    зависеть от разрешённых символов в resolvedName. Маппинг обратим.
 // ─────────────────────────────────────────────────────────────────────────────
-const CRAFT_SEP = "--";
-export const toCraftType = (studioType: string): string => studioType.split("/").join(CRAFT_SEP);
-export const toStudioType = (craftType: string): string => craftType.split(CRAFT_SEP).join("/");
+const CRAFT_SEP = '--';
+export const toCraftType = (studioType: string): string =>
+    studioType.split('/').join(CRAFT_SEP);
+export const toStudioType = (craftType: string): string =>
+    craftType.split(CRAFT_SEP).join('/');
 
 /** Идентификатор ROOT-узла Craft (canvas-контейнер холста). */
-export const CRAFT_ROOT = "ROOT";
+export const CRAFT_ROOT = 'ROOT';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 1. Чистая презентация блока (без Craft-хуков) — пригодна для headless-проверки
@@ -46,18 +51,18 @@ export const CRAFT_ROOT = "ROOT";
 
 /** Прогнать props через агностичный mod.render — строка HTML (как в экспорте). */
 export function renderModuleHtml(
-  mod: BlockModule,
-  props: Record<string, unknown>,
-  doc: StudioDocument,
+    mod: BlockModule,
+    props: Record<string, unknown>,
+    doc: StudioDocument,
 ): string {
-  const ctx: RenderContext = { doc };
-  return mod.render(props, ctx);
+    const ctx: RenderContext = { doc };
+    return mod.render(props, ctx);
 }
 
 export interface BlockHtmlProps {
-  mod: BlockModule;
-  props: Record<string, unknown>;
-  doc: StudioDocument;
+    mod: BlockModule;
+    props: Record<string, unknown>;
+    doc: StudioDocument;
 }
 
 /**
@@ -66,12 +71,12 @@ export interface BlockHtmlProps {
  * экспорте). data-block позволяет нейтрализовать position:fixed конверта в холсте.
  */
 export function BlockHtml({ mod, props, doc }: BlockHtmlProps): ReactElement {
-  const html = renderModuleHtml(mod, props, doc);
-  return createElement("div", {
-    className: "craft-block-inner",
-    "data-block": mod.type,
-    dangerouslySetInnerHTML: { __html: html },
-  });
+    const html = renderModuleHtml(mod, props, doc);
+    return createElement('div', {
+        className: 'craft-block-inner',
+        'data-block': mod.type,
+        dangerouslySetInnerHTML: { __html: html },
+    });
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -82,49 +87,49 @@ export function BlockHtml({ mod, props, doc }: BlockHtmlProps): ReactElement {
 export type BlockComponent = UserComponent<Record<string, unknown>>;
 
 export function makeBlockComponent(
-  mod: BlockModule,
-  getDoc: () => StudioDocument,
+    mod: BlockModule,
+    getDoc: () => StudioDocument,
 ): BlockComponent {
-  const Block: BlockComponent = (props: Record<string, unknown>) => {
-    const {
-      connectors: { connect, drag },
-      selected,
-    } = useNode((node) => ({ selected: node.events.selected }));
+    const Block: BlockComponent = (props: Record<string, unknown>) => {
+        const {
+            connectors: { connect, drag },
+            selected,
+        } = useNode((node) => ({ selected: node.events.selected }));
 
-    return createElement(
-      "div",
-      {
-        // connect(drag(dom)) — узел реагирует на выбор и его можно перетаскивать
-        ref: (dom: HTMLElement | null) => {
-          if (dom) {
-            connect(drag(dom));
-          }
-        },
-        className: `craft-block${selected ? " is-selected" : ""}`,
-        "data-block": mod.type,
-      },
-      createElement(BlockHtml, { mod, props, doc: getDoc() }),
-    );
-  };
+        return createElement(
+            'div',
+            {
+                // connect(drag(dom)) — узел реагирует на выбор и его можно перетаскивать
+                ref: (dom: HTMLElement | null) => {
+                    if (dom) {
+                        connect(drag(dom));
+                    }
+                },
+                className: `craft-block${selected ? ' is-selected' : ''}`,
+                'data-block': mod.type,
+            },
+            createElement(BlockHtml, { mod, props, doc: getDoc() }),
+        );
+    };
 
-  Block.craft = {
-    displayName: mod.label,
-    props: { ...mod.defaults },
-    related: { settings: makeSettings(mod) },
-  };
-  return Block;
+    Block.craft = {
+        displayName: mod.label,
+        props: { ...mod.defaults },
+        related: { settings: makeSettings(mod) },
+    };
+    return Block;
 }
 
 /** Резолвер для <Editor resolvers={...}>: ключ-тип (без "/") → user-component. */
 export function makeResolver(
-  registry: BlockRegistry,
-  getDoc: () => StudioDocument,
+    registry: BlockRegistry,
+    getDoc: () => StudioDocument,
 ): Record<string, BlockComponent> {
-  const resolver: Record<string, BlockComponent> = {};
-  for (const mod of registry.list()) {
-    resolver[toCraftType(mod.type)] = makeBlockComponent(mod, getDoc);
-  }
-  return resolver;
+    const resolver: Record<string, BlockComponent> = {};
+    for (const mod of registry.list()) {
+        resolver[toCraftType(mod.type)] = makeBlockComponent(mod, getDoc);
+    }
+    return resolver;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -133,21 +138,27 @@ export function makeResolver(
 //    useNode (props + setProp). Это порт паттерна wed/playground/controls.ts.
 // ─────────────────────────────────────────────────────────────────────────────
 export function makeSettings(mod: BlockModule): React.ComponentType {
-  const Settings = (): ReactElement => {
-    const {
-      props,
-      actions: { setProp },
-    } = useNode((node) => ({ props: node.data.props as Record<string, unknown> }));
+    const Settings = (): ReactElement => {
+        const {
+            props,
+            actions: { setProp },
+        } = useNode((node) => ({
+            props: node.data.props as Record<string, unknown>,
+        }));
 
-    const set = (key: string, value: unknown): void => {
-      setProp((p: Record<string, unknown>) => {
-        p[key] = value;
-      });
+        const set = (key: string, value: unknown): void => {
+            setProp((p: Record<string, unknown>) => {
+                p[key] = value;
+            });
+        };
+
+        return createElement(SchemaFields, {
+            schema: mod.schema,
+            props,
+            onChange: set,
+        });
     };
-
-    return createElement(SchemaFields, { schema: mod.schema, props, onChange: set });
-  };
-  return Settings;
+    return Settings;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -160,36 +171,36 @@ export function makeSettings(mod: BlockModule): React.ComponentType {
 export type CraftNodes = Record<string, Record<string, unknown>>;
 
 export function documentToCraft(doc: StudioDocument): CraftNodes {
-  const sections = sortedSections(doc);
-  const nodes: CraftNodes = {
-    [CRAFT_ROOT]: {
-      type: "div",
-      isCanvas: true,
-      props: { className: "craft-canvas" },
-      parent: null,
-      displayName: "Холст",
-      custom: {},
-      hidden: false,
-      nodes: sections.map((s) => s.id),
-      linkedNodes: {},
-    },
-  };
-
-  for (const s of sections) {
-    nodes[s.id] = {
-      type: { resolvedName: toCraftType(s.type) },
-      isCanvas: false,
-      props: { ...s.props },
-      parent: CRAFT_ROOT,
-      displayName: s.type,
-      custom: {},
-      hidden: false,
-      nodes: [],
-      linkedNodes: {},
+    const sections = sortedSections(doc);
+    const nodes: CraftNodes = {
+        [CRAFT_ROOT]: {
+            type: 'div',
+            isCanvas: true,
+            props: { className: 'craft-canvas' },
+            parent: null,
+            displayName: 'Холст',
+            custom: {},
+            hidden: false,
+            nodes: sections.map((s) => s.id),
+            linkedNodes: {},
+        },
     };
-  }
 
-  return nodes;
+    for (const s of sections) {
+        nodes[s.id] = {
+            type: { resolvedName: toCraftType(s.type) },
+            isCanvas: false,
+            props: { ...s.props },
+            parent: CRAFT_ROOT,
+            displayName: s.type,
+            custom: {},
+            hidden: false,
+            nodes: [],
+            linkedNodes: {},
+        };
+    }
+
+    return nodes;
 }
 
 /**
@@ -197,34 +208,37 @@ export function documentToCraft(doc: StudioDocument): CraftNodes {
  * DnD), дробные order пересчитываем заново слева направо через fractional-indexing.
  * base даёт schemaVersion/theme/motion — Craft их не трогает.
  */
-export function craftToDocument(nodes: CraftNodes, base: StudioDocument): StudioDocument {
-  const root = nodes[CRAFT_ROOT];
-  const childIds = (root?.nodes as string[] | undefined) ?? [];
+export function craftToDocument(
+    nodes: CraftNodes,
+    base: StudioDocument,
+): StudioDocument {
+    const root = nodes[CRAFT_ROOT];
+    const childIds = (root?.nodes as string[] | undefined) ?? [];
 
-  const sections: SectionNode[] = [];
-  let prevOrder: string | null = null;
-  for (const id of childIds) {
-    const node = nodes[id];
-    if (!node) {
-      continue;
+    const sections: SectionNode[] = [];
+    let prevOrder: string | null = null;
+    for (const id of childIds) {
+        const node = nodes[id];
+        if (!node) {
+            continue;
+        }
+        const order = orderBetween(prevOrder, null);
+        sections.push({
+            id,
+            type: toStudioType(craftResolvedName(node)),
+            order,
+            props: (node.props as Record<string, unknown>) ?? {},
+        });
+        prevOrder = order;
     }
-    const order = orderBetween(prevOrder, null);
-    sections.push({
-      id,
-      type: toStudioType(craftResolvedName(node)),
-      order,
-      props: (node.props as Record<string, unknown>) ?? {},
-    });
-    prevOrder = order;
-  }
-  return { ...base, sections };
+    return { ...base, sections };
 }
 
 /** resolvedName узла Craft (type может быть строкой или {resolvedName}). */
 function craftResolvedName(node: Record<string, unknown>): string {
-  const type = node.type;
-  if (typeof type === "string") {
-    return type;
-  }
-  return String((type as { resolvedName: string }).resolvedName);
+    const type = node.type;
+    if (typeof type === 'string') {
+        return type;
+    }
+    return String((type as { resolvedName: string }).resolvedName);
 }

@@ -1,94 +1,103 @@
 /* Локальные шрифты для превью и экспорта (относительные пути — работают и по file://). */
 
 @font-face {
-  font-family: "Source Serif Pro";
-  font-style: normal;
-  font-weight: 300;
-  src: url("fonts/SourceSerifPro-Light.woff") format("woff");
-  font-display: swap;
+    font-family: 'Source Serif Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/SourceSerifPro-Light.woff') format('woff');
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "Source Serif Pro";
-  font-style: normal;
-  font-weight: 400;
-  src: url("fonts/SourceSerifPro-Regul.woff") format("woff");
-  font-display: swap;
+    font-family: 'Source Serif Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/SourceSerifPro-Regul.woff') format('woff');
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "Florisel";
-  font-style: normal;
-  font-weight: 400;
-  src: url("fonts/Floriselscript.woff") format("woff");
-  font-display: swap;
+    font-family: 'Florisel';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/Floriselscript.woff') format('woff');
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "Felidae";
-  font-style: normal;
-  font-weight: 400;
-  src: url("fonts/Felidae.woff") format("woff");
-  font-display: swap;
+    font-family: 'Felidae';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/Felidae.woff') format('woff');
+    font-display: swap;
 }
 
 /* Inter — кириллица */
 @font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 300;
-  src: url("fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0Q5n-wU.woff2") format("woff2");
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-  font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0Q5n-wU.woff2')
+        format('woff2');
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 400;
-  src: url("fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0Q5n-wU.woff2") format("woff2");
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-  font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0Q5n-wU.woff2')
+        format('woff2');
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 500;
-  src: url("fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0Q5n-wU.woff2") format("woff2");
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-  font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    src: url('fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0Q5n-wU.woff2')
+        format('woff2');
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 300;
-  src: url("fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2") format("woff2");
-  unicode-range:
-    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC,
-    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2')
+        format('woff2');
+    unicode-range:
+        U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+        U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
+        U+FFFD;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 400;
-  src: url("fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2") format("woff2");
-  unicode-range:
-    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC,
-    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2')
+        format('woff2');
+    unicode-range:
+        U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+        U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
+        U+FFFD;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 500;
-  src: url("fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2") format("woff2");
-  unicode-range:
-    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC,
-    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    src: url('fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2')
+        format('woff2');
+    unicode-range:
+        U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+        U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
+        U+FFFD;
+    font-display: swap;
 }

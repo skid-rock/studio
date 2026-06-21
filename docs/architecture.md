@@ -13,12 +13,12 @@
 Studio построен в парадигме портов и адаптеров (knowledge перенесён из Go — см.
 [improvements/roadmap-control.md](improvements/roadmap-control.md)):
 
-| Мир Go | studio |
-|---|---|
-| Домен / ядро без фреймворка | `render-core/` — чистые `(props, ctx) → string`, не знают про React |
-| Доменная модель / агрегат | `StudioDocument` — единственный источник правды |
-| Доменные модули | `sections/` (envelope, hero, closing) |
-| Driving-адаптер | `editor/` — React-оболочка на Puck, тонкий маппинг в/из `StudioDocument` |
+| Мир Go                       | studio                                                                      |
+| ---------------------------- | --------------------------------------------------------------------------- |
+| Домен / ядро без фреймворка  | `render-core/` — чистые `(props, ctx) → string`, не знают про React         |
+| Доменная модель / агрегат    | `StudioDocument` — единственный источник правды                             |
+| Доменные модули              | `sections/` (envelope, hero, closing)                                       |
+| Driving-адаптер              | `editor/` — React-оболочка на Puck, тонкий маппинг в/из `StudioDocument`    |
 | Сменная реализация за портом | движок Puck, изолирован адаптером ([ADR-0004](adr/ADR-0004-editor-base.md)) |
 
 Смысл: на архитектурной оси (границы, направление зависимостей) работаем как в
@@ -26,12 +26,12 @@ Studio построен в парадигме портов и адаптеров
 
 ## 2. Слои и зависимости
 
-| Слой | Папка | Ответственность | Зависит от |
-|---|---|---|---|
-| Ядро (агностичное) | [`src/render-core/`](../src/render-core/) | модель документа, схема параметров, реестр, render, сборка страницы | — (ванильный TS) |
-| Секции | [`src/sections/`](../src/sections/) | модули блоков (`BlockModule`) + реестр по умолчанию | `render-core` |
-| Токены | [`src/tokens/`](../src/tokens/) | токены темы (DTCG JSON → CSS), загрузка CSS темы | — (типы из `render-core`) |
-| Редактор | [`src/editor/`](../src/editor/) | React-оболочка на Puck, маппинг модели ↔ Puck, превью | `render-core`, `sections`, Puck, React |
+| Слой               | Папка                                     | Ответственность                                                     | Зависит от                             |
+| ------------------ | ----------------------------------------- | ------------------------------------------------------------------- | -------------------------------------- |
+| Ядро (агностичное) | [`src/render-core/`](../src/render-core/) | модель документа, схема параметров, реестр, render, сборка страницы | — (ванильный TS)                       |
+| Секции             | [`src/sections/`](../src/sections/)       | модули блоков (`BlockModule`) + реестр по умолчанию                 | `render-core`                          |
+| Токены             | [`src/tokens/`](../src/tokens/)           | токены темы (DTCG JSON → CSS), загрузка CSS темы                    | — (типы из `render-core`)              |
+| Редактор           | [`src/editor/`](../src/editor/)           | React-оболочка на Puck, маппинг модели ↔ Puck, превью               | `render-core`, `sections`, Puck, React |
 
 Все стрелки зависимостей направлены **внутрь** — к ядру. Ядро ни про кого из
 внешних слоёв не знает.
@@ -134,16 +134,16 @@ Puck редактирует дерево React-компонентов, но **н
 
 ## 6. Карта файлов ядра (`render-core/`)
 
-| Файл | Ответственность |
-|---|---|
-| [`document.ts`](../src/render-core/document.ts) | `StudioDocument`, `SectionNode`; операции `addSection`/`moveSection`/`removeSection`; `sortedSections` |
-| [`document.schema.ts`](../src/render-core/document.schema.ts) | zod-схема формы документа; `parseDocument` |
-| [`schema.ts`](../src/render-core/schema.ts) | `ParamSchema` (range/color/text/select); `defaultsFromSchema`, `parseBySchema` |
-| [`types.ts`](../src/render-core/types.ts) | `RenderFn`, `RenderContext`, `BlockModule`, `RenderResult` |
-| [`registry.ts`](../src/render-core/registry.ts) | `createRegistry`, `defineBlock` (стирание `P` через рантайм-парсер) |
-| [`render.ts`](../src/render-core/render.ts) | `renderDocument` — обход секций, сборка html + css |
-| [`page.ts`](../src/render-core/page.ts) | `buildPage` — полный HTML-документ (тема + CSS блоков + body) |
-| [`order.ts`](../src/render-core/order.ts) | `orderBetween` — дробный индекс порядка |
+| Файл                                                          | Ответственность                                                                                        |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| [`document.ts`](../src/render-core/document.ts)               | `StudioDocument`, `SectionNode`; операции `addSection`/`moveSection`/`removeSection`; `sortedSections` |
+| [`document.schema.ts`](../src/render-core/document.schema.ts) | zod-схема формы документа; `parseDocument`                                                             |
+| [`schema.ts`](../src/render-core/schema.ts)                   | `ParamSchema` (range/color/text/select); `defaultsFromSchema`, `parseBySchema`                         |
+| [`types.ts`](../src/render-core/types.ts)                     | `RenderFn`, `RenderContext`, `BlockModule`, `RenderResult`                                             |
+| [`registry.ts`](../src/render-core/registry.ts)               | `createRegistry`, `defineBlock` (стирание `P` через рантайм-парсер)                                    |
+| [`render.ts`](../src/render-core/render.ts)                   | `renderDocument` — обход секций, сборка html + css                                                     |
+| [`page.ts`](../src/render-core/page.ts)                       | `buildPage` — полный HTML-документ (тема + CSS блоков + body)                                          |
+| [`order.ts`](../src/render-core/order.ts)                     | `orderBetween` — дробный индекс порядка                                                                |
 
 ## 7. Почему так (ADR)
 

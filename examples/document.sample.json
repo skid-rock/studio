@@ -1,14 +1,19 @@
 {
-  "schemaVersion": 1,
-  "theme": { "id": "cream-navy" },
-  "motion": { "preset": "subtle" },
-  "sections": [
-    { "id": "s_intro", "type": "intro/envelope", "order": "a0", "props": {} },
-    {
-      "id": "s_hero",
-      "type": "hero",
-      "order": "a1",
-      "props": { "names": "Полина & Илья", "date": "05.08.2026" }
-    }
-  ]
+    "schemaVersion": 1,
+    "theme": { "id": "cream-navy" },
+    "motion": { "preset": "subtle" },
+    "sections": [
+        {
+            "id": "s_intro",
+            "type": "intro/envelope",
+            "order": "a0",
+            "props": {}
+        },
+        {
+            "id": "s_hero",
+            "type": "hero",
+            "order": "a1",
+            "props": { "names": "Полина & Илья", "date": "05.08.2026" }
+        }
+    ]
 }

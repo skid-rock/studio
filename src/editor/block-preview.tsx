@@ -1,27 +1,32 @@
-import { createElement, memo } from "react";
-import type { ReactElement } from "react";
+import { createElement, memo } from 'react';
+import type { ReactElement } from 'react';
 
-import type { StudioDocument } from "../render-core/document";
-import type { BlockModule } from "../render-core/types";
-import { useEditorDoc } from "./editor-doc";
-import { renderModuleHtml } from "./render-block-html";
-import { samePuckProps } from "./same-puck-props";
+import type { StudioDocument } from '../render-core/document';
+import type { BlockModule } from '../render-core/types';
+import { useEditorDoc } from './editor-doc';
+import { renderModuleHtml } from './render-block-html';
+import { samePuckProps } from './same-puck-props';
 
 export interface BlockPreviewProps {
-  mod: BlockModule;
-  props: Record<string, unknown>;
-  doc: StudioDocument;
+    mod: BlockModule;
+    props: Record<string, unknown>;
+    doc: StudioDocument;
 }
 
-export function BlockPreview({ mod, props, doc }: BlockPreviewProps): ReactElement {
-  const html = renderModuleHtml(mod, props, doc);
-  // data-block + класс позволяют нейтрализовать position:fixed конверта в холсте
-  // (см. Editor.tsx, .editor-block[data-block="intro/envelope"]).
-  return createElement("div", {
-    className: "editor-block",
-    "data-block": mod.type,
-    dangerouslySetInnerHTML: { __html: html },
-  });
+export function BlockPreview({
+    mod,
+    props,
+    doc,
+}: BlockPreviewProps): ReactElement {
+    const html = renderModuleHtml(mod, props, doc);
+
+    // data-block + класс позволяют нейтрализовать position:fixed конверта в холсте
+    // (см. Editor.tsx, .editor-block[data-block="intro/envelope"]).
+    return createElement('div', {
+        className: 'editor-block',
+        'data-block': mod.type,
+        dangerouslySetInnerHTML: { __html: html },
+    });
 }
 
 /**
@@ -33,15 +38,17 @@ export function BlockPreview({ mod, props, doc }: BlockPreviewProps): ReactEleme
  * через контекст в обход memo — это намеренно.
  */
 export const PuckBlockPreview = memo(
-  function PuckBlockPreview({
-    mod,
-    props,
-  }: {
-    mod: BlockModule;
-    props: Record<string, unknown>;
-  }): ReactElement {
-    const doc = useEditorDoc();
-    return createElement(BlockPreview, { mod, props, doc });
-  },
-  (prev, next) => prev.mod === next.mod && samePuckProps(prev.props, next.props),
+    function PuckBlockPreview({
+        mod,
+        props,
+    }: {
+        mod: BlockModule;
+        props: Record<string, unknown>;
+    }): ReactElement {
+        const doc = useEditorDoc();
+
+        return createElement(BlockPreview, { mod, props, doc });
+    },
+    (prev, next) =>
+        prev.mod === next.mod && samePuckProps(prev.props, next.props),
 );

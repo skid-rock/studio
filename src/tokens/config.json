@@ -1,22 +1,22 @@
 {
-  "source": ["src/tokens/source/**/*.json"],
-  "platforms": {
-    "css": {
-      "transforms": [
-        "name/kebab",
-        "color/css",
-        "fontFamily/css",
-        "cubicBezier/css",
-        "time/seconds"
-      ],
-      "buildPath": "src/tokens/dist/",
-      "files": [
-        {
-          "destination": "cream-navy.css",
-          "format": "css/variables",
-          "options": { "outputReferences": true }
+    "source": ["src/tokens/source/**/*.json"],
+    "platforms": {
+        "css": {
+            "transforms": [
+                "name/kebab",
+                "color/css",
+                "fontFamily/css",
+                "cubicBezier/css",
+                "time/seconds"
+            ],
+            "buildPath": "src/tokens/dist/",
+            "files": [
+                {
+                    "destination": "cream-navy.css",
+                    "format": "css/variables",
+                    "options": { "outputReferences": true }
+                }
+            ]
         }
-      ]
     }
-  }
 }

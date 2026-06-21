@@ -1,16 +1,16 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
-import landingSample from "../examples/landing.sample.json";
-import { parseDocument } from "./render-core/document.schema";
-import { renderDocument } from "./render-core/render";
-import { defaultRegistry } from "./sections/registry.default";
-import creamNavyCss from "./tokens/dist/cream-navy.css?raw";
-import baseCss from "./render-core/styles/base.css?raw";
-import fontsCss from "./render-core/styles/fonts.css?raw";
+import landingSample from '../examples/landing.sample.json';
+import { parseDocument } from './render-core/document.schema';
+import { renderDocument } from './render-core/render';
+import { defaultRegistry } from './sections/registry.default';
+import creamNavyCss from './tokens/dist/cream-navy.css?raw';
+import baseCss from './render-core/styles/base.css?raw';
+import fontsCss from './render-core/styles/fonts.css?raw';
 
 /** CSS тем по id — в превью через Vite ?raw (без node:fs). */
 const THEME_CSS: Record<string, string> = {
-  "cream-navy": creamNavyCss,
+    'cream-navy': creamNavyCss,
 };
 
 /**
@@ -18,18 +18,19 @@ const THEME_CSS: Record<string, string> = {
  * React — только оболочка; HTML/CSS собирает агностичный renderDocument.
  */
 export function App() {
-  const preview = useMemo(() => {
-    const doc = parseDocument(landingSample);
-    const result = renderDocument(doc, { registry: defaultRegistry });
-    const theme = THEME_CSS[doc.theme.id] ?? creamNavyCss;
-    const css = [baseCss, fontsCss, theme, result.css].join("\n");
-    return { body: result.html, css };
-  }, []);
+    const preview = useMemo(() => {
+        const doc = parseDocument(landingSample);
+        const result = renderDocument(doc, { registry: defaultRegistry });
+        const theme = THEME_CSS[doc.theme.id] ?? creamNavyCss;
+        const css = [baseCss, fontsCss, theme, result.css].join('\n');
 
-  return (
-    <>
-      <style>{preview.css}</style>
-      <div dangerouslySetInnerHTML={{ __html: preview.body }} />
-    </>
-  );
+        return { body: result.html, css };
+    }, []);
+
+    return (
+        <>
+            <style>{preview.css}</style>
+            <div dangerouslySetInnerHTML={{ __html: preview.body }} />
+        </>
+    );
 }

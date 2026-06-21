@@ -1,10 +1,16 @@
 {
-  "font": {
-    "display": {
-      "$type": "fontFamily",
-      "$value": "\"Source Serif Pro\", \"Cormorant Garamond\", Georgia, serif"
-    },
-    "script": { "$type": "fontFamily", "$value": "\"Florisel\", \"Felidae\", cursive" },
-    "body": { "$type": "fontFamily", "$value": "\"Inter\", system-ui, sans-serif" }
-  }
+    "font": {
+        "display": {
+            "$type": "fontFamily",
+            "$value": "\"Source Serif Pro\", \"Cormorant Garamond\", Georgia, serif"
+        },
+        "script": {
+            "$type": "fontFamily",
+            "$value": "\"Florisel\", \"Felidae\", cursive"
+        },
+        "body": {
+            "$type": "fontFamily",
+            "$value": "\"Inter\", system-ui, sans-serif"
+        }
+    }
 }

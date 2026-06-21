@@ -54,17 +54,19 @@ error TS2322: 'RFn<EnvelopeState>'        is not assignable to 'RFn<Record<strin
   Реестр типизируем обычным `BlockModule`, без `any` и без `eslint-disable`.
   Стирание `P` — в одной задокументированной точке:
 
-  ```ts
-  // Узкий BlockModule<P> → стёртый BlockModule. Единственное явное и grep-able
-  // место «нечестности», оправданное валидацией props по schema модуля.
-  export function defineBlock<P extends Record<string, unknown>>(m: BlockModule<P>): BlockModule {
-    return m as unknown as BlockModule;
-  }
-  // createRegistry([defineBlock(envelopeModule)])
-  ```
+    ```ts
+    // Узкий BlockModule<P> → стёртый BlockModule. Единственное явное и grep-able
+    // место «нечестности», оправданное валидацией props по schema модуля.
+    export function defineBlock<P extends Record<string, unknown>>(
+        m: BlockModule<P>,
+    ): BlockModule {
+        return m as unknown as BlockModule;
+    }
+    // createRegistry([defineBlock(envelopeModule)])
+    ```
 
-  Авторская типизация модуля остаётся полной (`BlockModule<EnvelopeState>`
-  проверяется как раньше), неявный `any` из render-core исчезает.
+    Авторская типизация модуля остаётся полной (`BlockModule<EnvelopeState>`
+    проверяется как раньше), неявный `any` из render-core исчезает.
 
 - **C (не рекомендуется). Бивариантность через метод.** Объявить `render`
   методом интерфейса (`render(props: P, ctx): string` вместо стрелочного поля) —

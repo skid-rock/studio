@@ -1,23 +1,33 @@
 /**
  * Минимальный блок closing — подпись и P.S. (демо Фазы 0).
  */
-import type { BlockModule } from "../../render-core/types";
-import type { ParamSchema } from "../../render-core/schema";
-import { defaultsFromSchema } from "../../render-core/schema";
+import type { BlockModule } from '../../render-core/types';
+import type { ParamSchema } from '../../render-core/schema';
+import { defaultsFromSchema } from '../../render-core/schema';
 
 interface ClosingProps extends Record<string, unknown> {
-  signature: string;
-  ps: string;
+    signature: string;
+    ps: string;
 }
 
 const schema: ParamSchema = [
-  {
-    group: "Closing",
-    items: [
-      { key: "signature", label: "Подпись", type: "text", def: "С любовью, Полина & Илья" },
-      { key: "ps", label: "P.S.", type: "text", def: "Будем рады видеть вас!" },
-    ],
-  },
+    {
+        group: 'Closing',
+        items: [
+            {
+                key: 'signature',
+                label: 'Подпись',
+                type: 'text',
+                def: 'С любовью, Полина & Илья',
+            },
+            {
+                key: 'ps',
+                label: 'P.S.',
+                type: 'text',
+                def: 'Будем рады видеть вас!',
+            },
+        ],
+    },
 ];
 
 const css = `
@@ -41,21 +51,25 @@ const css = `
 `;
 
 export const closingModule: BlockModule<ClosingProps> = {
-  type: "closing",
-  label: "Closing (подпись)",
-  schema,
-  defaults: defaultsFromSchema<ClosingProps>(schema),
-  render: (p) => {
-    const props = { ...defaultsFromSchema<ClosingProps>(schema), ...p };
-    return `
+    type: 'closing',
+    label: 'Closing (подпись)',
+    schema,
+    defaults: defaultsFromSchema<ClosingProps>(schema),
+    render: (p) => {
+        const props = { ...defaultsFromSchema<ClosingProps>(schema), ...p };
+
+        return `
     <section class="s-closing">
       <p class="s-closing__signature">${esc(props.signature)}</p>
       <p class="s-closing__ps">P.S. ${esc(props.ps)}</p>
     </section>`;
-  },
-  css,
+    },
+    css,
 };
 
 function esc(s: string): string {
-  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
 }

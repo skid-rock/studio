@@ -10,48 +10,55 @@
  *
  * Это одноразовый спайк: НЕ в src/, в прод-сборку не входит.
  */
-import { createElement, useMemo, useRef, useState } from "react";
-import type { ReactElement } from "react";
-import { Editor, Frame, useEditor } from "@craftjs/core";
+import { createElement, useMemo, useRef, useState } from 'react';
+import type { ReactElement } from 'react';
+import { Editor, Frame, useEditor } from '@craftjs/core';
 
-import type { StudioDocument } from "../../src/render-core/document";
-import { renderDocument } from "../../src/render-core/render";
-import { defaultRegistry } from "../../src/sections/registry.default";
+import type { StudioDocument } from '../../src/render-core/document';
+import { renderDocument } from '../../src/render-core/render';
+import { defaultRegistry } from '../../src/sections/registry.default';
 import {
-  craftToDocument,
-  documentToCraft,
-  makeResolver,
-} from "./craft-adapter";
-import { Toolbox } from "./Toolbox";
+    craftToDocument,
+    documentToCraft,
+    makeResolver,
+} from './craft-adapter';
+import { Toolbox } from './Toolbox';
 
-import baseCss from "../../src/render-core/styles/base.css?raw";
-import fontsCss from "../../src/render-core/styles/fonts.css?raw";
-import creamNavyCss from "../../src/tokens/dist/cream-navy.css?raw";
+import baseCss from '../../src/render-core/styles/base.css?raw';
+import fontsCss from '../../src/render-core/styles/fonts.css?raw';
+import creamNavyCss from '../../src/tokens/dist/cream-navy.css?raw';
 
 /** Стартовый документ спайка: конверт + hero + closing (есть что переставлять). */
 const INITIAL_DOC: StudioDocument = {
-  schemaVersion: 1,
-  theme: { id: "cream-navy" },
-  motion: { preset: "subtle" },
-  sections: [
-    { id: "s_intro", type: "intro/envelope", order: "a0", props: {} },
-    {
-      id: "s_hero",
-      type: "hero",
-      order: "a1",
-      props: { eyebrow: "Мы женимся", names: "Полина & Илья", date: "05.08.2026" },
-    },
-    {
-      id: "s_closing",
-      type: "closing",
-      order: "a2",
-      props: { signature: "С любовью, Полина & Илья", ps: "Будем рады видеть вас!" },
-    },
-  ],
+    schemaVersion: 1,
+    theme: { id: 'cream-navy' },
+    motion: { preset: 'subtle' },
+    sections: [
+        { id: 's_intro', type: 'intro/envelope', order: 'a0', props: {} },
+        {
+            id: 's_hero',
+            type: 'hero',
+            order: 'a1',
+            props: {
+                eyebrow: 'Мы женимся',
+                names: 'Полина & Илья',
+                date: '05.08.2026',
+            },
+        },
+        {
+            id: 's_closing',
+            type: 'closing',
+            order: 'a2',
+            props: {
+                signature: 'С любовью, Полина & Илья',
+                ps: 'Будем рады видеть вас!',
+            },
+        },
+    ],
 };
 
 /** CSS темы/базы для холста превью (как в src/App.tsx — через ?raw). */
-const FRAME_CSS = [baseCss, fontsCss, creamNavyCss].join("\n");
+const FRAME_CSS = [baseCss, fontsCss, creamNavyCss].join('\n');
 
 /**
  * Локальный CSS спайка: каркас 3 колонок + нейтрализация полноэкранного конверта
@@ -120,104 +127,122 @@ const SPIKE_CSS = `
  * (панель из ParamSchema). Это идиоматичный для Craft способ «панели свойств».
  */
 function SettingsColumn(): ReactElement {
-  const { selectedName, Settings } = useEditor((state) => {
-    const id = [...state.events.selected][0] as string | undefined;
-    const node = id ? state.nodes[id] : undefined;
-    return {
-      selectedName: node?.data.displayName,
-      Settings: node?.related?.settings,
-    };
-  });
+    const { selectedName, Settings } = useEditor((state) => {
+        const id = [...state.events.selected][0] as string | undefined;
+        const node = id ? state.nodes[id] : undefined;
+        return {
+            selectedName: node?.data.displayName,
+            Settings: node?.related?.settings,
+        };
+    });
 
-  if (!Settings) {
+    if (!Settings) {
+        return createElement(
+            'p',
+            { className: 'cf-empty' },
+            'Выберите блок в холсте, чтобы изменить его свойства.',
+        );
+    }
     return createElement(
-      "p",
-      { className: "cf-empty" },
-      "Выберите блок в холсте, чтобы изменить его свойства.",
+        'div',
+        null,
+        createElement('p', { className: 'cf-selected-name' }, selectedName),
+        createElement(Settings),
     );
-  }
-  return createElement(
-    "div",
-    null,
-    createElement("p", { className: "cf-selected-name" }, selectedName),
-    createElement(Settings),
-  );
 }
 
 /** Кнопка экспорта: читает текущее состояние Craft и гонит его через renderDocument. */
 function ExportBar(): ReactElement {
-  const { query } = useEditor();
-  const [exported, setExported] = useState<string | null>(null);
+    const { query } = useEditor();
+    const [exported, setExported] = useState<string | null>(null);
 
-  function handleExport(): void {
-    const doc = craftToDocument(
-      query.getSerializedNodes() as Record<string, Record<string, unknown>>,
-      INITIAL_DOC,
-    );
-    const { html, css } = renderDocument(doc, { registry: defaultRegistry });
-    const hasReact = /data-reactroot|__reactProps|reactFiber|<script/i.test(html);
-    setExported(
-      `// секций: ${doc.sections.length} · React в выводе: ${hasReact ? "ДА (ошибка!)" : "нет"}\n` +
-        `// html: ${html.length} байт · css: ${css.length} байт\n\n` +
-        html.slice(0, 900) +
-        (html.length > 900 ? "\n…" : ""),
-    );
-  }
+    function handleExport(): void {
+        const doc = craftToDocument(
+            query.getSerializedNodes() as Record<
+                string,
+                Record<string, unknown>
+            >,
+            INITIAL_DOC,
+        );
+        const { html, css } = renderDocument(doc, {
+            registry: defaultRegistry,
+        });
+        const hasReact = /data-reactroot|__reactProps|reactFiber|<script/i.test(
+            html,
+        );
+        setExported(
+            `// секций: ${doc.sections.length} · React в выводе: ${hasReact ? 'ДА (ошибка!)' : 'нет'}\n` +
+                `// html: ${html.length} байт · css: ${css.length} байт\n\n` +
+                html.slice(0, 900) +
+                (html.length > 900 ? '\n…' : ''),
+        );
+    }
 
-  return createElement(
-    "div",
-    { className: "cf-export" },
-    exported && createElement("pre", null, exported),
-    createElement(
-      "button",
-      { type: "button", onClick: handleExport },
-      "Экспорт (агностичный renderDocument)",
-    ),
-  );
+    return createElement(
+        'div',
+        { className: 'cf-export' },
+        exported && createElement('pre', null, exported),
+        createElement(
+            'button',
+            { type: 'button', onClick: handleExport },
+            'Экспорт (агностичный renderDocument)',
+        ),
+    );
 }
 
 export function App(): ReactElement {
-  // Документ держим в ref — обёртки блоков читают актуальный doc для RenderContext.
-  const docRef = useRef<StudioDocument>(INITIAL_DOC);
-  const initialNodes = useMemo(() => documentToCraft(INITIAL_DOC), []);
-  const resolver = useMemo(() => makeResolver(defaultRegistry, () => docRef.current), []);
-
-  // Синхронизируем документ при любых изменениях дерева (DnD, правки, add/remove).
-  function handleNodesChange(query: { getSerializedNodes: () => unknown }): void {
-    docRef.current = craftToDocument(
-      query.getSerializedNodes() as Record<string, Record<string, unknown>>,
-      INITIAL_DOC,
+    // Документ держим в ref — обёртки блоков читают актуальный doc для RenderContext.
+    const docRef = useRef<StudioDocument>(INITIAL_DOC);
+    const initialNodes = useMemo(() => documentToCraft(INITIAL_DOC), []);
+    const resolver = useMemo(
+        () => makeResolver(defaultRegistry, () => docRef.current),
+        [],
     );
-  }
 
-  return createElement(
-    "div",
-    null,
-    createElement("style", null, FRAME_CSS),
-    createElement("style", null, SPIKE_CSS),
-    createElement(
-      Editor,
-      { resolver, onNodesChange: handleNodesChange as never },
-      createElement(
-        "div",
-        { className: "cf-app" },
+    // Синхронизируем документ при любых изменениях дерева (DnD, правки, add/remove).
+    function handleNodesChange(query: {
+        getSerializedNodes: () => unknown;
+    }): void {
+        docRef.current = craftToDocument(
+            query.getSerializedNodes() as Record<
+                string,
+                Record<string, unknown>
+            >,
+            INITIAL_DOC,
+        );
+    }
+
+    return createElement(
+        'div',
+        null,
+        createElement('style', null, FRAME_CSS),
+        createElement('style', null, SPIKE_CSS),
         createElement(
-          "aside",
-          { className: "cf-col cf-col-left" },
-          createElement(Toolbox, { registry: defaultRegistry, resolver }),
+            Editor,
+            { resolver, onNodesChange: handleNodesChange as never },
+            createElement(
+                'div',
+                { className: 'cf-app' },
+                createElement(
+                    'aside',
+                    { className: 'cf-col cf-col-left' },
+                    createElement(Toolbox, {
+                        registry: defaultRegistry,
+                        resolver,
+                    }),
+                ),
+                createElement(
+                    'main',
+                    { className: 'cf-col cf-col-canvas' },
+                    createElement(Frame, { data: initialNodes as never }),
+                ),
+                createElement(
+                    'aside',
+                    { className: 'cf-col cf-col-right' },
+                    createElement(SettingsColumn, null),
+                ),
+            ),
+            createElement(ExportBar, null),
         ),
-        createElement(
-          "main",
-          { className: "cf-col cf-col-canvas" },
-          createElement(Frame, { data: initialNodes as never }),
-        ),
-        createElement(
-          "aside",
-          { className: "cf-col cf-col-right" },
-          createElement(SettingsColumn, null),
-        ),
-      ),
-      createElement(ExportBar, null),
-    ),
-  );
+    );
 }

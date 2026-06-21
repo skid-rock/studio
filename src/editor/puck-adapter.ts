@@ -11,24 +11,26 @@
  *
  * Импорты из Puck — ТОЛЬКО типовые (import type), кроме точки входа Editor.tsx.
  */
-import { createElement } from "react";
-import type { Config, ComponentConfig, Data } from "@measured/puck";
+import { createElement } from 'react';
+import type { Config, ComponentConfig, Data } from '@measured/puck';
 
-import type { StudioDocument, SectionNode } from "../render-core/document";
-import { sortedSections } from "../render-core/document";
-import { orderBetween } from "../render-core/order";
-import type { BlockRegistry } from "../render-core/registry";
-import { parseBySchema } from "../render-core/schema";
-import { PuckBlockPreview } from "./block-preview";
-import { fieldsFromSchema } from "./fields-from-schema";
+import type { StudioDocument, SectionNode } from '../render-core/document';
+import { sortedSections } from '../render-core/document';
+import { orderBetween } from '../render-core/order';
+import type { BlockRegistry } from '../render-core/registry';
+import { parseBySchema } from '../render-core/schema';
+import { PuckBlockPreview } from './block-preview';
+import { fieldsFromSchema } from './fields-from-schema';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 0. Имена типов: Puck кладёт type в DOM-id ("type-<random>"); наш слэш в
 //    "intro/envelope" заменяем на безопасный разделитель и держим обратимым.
 // ─────────────────────────────────────────────────────────────────────────────
-const PUCK_SEP = "--";
-export const toPuckType = (studioType: string): string => studioType.split("/").join(PUCK_SEP);
-export const toStudioType = (puckType: string): string => puckType.split(PUCK_SEP).join("/");
+const PUCK_SEP = '--';
+export const toPuckType = (studioType: string): string =>
+    studioType.split('/').join(PUCK_SEP);
+export const toStudioType = (puckType: string): string =>
+    puckType.split(PUCK_SEP).join('/');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 1. BlockModule[] → Puck Config.
@@ -37,31 +39,33 @@ export const toStudioType = (puckType: string): string => puckType.split(PUCK_SE
 // Валидность вставки — плоско по реестру (makeConfig → только зарегистрированные типы);
 // правила вложенности/контейнеров — будущая фаза (STUDIO-011, семя).
 export function makeConfig(registry: BlockRegistry): Config {
-  const components: Record<string, ComponentConfig> = {};
-  for (const mod of registry.list()) {
-    components[toPuckType(mod.type)] = {
-      label: mod.label,
-      fields: fieldsFromSchema(mod.schema),
-      defaultProps: { ...mod.defaults },
-      render: (props: Record<string, unknown>) =>
-        createElement(PuckBlockPreview, { mod, props }),
-    } as ComponentConfig;
-  }
-  return { components } as Config;
+    const components: Record<string, ComponentConfig> = {};
+
+    for (const mod of registry.list()) {
+        components[toPuckType(mod.type)] = {
+            label: mod.label,
+            fields: fieldsFromSchema(mod.schema),
+            defaultProps: { ...mod.defaults },
+            render: (props: Record<string, unknown>) =>
+                createElement(PuckBlockPreview, { mod, props }),
+        } as ComponentConfig;
+    }
+
+    return { components } as Config;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 3. StudioDocument ↔ Puck Data.
 // ─────────────────────────────────────────────────────────────────────────────
 export function documentToPuck(doc: StudioDocument): Data {
-  return {
-    content: sortedSections(doc).map((s) => ({
-      type: toPuckType(s.type),
-      props: { ...s.props, id: s.id },
-    })),
-    root: { props: {} },
-    zones: {},
-  } as Data;
+    return {
+        content: sortedSections(doc).map((s) => ({
+            type: toPuckType(s.type),
+            props: { ...s.props, id: s.id },
+        })),
+        root: { props: {} },
+        zones: {},
+    } as Data;
 }
 
 /**
@@ -84,51 +88,60 @@ export function documentToPuck(doc: StudioDocument): Data {
  * registry props идут как есть (обратная совместимость со старыми вызовами/тестами).
  */
 export function puckToDocument(
-  data: Data,
-  base: StudioDocument,
-  registry?: BlockRegistry,
+    data: Data,
+    base: StudioDocument,
+    registry?: BlockRegistry,
 ): StudioDocument {
-  const prevOrderById = new Map(base.sections.map((s) => [s.id, s.order]));
-  const items = data.content;
+    const prevOrderById = new Map(base.sections.map((s) => [s.id, s.order]));
+    const items = data.content;
 
-  const idOf = (i: number): string => String((items[i].props as { id: string }).id);
+    const idOf = (i: number): string =>
+        String((items[i].props as { id: string }).id);
 
-  // Ближайший справа существующий ключ, строго больший нижней границы lower —
-  // верхняя граница для orderBetween при выдаче нового ключа.
-  const nextAnchor = (from: number, lower: string | null): string | null => {
-    for (let j = from; j < items.length; j++) {
-      const existing = prevOrderById.get(idOf(j));
-      if (existing != null && (lower === null || existing > lower)) {
-        return existing;
-      }
+    // Ближайший справа существующий ключ, строго больший нижней границы lower —
+    // верхняя граница для orderBetween при выдаче нового ключа.
+    const nextAnchor = (from: number, lower: string | null): string | null => {
+        for (let j = from; j < items.length; j++) {
+            const existing = prevOrderById.get(idOf(j));
+
+            if (existing != null && (lower === null || existing > lower)) {
+                return existing;
+            }
+        }
+
+        return null;
+    };
+
+    const sections: SectionNode[] = [];
+    let lastOrder: string | null = null;
+
+    for (let i = 0; i < items.length; i++) {
+        const { id, ...rawProps } = items[i].props as Record<
+            string,
+            unknown
+        > & { id: string };
+        const studioType = toStudioType(items[i].type);
+        const existing = prevOrderById.get(String(id));
+        const upper = nextAnchor(i + 1, lastOrder);
+
+        const canReuse: boolean =
+            existing != null &&
+            (lastOrder === null || existing > lastOrder) &&
+            (upper === null || existing < upper);
+
+        const order: string = canReuse
+            ? existing!
+            : orderBetween(lastOrder, upper);
+
+        // Валидация props по схеме блока при записи в документ (STUDIO-013): сужаем сырые
+        // props к типу блока — невалидные и неизвестные поля отбрасываются. Неизвестный
+        // тип (нет в реестре) или вызов без registry — props как есть.
+        const mod = registry?.get(studioType);
+        const props = mod ? parseBySchema(mod.schema, rawProps) : rawProps;
+
+        sections.push({ id: String(id), type: studioType, order, props });
+        lastOrder = order;
     }
-    return null;
-  };
 
-  const sections: SectionNode[] = [];
-  let lastOrder: string | null = null;
-  for (let i = 0; i < items.length; i++) {
-    const { id, ...rawProps } = items[i].props as Record<string, unknown> & { id: string };
-    const studioType = toStudioType(items[i].type);
-    const existing = prevOrderById.get(String(id));
-    const upper = nextAnchor(i + 1, lastOrder);
-
-    const canReuse: boolean =
-      existing != null &&
-      (lastOrder === null || existing > lastOrder) &&
-      (upper === null || existing < upper);
-
-    const order: string = canReuse ? existing! : orderBetween(lastOrder, upper);
-
-    // Валидация props по схеме блока при записи в документ (STUDIO-013): сужаем сырые
-    // props к типу блока — невалидные и неизвестные поля отбрасываются. Неизвестный
-    // тип (нет в реестре) или вызов без registry — props как есть.
-    const mod = registry?.get(studioType);
-    const props = mod ? parseBySchema(mod.schema, rawProps) : rawProps;
-
-    sections.push({ id: String(id), type: studioType, order, props });
-    lastOrder = order;
-  }
-
-  return { ...base, sections };
+    return { ...base, sections };
 }

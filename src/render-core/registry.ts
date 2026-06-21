@@ -1,5 +1,5 @@
-import { parseBySchema } from "./schema";
-import type { BlockModule } from "./types";
+import { parseBySchema } from './schema';
+import type { BlockModule } from './types';
 
 // Реестр гетерогенный — хранит модули с разными типами props в одной Map. Узкий
 // BlockModule<P> НЕ присваивается BlockModule<Record<string, unknown>>: единственный
@@ -9,27 +9,31 @@ import type { BlockModule } from "./types";
 // defineBlock (вариант D из docs/improvements.md, IMP-001): стирание оправдано
 // рантайм-проверкой parse — `any` и eslint-disable здесь больше не нужны.
 export interface BlockRegistry {
-  register(module: BlockModule): void;
-  get(type: string): BlockModule | undefined;
-  list(): BlockModule[];
+    register(module: BlockModule): void;
+    get(type: string): BlockModule | undefined;
+    list(): BlockModule[];
 }
 
-export function createRegistry(modules: readonly BlockModule[] = []): BlockRegistry {
-  const map = new Map<string, BlockModule>();
-  for (const m of modules) {
-    map.set(m.type, m);
-  }
-  return {
-    register(m) {
-      map.set(m.type, m);
-    },
-    get(type) {
-      return map.get(type);
-    },
-    list() {
-      return [...map.values()];
-    },
-  };
+export function createRegistry(
+    modules: readonly BlockModule[] = [],
+): BlockRegistry {
+    const map = new Map<string, BlockModule>();
+
+    for (const m of modules) {
+        map.set(m.type, m);
+    }
+
+    return {
+        register(m) {
+            map.set(m.type, m);
+        },
+        get(type) {
+            return map.get(type);
+        },
+        list() {
+            return [...map.values()];
+        },
+    };
 }
 
 /**
@@ -40,13 +44,15 @@ export function createRegistry(modules: readonly BlockModule[] = []): BlockRegis
  * Record<string, unknown> как ковариантная позиция. Авторская типизация модуля
  * (BlockModule<EnvelopeState> и т.п.) при этом сохраняется и проверяется как раньше.
  */
-export function defineBlock<P extends Record<string, unknown>>(m: BlockModule<P>): BlockModule {
-  return {
-    type: m.type,
-    label: m.label,
-    schema: m.schema,
-    defaults: m.defaults,
-    css: m.css,
-    render: (raw, ctx) => m.render(parseBySchema<P>(m.schema, raw), ctx),
-  };
+export function defineBlock<P extends Record<string, unknown>>(
+    m: BlockModule<P>,
+): BlockModule {
+    return {
+        type: m.type,
+        label: m.label,
+        schema: m.schema,
+        defaults: m.defaults,
+        css: m.css,
+        render: (raw, ctx) => m.render(parseBySchema<P>(m.schema, raw), ctx),
+    };
 }

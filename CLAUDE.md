@@ -35,7 +35,7 @@ studio — конструктор лендингов: визуальный ре�
 - **Источник правды — `StudioDocument`** (`src/render-core/document.ts`). Редактор
   его лишь маппит в/из Puck; правки идут в документ.
 - **Render — чистая строка HTML**, агностичная к React: `RenderFn = (props, ctx) =>
-  string`, без `document`/`window`/DOM (работает и в Node).
+string`, без `document`/`window`/DOM (работает и в Node).
 - **Один путь рендера**: `renderDocument` используется и в превью, и в экспорте.
   Превью в редакторе оборачивает тот же `mod.render` (`BlockPreview`), второго пути
   разметки нет (анти-drift).

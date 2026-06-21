@@ -23,25 +23,25 @@ npm run spike:craft:verify
 
 ## Что показано (те же критерии, что у Puck-спайка)
 
-| Критерий ADR | Где видно |
-|---|---|
-| Модель Craft ↔ `StudioDocument`/`SectionNode[]` | `craft-adapter.tsx` → `documentToCraft` / `craftToDocument`; round-trip в `verify.mts` |
-| Панель свойств из нашей `ParamSchema` | `SchemaFields.tsx` (range→слайдер+readout+unit, color→`<input type=color>`, text→textarea, select→select); `makeSettings` как `related.settings`; скрин `screenshots/02-*.png` |
-| Превью через агностичный render | `BlockHtml` зовёт `mod.render(props, ctx)` → `dangerouslySetInnerHTML`; скрин `screenshots/01-*.png` |
-| DnD: добавить/переставить + дробный `order` | палитра `Toolbox.tsx` (`connectors.create`); `verify.mts` (add + reorder, order пересчитан через fractional-indexing) |
-| Экспорт остаётся агностичным | кнопка «Экспорт» в `App.tsx` гонит `renderDocument` → строка HTML без React; `verify.mts` [4] |
-| Анти-drift (один путь рендера) | `verify.mts` [5]: `renderToStaticMarkup(BlockHtml)` содержит ровно строковый `mod.render` |
+| Критерий ADR                                    | Где видно                                                                                                                                                                      |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Модель Craft ↔ `StudioDocument`/`SectionNode[]` | `craft-adapter.tsx` → `documentToCraft` / `craftToDocument`; round-trip в `verify.mts`                                                                                         |
+| Панель свойств из нашей `ParamSchema`           | `SchemaFields.tsx` (range→слайдер+readout+unit, color→`<input type=color>`, text→textarea, select→select); `makeSettings` как `related.settings`; скрин `screenshots/02-*.png` |
+| Превью через агностичный render                 | `BlockHtml` зовёт `mod.render(props, ctx)` → `dangerouslySetInnerHTML`; скрин `screenshots/01-*.png`                                                                           |
+| DnD: добавить/переставить + дробный `order`     | палитра `Toolbox.tsx` (`connectors.create`); `verify.mts` (add + reorder, order пересчитан через fractional-indexing)                                                          |
+| Экспорт остаётся агностичным                    | кнопка «Экспорт» в `App.tsx` гонит `renderDocument` → строка HTML без React; `verify.mts` [4]                                                                                  |
+| Анти-drift (один путь рендера)                  | `verify.mts` [5]: `renderToStaticMarkup(BlockHtml)` содержит ровно строковый `mod.render`                                                                                      |
 
 ## Файлы
 
-| Файл | Назначение | Аналог в Puck-спайке |
-|---|---|---|
-| `craft-adapter.tsx` | resolver-компоненты блоков, `documentToCraft`/`craftToDocument`, `related.settings` | `puck-adapter.tsx` |
-| `SchemaFields.tsx` | generic-панель свойств из `ParamSchema` (порт `wed/.../controls.ts`) | *нет — у Puck панель из коробки* |
-| `Toolbox.tsx` | палитра из `registry.list()` через `connectors.create` | *нет — у Puck палитра из коробки* |
-| `App.tsx` | каркас 3 колонок + `<Editor>`/`<Frame>` + выделение + экспорт | `App.tsx` |
-| `verify.mts` | воспроизводимое доказательство сценария без браузера | `verify.mts` |
-| `main.tsx` / `index.html` / `vite.config.ts` / `tsconfig.json` | обвязка запуска | те же |
+| Файл                                                           | Назначение                                                                          | Аналог в Puck-спайке              |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------- |
+| `craft-adapter.tsx`                                            | resolver-компоненты блоков, `documentToCraft`/`craftToDocument`, `related.settings` | `puck-adapter.tsx`                |
+| `SchemaFields.tsx`                                             | generic-панель свойств из `ParamSchema` (порт `wed/.../controls.ts`)                | _нет — у Puck панель из коробки_  |
+| `Toolbox.tsx`                                                  | палитра из `registry.list()` через `connectors.create`                              | _нет — у Puck палитра из коробки_ |
+| `App.tsx`                                                      | каркас 3 колонок + `<Editor>`/`<Frame>` + выделение + экспорт                       | `App.tsx`                         |
+| `verify.mts`                                                   | воспроизводимое доказательство сценария без браузера                                | `verify.mts`                      |
+| `main.tsx` / `index.html` / `vite.config.ts` / `tsconfig.json` | обвязка запуска                                                                     | те же                             |
 
 Зависимость: `@craftjs/core@0.2.12` (devDependency, в прод-бандл не входит).
 
@@ -52,15 +52,15 @@ npm run spike:craft:verify
 
 ### Объём кода (фактический `wc -l`)
 
-| Часть | Puck | Craft.js | Δ |
-|---|---:|---:|---:|
-| Адаптер модель↔редактор | `puck-adapter.tsx` **175** | `craft-adapter.tsx` **230** | +55 |
-| Панель свойств из схемы | внутри адаптера (`fieldsFromSchema`, ~**22**) | `SchemaFields.tsx` **109** | +87 |
-| Палитра / Toolbox | **0** (из коробки) | `Toolbox.tsx` **47** | +47 |
-| Каркас + выделение + экспорт | `App.tsx` **142** | `App.tsx` **223** | +81 |
-| **Код редактора (без verify/main)** | **≈317** | **≈609** | **≈1.9×** |
-| verify.mts (доказательство) | 136 | 148 | +12 |
-| **Итого** | **469** | **773** | **≈1.65×** |
+| Часть                               |                                          Puck |                    Craft.js |          Δ |
+| ----------------------------------- | --------------------------------------------: | --------------------------: | ---------: |
+| Адаптер модель↔редактор             |                    `puck-adapter.tsx` **175** | `craft-adapter.tsx` **230** |        +55 |
+| Панель свойств из схемы             | внутри адаптера (`fieldsFromSchema`, ~**22**) |  `SchemaFields.tsx` **109** |        +87 |
+| Палитра / Toolbox                   |                            **0** (из коробки) |        `Toolbox.tsx` **47** |        +47 |
+| Каркас + выделение + экспорт        |                             `App.tsx` **142** |           `App.tsx` **223** |        +81 |
+| **Код редактора (без verify/main)** |                                      **≈317** |                    **≈609** |  **≈1.9×** |
+| verify.mts (доказательство)         |                                           136 |                         148 |        +12 |
+| **Итого**                           |                                       **469** |                     **773** | **≈1.65×** |
 
 > На Craft.js вышло **примерно вдвое больше кода редактора**. Весь прирост —
 > ровно те части, что Puck даёт батарейкой: палитра, декларативная панель полей,

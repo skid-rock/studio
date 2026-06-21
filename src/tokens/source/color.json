@@ -1,14 +1,14 @@
 {
-  "color": {
-    "cream": { "$type": "color", "$value": "#fffaf1" },
-    "cream-alt": { "$type": "color", "$value": "#fcfaf5" },
-    "navy": { "$type": "color", "$value": "#275889" },
-    "navy-dark": { "$type": "color", "$value": "#1e4568" },
-    "terracotta": { "$type": "color", "$value": "#a3313a" },
-    "terracotta-light": { "$type": "color", "$value": "#a4313a" },
-    "text": { "$type": "color", "$value": "{color.navy}" },
-    "text-muted": { "$type": "color", "$value": "#595b4e" },
-    "white": { "$type": "color", "$value": "#ffffff" },
-    "overlay": { "$type": "color", "$value": "rgba(39, 88, 137, 0.08)" }
-  }
+    "color": {
+        "cream": { "$type": "color", "$value": "#fffaf1" },
+        "cream-alt": { "$type": "color", "$value": "#fcfaf5" },
+        "navy": { "$type": "color", "$value": "#275889" },
+        "navy-dark": { "$type": "color", "$value": "#1e4568" },
+        "terracotta": { "$type": "color", "$value": "#a3313a" },
+        "terracotta-light": { "$type": "color", "$value": "#a4313a" },
+        "text": { "$type": "color", "$value": "{color.navy}" },
+        "text-muted": { "$type": "color", "$value": "#595b4e" },
+        "white": { "$type": "color", "$value": "#ffffff" },
+        "overlay": { "$type": "color", "$value": "rgba(39, 88, 137, 0.08)" }
+    }
 }

@@ -1,25 +1,35 @@
 /**
  * Минимальный блок hero — имена и дата (демо Фазы 0).
  */
-import type { BlockModule } from "../../render-core/types";
-import type { ParamSchema } from "../../render-core/schema";
-import { defaultsFromSchema } from "../../render-core/schema";
+import type { BlockModule } from '../../render-core/types';
+import type { ParamSchema } from '../../render-core/schema';
+import { defaultsFromSchema } from '../../render-core/schema';
 
 interface HeroProps extends Record<string, unknown> {
-  names: string;
-  date: string;
-  eyebrow: string;
+    names: string;
+    date: string;
+    eyebrow: string;
 }
 
 const schema: ParamSchema = [
-  {
-    group: "Hero",
-    items: [
-      { key: "eyebrow", label: "Надпись сверху", type: "text", def: "Мы женимся" },
-      { key: "names", label: "Имена", type: "text", def: "Полина & Илья" },
-      { key: "date", label: "Дата", type: "text", def: "05.08.2026" },
-    ],
-  },
+    {
+        group: 'Hero',
+        items: [
+            {
+                key: 'eyebrow',
+                label: 'Надпись сверху',
+                type: 'text',
+                def: 'Мы женимся',
+            },
+            {
+                key: 'names',
+                label: 'Имена',
+                type: 'text',
+                def: 'Полина & Илья',
+            },
+            { key: 'date', label: 'Дата', type: 'text', def: '05.08.2026' },
+        ],
+    },
 ];
 
 const css = `
@@ -47,22 +57,26 @@ const css = `
 `;
 
 export const heroModule: BlockModule<HeroProps> = {
-  type: "hero",
-  label: "Hero (имена и дата)",
-  schema,
-  defaults: defaultsFromSchema<HeroProps>(schema),
-  render: (p) => {
-    const props = { ...defaultsFromSchema<HeroProps>(schema), ...p };
-    return `
+    type: 'hero',
+    label: 'Hero (имена и дата)',
+    schema,
+    defaults: defaultsFromSchema<HeroProps>(schema),
+    render: (p) => {
+        const props = { ...defaultsFromSchema<HeroProps>(schema), ...p };
+
+        return `
     <section class="s-hero">
       <p class="s-hero__eyebrow">${esc(props.eyebrow)}</p>
       <h1 class="s-hero__names">${esc(props.names)}</h1>
       <p class="s-hero__date">${esc(props.date)}</p>
     </section>`;
-  },
-  css,
+    },
+    css,
 };
 
 function esc(s: string): string {
-  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
 }
