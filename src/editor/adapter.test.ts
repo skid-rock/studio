@@ -140,6 +140,38 @@ describe("puckToDocument round-trip", () => {
   });
 });
 
+describe("puckToDocument с валидацией props", () => {
+  it("отсекает невалидные и неизвестные поля при передаче registry", () => {
+    const data0 = documentToPuck(DOC0);
+    const hero = data0.content.find((c) => c.props.id === "s_hero")!;
+    const withJunk: Data = {
+      ...data0,
+      content: data0.content.map((c) =>
+        c.props.id === "s_hero"
+          ? {
+              ...c,
+              props: {
+                ...c.props,
+                names: "Аня & Боря",
+                evil: "x",
+                eyebrow: 123,
+              },
+            }
+          : c,
+      ),
+    };
+
+    const doc1 = puckToDocument(withJunk, DOC0, defaultRegistry);
+    const heroSection = doc1.sections.find((s) => s.id === "s_hero")!;
+
+    expect(heroSection.props).not.toHaveProperty("evil");
+    expect(heroSection.props.names).toBe("Аня & Боря");
+    // eyebrow — text; число невалидно → def из схемы hero
+    expect(typeof heroSection.props.eyebrow).toBe("string");
+    expect(hero).toBeDefined();
+  });
+});
+
 describe("renderDocument после round-trip", () => {
   it("даёт строковый HTML без React-рантайма и с отредактированным контентом", () => {
     const data0 = documentToPuck(DOC0);

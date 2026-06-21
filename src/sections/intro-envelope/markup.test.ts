@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 import { renderEnvelopeHtml, hexToRgba } from "./markup";
 import { ENVELOPE_DEFAULTS } from "./schema";
 import { envelopeModule } from "./index";
-import { createRegistry } from "../../render-core/registry";
+import { createRegistry, defineBlock } from "../../render-core/registry";
 import { renderDocument } from "../../render-core/render";
 import type { StudioDocument } from "../../render-core/document";
 
@@ -48,12 +48,12 @@ describe("renderEnvelopeHtml", () => {
 
 describe("envelopeModule через реестр", () => {
   it("регистрируется и доступен по типу intro/envelope", () => {
-    const registry = createRegistry([envelopeModule]);
+    const registry = createRegistry([defineBlock(envelopeModule)]);
     expect(registry.get("intro/envelope")).toBeDefined();
   });
 
   it("renderDocument выдаёт разметку конверта и его CSS", () => {
-    const registry = createRegistry([envelopeModule]);
+    const registry = createRegistry([defineBlock(envelopeModule)]);
     const doc: StudioDocument = {
       schemaVersion: 1,
       theme: { id: "cream-navy" },

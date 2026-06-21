@@ -9,7 +9,7 @@
 
 ## IMP-001. Реестр блоков: `any` как супертип гетерогенных модулей
 
-- **Статус:** отложено (приемлемо для Фазы 0).
+- **Статус:** решено в STUDIO-013 (вариант D — рантайм-парсер на модуль).
 - **Где:** [`src/render-core/registry.ts`](../src/render-core/registry.ts) —
   `type AnyBlockModule = BlockModule<any>` (с `eslint-disable no-explicit-any`).
 - **Появилось в:** STUDIO-006 (первый типизированный модуль `intro/envelope`).
@@ -87,6 +87,15 @@ error TS2322: 'RFn<EnvelopeState>'        is not assignable to 'RFn<Record<strin
 **валидация props** (фаза редактора): там сужение `unknown → P` получит настоящую
 рантайм-гарантию, и стирание станет полностью sound. Заодно поправить неточный
 комментарий про «ковариантность defaults» в `registry.ts`.
+
+**Решено (STUDIO-013).** Реализован вариант **D**: `parseBySchema(schema, raw)`
+(`src/render-core/schema.ts`) + `defineBlock` (`src/render-core/registry.ts`) хранит в
+реестре стёртый модуль с замыканием `render = (raw) => typedRender(parseBySchema(...))`.
+`BlockModule<any>`/`eslint-disable` из `registry.ts` убраны; стирание стало sound
+(сужение `unknown → P` обеспечено рантайм-проверкой). Тот же парсер применяется при
+записи props из редактора (`puckToDocument`). Неточный комментарий про
+«ковариантность defaults» в `registry.ts` исправлен (единственный блокер —
+контравариантность `render`).
 
 ### Ссылки
 

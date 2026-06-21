@@ -18,6 +18,7 @@ import type { StudioDocument, SectionNode } from "../render-core/document";
 import { sortedSections } from "../render-core/document";
 import { orderBetween } from "../render-core/order";
 import type { BlockRegistry } from "../render-core/registry";
+import { parseBySchema } from "../render-core/schema";
 import { PuckBlockPreview } from "./block-preview";
 import { fieldsFromSchema } from "./fields-from-schema";
 
@@ -77,8 +78,16 @@ export function documentToPuck(doc: StudioDocument): Data {
  * а не неизменный исходный документ.
  *
  * Валидность вставки — плоско по реестру; правила вложенности — будущая фаза.
+ *
+ * registry (опц.): если передан, props каждой секции сужаются parseBySchema по
+ * схеме её блока (STUDIO-013) — невалидные/неизвестные поля отбрасываются. Без
+ * registry props идут как есть (обратная совместимость со старыми вызовами/тестами).
  */
-export function puckToDocument(data: Data, base: StudioDocument): StudioDocument {
+export function puckToDocument(
+  data: Data,
+  base: StudioDocument,
+  registry?: BlockRegistry,
+): StudioDocument {
   const prevOrderById = new Map(base.sections.map((s) => [s.id, s.order]));
   const items = data.content;
 
@@ -99,7 +108,8 @@ export function puckToDocument(data: Data, base: StudioDocument): StudioDocument
   const sections: SectionNode[] = [];
   let lastOrder: string | null = null;
   for (let i = 0; i < items.length; i++) {
-    const { id, ...props } = items[i].props as Record<string, unknown> & { id: string };
+    const { id, ...rawProps } = items[i].props as Record<string, unknown> & { id: string };
+    const studioType = toStudioType(items[i].type);
     const existing = prevOrderById.get(String(id));
     const upper = nextAnchor(i + 1, lastOrder);
 
@@ -110,7 +120,13 @@ export function puckToDocument(data: Data, base: StudioDocument): StudioDocument
 
     const order: string = canReuse ? existing! : orderBetween(lastOrder, upper);
 
-    sections.push({ id: String(id), type: toStudioType(items[i].type), order, props });
+    // Валидация props по схеме блока при записи в документ (STUDIO-013): сужаем сырые
+    // props к типу блока — невалидные и неизвестные поля отбрасываются. Неизвестный
+    // тип (нет в реестре) или вызов без registry — props как есть.
+    const mod = registry?.get(studioType);
+    const props = mod ? parseBySchema(mod.schema, rawProps) : rawProps;
+
+    sections.push({ id: String(id), type: studioType, order, props });
     lastOrder = order;
   }
 

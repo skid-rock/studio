@@ -61,7 +61,7 @@ export function Editor() {
 
   function handleChange(next: Data) {
     setData(next);
-    const nextDoc = puckToDocument(next, docRef.current);
+    const nextDoc = puckToDocument(next, docRef.current, defaultRegistry);
     docRef.current = nextDoc;
     // Контекст обновляем ТОЛЬКО при смене глобальных полей: иначе вернётся прежняя
     // ссылка (cur) и провайдер не разбудит потребителей (bail-out по Object.is).
