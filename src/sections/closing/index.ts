@@ -60,8 +60,8 @@ export const closingModule: BlockModule<ClosingProps> = {
 
         return `
     <section class="s-closing">
-      <p class="s-closing__signature">${esc(props.signature)}</p>
-      <p class="s-closing__ps">P.S. ${esc(props.ps)}</p>
+      <p class="s-closing__signature" data-prop="signature">${esc(props.signature)}</p>
+      <p class="s-closing__ps"><span class="s-closing__ps-label">P.S. </span><span class="s-closing__ps-text" data-prop="ps">${esc(props.ps)}</span></p>
     </section>`;
     },
     css,

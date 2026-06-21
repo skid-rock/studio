@@ -66,9 +66,9 @@ export const heroModule: BlockModule<HeroProps> = {
 
         return `
     <section class="s-hero">
-      <p class="s-hero__eyebrow">${esc(props.eyebrow)}</p>
-      <h1 class="s-hero__names">${esc(props.names)}</h1>
-      <p class="s-hero__date">${esc(props.date)}</p>
+      <p class="s-hero__eyebrow" data-prop="eyebrow">${esc(props.eyebrow)}</p>
+      <h1 class="s-hero__names" data-prop="names">${esc(props.names)}</h1>
+      <p class="s-hero__date" data-prop="date">${esc(props.date)}</p>
     </section>`;
     },
     css,

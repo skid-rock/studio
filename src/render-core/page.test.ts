@@ -35,7 +35,8 @@ describe('buildPage — landing.sample.json', () => {
         expect(html).toContain('class="s-hero"');
         expect(html).toContain('Полина &amp; Илья');
         expect(html).toContain('class="s-closing"');
-        expect(html).toContain('P.S. Будем рады видеть вас!');
+        expect(html).toContain('class="s-closing__ps-label">P.S. </span>');
+        expect(html).toContain('data-prop="ps">Будем рады видеть вас!</span>');
     });
 
     it('подключает CSS темы и блоков', () => {
@@ -73,6 +74,6 @@ describe('buildPage — landing.sample.json', () => {
         });
 
         expect(html).toContain('src="img/seal.png"');
-        expect(html).toContain('url("fonts/Floriselscript.woff")');
+        expect(html).toContain("url('fonts/Floriselscript.woff')");
     });
 });

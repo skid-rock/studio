@@ -69,6 +69,9 @@ export function renderEnvelopeHtml(s: EnvelopeState): string {
     // TODO (Фаза 1): для пользовательского ввода в deliveryText/initialsText
     // добавить экранирование — сейчас функции вставляют разрешённый HTML (<br>,
     // &nbsp;) и рассчитаны на наши же дефолты.
+    // TODO STUDIO-015: deliveryText/initialsText под inline пока не помечены data-prop —
+    // их содержимое трансформируется (<br>, &nbsp;), якорь ≠ raw; нужен un-transform
+    // в edit-time слое.
     return `
 <div class="envelope-overlay" id="envelope" role="dialog" aria-modal="true" aria-label="Открыть приглашение" style="${styleVars}">
   <div class="envelope__flaps" aria-hidden="true">
@@ -88,7 +91,7 @@ export function renderEnvelopeHtml(s: EnvelopeState): string {
   <p class="envelope__delivery">${deliveryToHtml(s.deliveryText)}</p>
   <button type="button" class="envelope__seal" id="envelope-seal" aria-label="Открыть приглашение">
     <img class="envelope__seal-img" src="img/seal.png" alt="" aria-hidden="true" />
-    <span class="envelope__seal-text">${escapeText(s.sealText)}</span>
+    <span class="envelope__seal-text" data-prop="sealText">${escapeText(s.sealText)}</span>
   </button>
   <p class="envelope__initials">${initialsToHtml(s.initialsText)}</p>
 </div>`;

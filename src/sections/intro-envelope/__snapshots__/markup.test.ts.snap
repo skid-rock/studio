@@ -20,7 +20,7 @@ exports[`renderEnvelopeHtml > стабилен по снапшоту на деф
   <p class="envelope__delivery">Вам доставлено<br>приглашение</p>
   <button type="button" class="envelope__seal" id="envelope-seal" aria-label="Открыть приглашение">
     <img class="envelope__seal-img" src="img/seal.png" alt="" aria-hidden="true" />
-    <span class="envelope__seal-text">открыть</span>
+    <span class="envelope__seal-text" data-prop="sealText">открыть</span>
   </button>
   <p class="envelope__initials">П&nbsp;&amp;&nbsp;И</p>
 </div>"

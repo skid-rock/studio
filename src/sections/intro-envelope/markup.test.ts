@@ -37,7 +37,7 @@ describe('renderEnvelopeHtml', () => {
         expect(html).toContain('Вам доставлено<br>приглашение');
         expect(html).toContain('П&nbsp;&amp;&nbsp;И');
         expect(html).toContain(
-            '<span class="envelope__seal-text">открыть</span>',
+            '<span class="envelope__seal-text" data-prop="sealText">открыть</span>',
         );
     });
 
