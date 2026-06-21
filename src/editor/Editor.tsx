@@ -52,7 +52,9 @@ export function Editor() {
 
   function handleChange(next: Data) {
     setData(next);
-    setDoc(puckToDocument(next, INITIAL_DOC));
+    // База пересчёта order — предыдущее состояние документа (актуальные ключи),
+    // чтобы переиспользовать их и не перенумеровывать неизменные секции (STUDIO-011).
+    setDoc((prev) => puckToDocument(next, prev));
   }
 
   return (

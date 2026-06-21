@@ -84,6 +84,40 @@ describe("documentToPuck", () => {
 });
 
 describe("puckToDocument round-trip", () => {
+  it("вставка в середину сохраняет ключи соседей", () => {
+    const data0 = documentToPuck(DOC0);
+    const hero = data0.content.find((c) => c.props.id === "s_hero")!;
+    const closing = data0.content.find((c) => c.props.id === "s_closing")!;
+    const intro = data0.content.find((c) => c.props.id === "s_intro")!;
+    const inserted: Data = {
+      ...data0,
+      content: [intro, hero, { type: toPuckType("hero"), props: { id: "s_new" } }, closing],
+    };
+
+    const doc1 = puckToDocument(inserted, DOC0);
+    const byId = Object.fromEntries(doc1.sections.map((s) => [s.id, s.order]));
+
+    expect(byId.s_intro).toBe("a0");
+    expect(byId.s_hero).toBe("a1");
+    expect(byId.s_closing).toBe("a2");
+    expect(byId.s_new! > "a1" && byId.s_new! < "a2").toBe(true);
+  });
+
+  it("удаление не трогает ключи оставшихся секций", () => {
+    const data0 = documentToPuck(DOC0);
+    const withoutHero: Data = {
+      ...data0,
+      content: data0.content.filter((c) => c.props.id !== "s_hero"),
+    };
+
+    const doc1 = puckToDocument(withoutHero, DOC0);
+    const byId = Object.fromEntries(doc1.sections.map((s) => [s.id, s.order]));
+
+    expect(byId.s_intro).toBe("a0");
+    expect(byId.s_closing).toBe("a2");
+    expect(doc1.sections).toHaveLength(2);
+  });
+
   it("сохраняет правки, порядок и дробный order после edit/reorder/add", () => {
     const data0 = documentToPuck(DOC0);
     const added = simulateEditorChanges(data0);

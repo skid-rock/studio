@@ -74,6 +74,8 @@ export function fieldsFromSchema(schema: ParamSchema): Record<string, Field> {
 // 2. BlockModule[] → Puck Config.
 //    Актуальный doc — через EditorDocContext (см. Editor.tsx).
 // ─────────────────────────────────────────────────────────────────────────────
+// Валидность вставки — плоско по реестру (makeConfig → только зарегистрированные типы);
+// правила вложенности/контейнеров — будущая фаза (STUDIO-011, семя).
 export function makeConfig(registry: BlockRegistry): Config {
   const components: Record<string, ComponentConfig> = {};
   for (const mod of registry.list()) {
@@ -103,23 +105,55 @@ export function documentToPuck(doc: StudioDocument): Data {
 }
 
 /**
- * Puck Data → StudioDocument: порядок берём из массива content (его задаёт DnD),
- * дробные order пересчитываем заново слева направо через fractional-indexing.
- * base даёт schemaVersion/theme/motion — Puck их не трогает.
+ * Puck Data → StudioDocument. Порядок берётся из массива content (его задаёт DnD).
+ *
+ * Дробный order пересчитывается ПО МИНИМУМУ (принцип №9 роадмапа — вставка без
+ * перенумерации): существующий ключ секции сохраняется, пока он не нарушает
+ * возрастание относительно уже назначенного слева и ближайшего якоря справа;
+ * новый ключ через orderBetween выдаётся только новым секциям и тем, что реально
+ * сменили позицию.
+ *
+ * base — предыдущее состояние документа: даёт schemaVersion/theme/motion и карту
+ * id→order для повторного использования ключей. Editor передаёт сюда текущий doc,
+ * а не неизменный исходный документ.
+ *
+ * Валидность вставки — плоско по реестру; правила вложенности — будущая фаза.
  */
 export function puckToDocument(data: Data, base: StudioDocument): StudioDocument {
+  const prevOrderById = new Map(base.sections.map((s) => [s.id, s.order]));
+  const items = data.content;
+
+  const idOf = (i: number): string => String((items[i].props as { id: string }).id);
+
+  // Ближайший справа существующий ключ, строго больший нижней границы lower —
+  // верхняя граница для orderBetween при выдаче нового ключа.
+  const nextAnchor = (from: number, lower: string | null): string | null => {
+    for (let j = from; j < items.length; j++) {
+      const existing = prevOrderById.get(idOf(j));
+      if (existing != null && (lower === null || existing > lower)) {
+        return existing;
+      }
+    }
+    return null;
+  };
+
   const sections: SectionNode[] = [];
-  let prevOrder: string | null = null;
-  for (const item of data.content) {
-    const { id, ...props } = item.props as Record<string, unknown> & { id: string };
-    const order = orderBetween(prevOrder, null);
-    sections.push({
-      id: String(id),
-      type: toStudioType(item.type),
-      order,
-      props,
-    });
-    prevOrder = order;
+  let lastOrder: string | null = null;
+  for (let i = 0; i < items.length; i++) {
+    const { id, ...props } = items[i].props as Record<string, unknown> & { id: string };
+    const existing = prevOrderById.get(String(id));
+    const upper = nextAnchor(i + 1, lastOrder);
+
+    const canReuse: boolean =
+      existing != null &&
+      (lastOrder === null || existing > lastOrder) &&
+      (upper === null || existing < upper);
+
+    const order: string = canReuse ? existing! : orderBetween(lastOrder, upper);
+
+    sections.push({ id: String(id), type: toStudioType(items[i].type), order, props });
+    lastOrder = order;
   }
+
   return { ...base, sections };
 }
