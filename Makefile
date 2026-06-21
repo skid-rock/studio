@@ -2,7 +2,8 @@
 # Короткие команды-обёртки над npm-скриптами.
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview lint format tokens export clean
+.PHONY: help install dev build preview lint format tokens export clean \
+	spike spike-verify spike-craft spike-craft-verify
 
 help: ## Показать список доступных команд
 	@echo "Доступные команды:"
@@ -32,6 +33,18 @@ tokens: ## Сгенерировать CSS-токены из DTCG JSON
 
 export: ## Статический экспорт примера лендинга в dist-export/
 	npm run tokens && npm run export
+
+spike: ## Спайк редактора на Puck (браузер, STUDIO-008)
+	npm run spike
+
+spike-verify: ## Headless-проверка спайка на Puck (PASS/FAIL)
+	npm run spike:verify
+
+spike-craft: ## Спайк редактора на Craft.js (браузер, STUDIO-008)
+	npm run spike:craft
+
+spike-craft-verify: ## Headless-проверка спайка на Craft.js (PASS/FAIL)
+	npm run spike:craft:verify
 
 clean: ## Удалить node_modules и dist
 	rm -rf node_modules dist
