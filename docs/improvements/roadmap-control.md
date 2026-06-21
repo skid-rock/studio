@@ -35,7 +35,7 @@
 
 ## R1. Машинно-проверяемые границы импортов
 
-- **Статус:** запланировано — делать первым.
+- **Статус:** ✅ сделано — STUDIO-027 (правило `no-restricted-imports` в `eslint.config.js`; `make lint` краснеет при импорте React/движка в ядро).
 - **Зачем:** главный инвариант «`render-core`/`sections` не зависят от React и
   движка» (см. [render-core/README](../../src/render-core/README.md),
   [ADR-0002](../adr/ADR-0002-render-contract.md)) сейчас держится **только

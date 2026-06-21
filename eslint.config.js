@@ -29,5 +29,40 @@ export default tseslint.config(
       ],
     },
   },
+  // Граница «ядро ↛ React/движок» (STUDIO-027):
+  // render-core и sections — агностичный TS, они не должны тянуть React и движки редактора.
+  // Нарушение обнаруживается линтом (make lint), а не только ревью глазами.
+  {
+    files: ['src/render-core/**/*.{ts,tsx}', 'src/sections/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['react', 'react/*', 'react-dom', 'react-dom/*'],
+              message:
+                'render-core/sections агностичны к React — импорт запрещён (ADR-0001, STUDIO-027).',
+            },
+            {
+              group: ['@measured/puck', '@measured/puck/*'],
+              message:
+                'render-core/sections не должны зависеть от Puck-редактора (ADR-0001, STUDIO-027).',
+            },
+            {
+              group: ['@craftjs/core', '@craftjs/core/*'],
+              message:
+                'render-core/sections не должны зависеть от CraftJS-редактора (ADR-0001, STUDIO-027).',
+            },
+            {
+              group: ['**/editor', '**/editor/**'],
+              message:
+                'render-core/sections не должны импортировать из editor/ (ADR-0001, STUDIO-027).',
+            },
+          ],
+        },
+      ],
+    },
+  },
   prettier,
 );
