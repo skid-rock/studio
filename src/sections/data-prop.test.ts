@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import type { StudioDocument } from '../render-core/document';
 import { heroModule } from './hero';
 import { closingModule } from './closing';
+import { storyModule } from './our-story';
+import { scheduleModule } from './schedule';
 import { renderEnvelopeHtml } from './intro-envelope/markup';
 import { ENVELOPE_DEFAULTS } from './intro-envelope/schema';
 
@@ -39,5 +41,22 @@ describe('data-prop якоря (STUDIO-014)', () => {
         expect(html).toContain('data-prop="sealText"');
         expect(html).not.toContain('data-prop="deliveryText"');
         expect(html).not.toContain('data-prop="initialsText"');
+    });
+
+    it('our-story — title и заполненные вехи (d1..d3, t1..t3)', () => {
+        const html = storyModule.render(storyModule.defaults, stubCtx);
+
+        expect(html).toContain('data-prop="title"');
+        expect(html).toContain('data-prop="d1"');
+        expect(html).toContain('data-prop="t3"');
+        expect(html).not.toContain('data-prop="d4"');
+    });
+
+    it('schedule — title и все 5 пар t/e', () => {
+        const html = scheduleModule.render(scheduleModule.defaults, stubCtx);
+
+        expect(html).toContain('data-prop="title"');
+        expect(html).toContain('data-prop="t1"');
+        expect(html).toContain('data-prop="e5"');
     });
 });

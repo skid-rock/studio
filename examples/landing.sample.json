@@ -20,6 +20,18 @@
             }
         },
         {
+            "id": "s_story",
+            "type": "our-story",
+            "order": "a1g",
+            "props": {}
+        },
+        {
+            "id": "s_schedule",
+            "type": "schedule",
+            "order": "a1n",
+            "props": {}
+        },
+        {
             "id": "s_closing",
             "type": "closing",
             "order": "a2",

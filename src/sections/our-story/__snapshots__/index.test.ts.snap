@@ -1,0 +1,22 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`our-story > стабилен по снапшоту на дефолтах 1`] = `
+"
+    <section class="s-story">
+      <h2 class="s-story__title" data-prop="title">Наша история</h2>
+      <ol class="s-story__list">
+      <li class="s-story__item">
+        <p class="s-story__date" data-prop="d1">2019</p>
+        <p class="s-story__text" data-prop="t1">Познакомились</p>
+      </li>
+      <li class="s-story__item">
+        <p class="s-story__date" data-prop="d2">2022</p>
+        <p class="s-story__text" data-prop="t2">Начали жить вместе</p>
+      </li>
+      <li class="s-story__item">
+        <p class="s-story__date" data-prop="d3">2025</p>
+        <p class="s-story__text" data-prop="t3">Сделал предложение</p>
+      </li>
+      </ol>
+    </section>"
+`;

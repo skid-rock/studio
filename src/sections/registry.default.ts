@@ -6,11 +6,15 @@ import { createRegistry, defineBlock } from '../render-core/registry';
 import { closingModule } from './closing';
 import { envelopeModule } from './intro-envelope';
 import { heroModule } from './hero';
+import { scheduleModule } from './schedule';
+import { storyModule } from './our-story';
 
 // defineBlock — единственная точка стирания P (вариант D, IMP-001): узкий модуль →
 // стёртый BlockModule с рантайм-парсером props по его schema.
 export const defaultRegistry = createRegistry([
     defineBlock(envelopeModule),
     defineBlock(heroModule),
+    defineBlock(storyModule),
+    defineBlock(scheduleModule),
     defineBlock(closingModule),
 ]);

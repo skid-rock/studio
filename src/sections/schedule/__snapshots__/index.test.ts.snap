@@ -1,0 +1,30 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`schedule > стабилен по снапшоту на дефолтах 1`] = `
+"
+    <section class="s-schedule">
+      <h2 class="s-schedule__title" data-prop="title">Расписание дня</h2>
+      <ol class="s-schedule__list">
+      <li class="s-schedule__item">
+        <time class="s-schedule__time" data-prop="t1">15:00</time>
+        <p class="s-schedule__label" data-prop="e1">Сбор гостей</p>
+      </li>
+      <li class="s-schedule__item">
+        <time class="s-schedule__time" data-prop="t2">16:00</time>
+        <p class="s-schedule__label" data-prop="e2">Церемония</p>
+      </li>
+      <li class="s-schedule__item">
+        <time class="s-schedule__time" data-prop="t3">17:00</time>
+        <p class="s-schedule__label" data-prop="e3">Банкет</p>
+      </li>
+      <li class="s-schedule__item">
+        <time class="s-schedule__time" data-prop="t4">21:00</time>
+        <p class="s-schedule__label" data-prop="e4">Торт</p>
+      </li>
+      <li class="s-schedule__item">
+        <time class="s-schedule__time" data-prop="t5">23:00</time>
+        <p class="s-schedule__label" data-prop="e5">Завершение</p>
+      </li>
+      </ol>
+    </section>"
+`;
