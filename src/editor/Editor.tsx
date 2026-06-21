@@ -4,7 +4,7 @@
  * блоки нашим mod.render (через BlockPreview), а не вторым путём (ADR-0002).
  * Стартовый документ — examples/landing.sample.json (как в превью Фазы 0).
  */
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { Puck } from "@measured/puck";
 import type { Data } from "@measured/puck";
 import "@measured/puck/puck.css";
@@ -13,6 +13,7 @@ import landingSample from "../../examples/landing.sample.json";
 import type { StudioDocument } from "../render-core/document";
 import { parseDocument } from "../render-core/document.schema";
 import { defaultRegistry } from "../sections/registry.default";
+import { EditorDocContext } from "./editor-doc";
 import { documentToPuck, makeConfig, puckToDocument } from "./puck-adapter";
 
 import baseCss from "../render-core/styles/base.css?raw";
@@ -44,22 +45,21 @@ const CANVAS_CSS = `
 `;
 
 export function Editor() {
-  // Документ держим в ref — обёртки блоков читают актуальный doc для RenderContext.
-  const docRef = useRef<StudioDocument>(INITIAL_DOC);
+  const [doc, setDoc] = useState<StudioDocument>(INITIAL_DOC);
   const [data, setData] = useState<Data>(() => documentToPuck(INITIAL_DOC));
 
-  const config = useMemo(() => makeConfig(defaultRegistry, () => docRef.current), []);
+  const config = useMemo(() => makeConfig(defaultRegistry), []);
 
   function handleChange(next: Data) {
     setData(next);
-    docRef.current = puckToDocument(next, INITIAL_DOC);
+    setDoc(puckToDocument(next, INITIAL_DOC));
   }
 
   return (
-    <>
+    <EditorDocContext.Provider value={doc}>
       <style>{FRAME_CSS}</style>
       <style>{CANVAS_CSS}</style>
       <Puck config={config} data={data} onChange={handleChange} />
-    </>
+    </EditorDocContext.Provider>
   );
 }

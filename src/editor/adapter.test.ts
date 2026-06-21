@@ -11,14 +11,14 @@ import type { StudioDocument } from "../render-core/document";
 import { sortedSections } from "../render-core/document";
 import { renderDocument } from "../render-core/render";
 import { defaultRegistry } from "../sections/registry.default";
+import { BlockPreview } from "./block-preview";
 import {
-  BlockPreview,
   documentToPuck,
   puckToDocument,
-  renderModuleHtml,
   toPuckType,
   toStudioType,
 } from "./puck-adapter";
+import { renderModuleHtml } from "./render-block-html";
 
 /** Стартовый документ: конверт + hero + closing (как в spike verify). */
 const DOC0: StudioDocument = {

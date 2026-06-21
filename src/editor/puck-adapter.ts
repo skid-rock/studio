@@ -12,7 +12,6 @@
  * Импорты из Puck — ТОЛЬКО типовые (import type), кроме точки входа Editor.tsx.
  */
 import { createElement } from "react";
-import type { ReactElement } from "react";
 import type { Config, ComponentConfig, Data, Field } from "@measured/puck";
 
 import type { StudioDocument, SectionNode } from "../render-core/document";
@@ -20,7 +19,7 @@ import { sortedSections } from "../render-core/document";
 import { orderBetween } from "../render-core/order";
 import type { BlockRegistry } from "../render-core/registry";
 import type { Param, ParamSchema } from "../render-core/schema";
-import type { BlockModule, RenderContext } from "../render-core/types";
+import { PuckBlockPreview } from "./block-preview";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 0. Имена типов: Puck кладёт type в DOM-id ("type-<random>"); наш слэш в
@@ -72,56 +71,10 @@ export function fieldsFromSchema(schema: ParamSchema): Record<string, Field> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 2. React-обёртка блока: зовёт наш агностичный render и вставляет HTML.
-//    Это единственное место, где React касается блока, — и он лишь обрамляет
-//    результат строкового render (анти-drift: тот же код, что и в экспорте).
+// 2. BlockModule[] → Puck Config.
+//    Актуальный doc — через EditorDocContext (см. Editor.tsx).
 // ─────────────────────────────────────────────────────────────────────────────
-const PUCK_INTERNAL_KEYS = new Set(["id", "puck", "editMode"]);
-
-/** Убрать служебные поля Puck перед передачей props в наш render. */
-function stripPuckProps(props: Record<string, unknown>): Record<string, unknown> {
-  const out: Record<string, unknown> = {};
-  for (const [k, v] of Object.entries(props)) {
-    if (!PUCK_INTERNAL_KEYS.has(k)) {
-      out[k] = v;
-    }
-  }
-  return out;
-}
-
-/** Прогнать props через агностичный mod.render — строка HTML (как в экспорте). */
-export function renderModuleHtml(
-  mod: BlockModule,
-  props: Record<string, unknown>,
-  doc: StudioDocument,
-): string {
-  const ctx: RenderContext = { doc };
-  return mod.render(stripPuckProps(props), ctx);
-}
-
-export interface BlockPreviewProps {
-  mod: BlockModule;
-  props: Record<string, unknown>;
-  doc: StudioDocument;
-}
-
-export function BlockPreview({ mod, props, doc }: BlockPreviewProps): ReactElement {
-  const html = renderModuleHtml(mod, props, doc);
-  // data-block + класс позволяют нейтрализовать position:fixed конверта в холсте
-  // (см. Editor.tsx, .editor-block[data-block="intro/envelope"]).
-  return createElement("div", {
-    className: "editor-block",
-    "data-block": mod.type,
-    dangerouslySetInnerHTML: { __html: html },
-  });
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 3. BlockModule[] → Puck Config.
-//    getDoc даёт обёртке актуальный документ для RenderContext (envelope ctx не
-//    использует, но контракт RenderFn общий — держим честно).
-// ─────────────────────────────────────────────────────────────────────────────
-export function makeConfig(registry: BlockRegistry, getDoc: () => StudioDocument): Config {
+export function makeConfig(registry: BlockRegistry): Config {
   const components: Record<string, ComponentConfig> = {};
   for (const mod of registry.list()) {
     components[toPuckType(mod.type)] = {
@@ -129,14 +82,14 @@ export function makeConfig(registry: BlockRegistry, getDoc: () => StudioDocument
       fields: fieldsFromSchema(mod.schema),
       defaultProps: { ...mod.defaults },
       render: (props: Record<string, unknown>) =>
-        createElement(BlockPreview, { mod, props, doc: getDoc() }),
+        createElement(PuckBlockPreview, { mod, props }),
     } as ComponentConfig;
   }
   return { components } as Config;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 4. StudioDocument ↔ Puck Data.
+// 3. StudioDocument ↔ Puck Data.
 // ─────────────────────────────────────────────────────────────────────────────
 export function documentToPuck(doc: StudioDocument): Data {
   return {
