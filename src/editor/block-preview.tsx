@@ -20,11 +20,13 @@ export function BlockPreview({
 }: BlockPreviewProps): ReactElement {
     const html = renderModuleHtml(mod, props, doc);
 
-    // data-block + класс позволяют нейтрализовать position:fixed конверта в холсте
-    // (см. Editor.tsx, .editor-block[data-block="intro/envelope"]).
+    // data-block — для нейтрализации position:fixed конверта в холсте (см. Editor.tsx).
+    // data-section-id — адресация узла для inline-правки (STUDIO-015): по нему
+    // edit-time слой находит, в какой узел Puck писать текст из каретки.
     return createElement('div', {
         className: 'editor-block',
         'data-block': mod.type,
+        'data-section-id': props.id as string,
         dangerouslySetInnerHTML: { __html: html },
     });
 }

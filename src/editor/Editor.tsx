@@ -14,6 +14,7 @@ import type { StudioDocument } from '../render-core/document';
 import { parseDocument } from '../render-core/document.schema';
 import { defaultRegistry } from '../sections/registry.default';
 import { EditorDocContext } from './editor-doc';
+import { InlineEditBridge } from './inline-edit';
 import { documentToPuck, makeConfig, puckToDocument } from './puck-adapter';
 
 import baseCss from '../render-core/styles/base.css?raw';
@@ -78,7 +79,20 @@ export function Editor() {
         <EditorDocContext.Provider value={ctxDoc}>
             <style>{FRAME_CSS}</style>
             <style>{CANVAS_CSS}</style>
-            <Puck config={config} data={data} onChange={handleChange} />
+            <Puck
+                config={config}
+                data={data}
+                onChange={handleChange}
+                iframe={{ enabled: false }}
+                overrides={{
+                    // Мост inline-правки монтируется внутри Puck-стора — отсюда у него
+                    // есть dispatch. overrides.puck оборачивает весь UI редактора,
+                    // не переписывая раскладку (ось «владение UX» — отдельная задача).
+                    puck: ({ children }) => (
+                        <InlineEditBridge>{children}</InlineEditBridge>
+                    ),
+                }}
+            />
         </EditorDocContext.Provider>
     );
 }

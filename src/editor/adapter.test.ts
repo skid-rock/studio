@@ -270,7 +270,7 @@ describe('BlockPreview anti-drift', () => {
 
         expect(reactHtml).toContain(agnostic);
         expect(reactHtml).toMatch(
-            /^<div class="editor-block" data-block="[^"]+">/,
+            /^<div class="editor-block" data-block="[^"]+" data-section-id="[^"]+">/,
         );
     });
 });

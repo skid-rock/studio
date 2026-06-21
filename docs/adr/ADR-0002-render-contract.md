@@ -113,13 +113,37 @@ Inline-правка реализуется путём **(б) — render с як�
 узел-обёртку секции. Поэтому write-back — собственный listener на `[data-prop]` на
 обоих движках:
 
-- **Puck:** listener `input` → `onChange`/dispatch, пишущий в props узла (опц.
-  `registerOverlayPortal`).
+- **Puck:** listener (у нас — `focusout`, коммит на blur) → `dispatch(setData)`,
+  пишущий в props узла. **`registerOverlayPortal` + `pointer-events: auto` на якоре
+  — обязательны, не опция** (см. ниже, обновление STUDIO-015).
 - **Craft.js:** listener `input` → `setProp(nodeId, …)`.
 
 Объём одинаков. Нативный per-node `contentEditable` Craft включается **только в
 пути (а)**. Значит (б) **снимает движок как дифференциатор для inline** —
 согласуется с отложенным выбором движка (ADR-0004).
+
+> **Обновление (2026-06-21, STUDIO-015 — реализация пути (б) на Puck).**
+> При реализации inline-каретки выяснилось, что для Puck связка
+> `registerOverlayPortal` + `pointer-events: auto` на якоре **обязательна**
+> (выше в тексте `registerOverlayPortal` значился как «опц.» — это уточнение
+> отменяет «опционально»). Причина: Puck оборачивает каждый блок в DnD-контейнер
+> (`[data-puck-dnd]`) и выставляет на содержимом блока **`pointer-events: none`**,
+> перехватывая клики на уровне обёртки (выделение/drag узла). Без вмешательства
+> клик по тексту не доходит до `[data-prop]`, каретка не появляется — хотя
+> write-back на blur при программном фокусе уже работает. Что делает edit-time
+> слой на каждом якоре:
+>
+> 1. `contenteditable = 'plaintext-only'` (включение правки);
+> 2. `style.pointerEvents = 'auto'` (пробить `pointer-events: none` Puck);
+> 3. `registerOverlayPortal(el)` — официальный API Puck: помечает элемент как
+>    интерактивный «портал» поверх холста, гасит перехват кликов/drag DnD-обёрткой
+>    при фокусе (и снимает пометку в cleanup).
+>
+> Это **Puck-специфика** (атрибут `data-puck-dnd` и его `pointer-events: none`),
+> а не часть агностичного контракта — поэтому живёт целиком в `src/editor/`
+> (`inline-edit.tsx`), `render-core`/`sections` не затронуты (граница ADR-0001).
+> Для Craft.js (путь (б)) аналога не потребуется — там перехват кликов устроен
+> иначе; конкретику зафиксировать, если/когда соберём inline на Craft.
 
 ### Плюсы / минусы (б) — выбранный путь
 

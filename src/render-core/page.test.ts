@@ -76,4 +76,15 @@ describe('buildPage — landing.sample.json', () => {
         expect(html).toContain('src="img/seal.png"');
         expect(html).toContain("url('fonts/Floriselscript.woff')");
     });
+
+    it('не содержит contenteditable (edit-time слой только в редакторе, STUDIO-015)', () => {
+        const doc = parseDocument(landingSample);
+        const result = renderDocument(doc, { registry: defaultRegistry });
+        const html = buildPage(result, {
+            themeCss: resolveThemeCss(doc.theme),
+            baseCss,
+        });
+
+        expect(html.toLowerCase()).not.toContain('contenteditable');
+    });
 });
