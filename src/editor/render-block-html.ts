@@ -2,7 +2,8 @@ import type { StudioDocument } from "../render-core/document";
 import type { BlockModule } from "../render-core/types";
 import type { RenderContext } from "../render-core/types";
 
-const PUCK_INTERNAL_KEYS = new Set(["id", "puck", "editMode"]);
+/** Служебные поля Puck — не идут в наш render и нестабильны между рендерами. */
+export const PUCK_INTERNAL_KEYS = new Set(["id", "puck", "editMode"]);
 
 /** Убрать служебные поля Puck перед передачей props в наш render. */
 function stripPuckProps(props: Record<string, unknown>): Record<string, unknown> {

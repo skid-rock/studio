@@ -12,6 +12,7 @@ import { sortedSections } from "../render-core/document";
 import { renderDocument } from "../render-core/render";
 import { defaultRegistry } from "../sections/registry.default";
 import { BlockPreview } from "./block-preview";
+import { samePuckProps } from "./same-puck-props";
 import {
   documentToPuck,
   puckToDocument,
@@ -151,6 +152,30 @@ describe("renderDocument после round-trip", () => {
     expect(/data-reactroot|__reactProps\$|reactFiber/i.test(out.html)).toBe(false);
     expect(out.html).toContain("envelope-overlay");
     expect(out.html).toContain("Аня");
+  });
+});
+
+describe("samePuckProps", () => {
+  it("равные значимые поля при разных puck/id → true", () => {
+    const a = { names: "Полина & Илья", id: "s_hero", puck: {}, editMode: true };
+    const b = {
+      names: "Полина & Илья",
+      id: "other-id",
+      puck: { isEditing: true },
+      editMode: false,
+    };
+
+    expect(samePuckProps(a, b)).toBe(true);
+  });
+
+  it("разное значение поля → false", () => {
+    expect(samePuckProps({ names: "Аня & Боря" }, { names: "Полина & Илья" })).toBe(false);
+  });
+
+  it("разный набор ключей → false", () => {
+    expect(samePuckProps({ eyebrow: "Мы женимся" }, { eyebrow: "Мы женимся", date: "05.08.2026" })).toBe(
+      false,
+    );
   });
 });
 

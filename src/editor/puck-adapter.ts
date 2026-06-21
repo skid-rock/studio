@@ -12,14 +12,14 @@
  * Импорты из Puck — ТОЛЬКО типовые (import type), кроме точки входа Editor.tsx.
  */
 import { createElement } from "react";
-import type { Config, ComponentConfig, Data, Field } from "@measured/puck";
+import type { Config, ComponentConfig, Data } from "@measured/puck";
 
 import type { StudioDocument, SectionNode } from "../render-core/document";
 import { sortedSections } from "../render-core/document";
 import { orderBetween } from "../render-core/order";
 import type { BlockRegistry } from "../render-core/registry";
-import type { Param, ParamSchema } from "../render-core/schema";
 import { PuckBlockPreview } from "./block-preview";
+import { fieldsFromSchema } from "./fields-from-schema";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 0. Имена типов: Puck кладёт type в DOM-id ("type-<random>"); наш слэш в
@@ -30,48 +30,7 @@ export const toPuckType = (studioType: string): string => studioType.split("/").
 export const toStudioType = (puckType: string): string => puckType.split(PUCK_SEP).join("/");
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 1. ParamSchema → поля панели Puck.
-//    range  → number (нативное поле Puck с min/max)
-//    text   → textarea
-//    select → select
-//    color  → custom-поле с нативным <input type="color"> (показываем, что наша
-//             ParamSchema ложится и на кастомные контролы)
-// ─────────────────────────────────────────────────────────────────────────────
-function paramToField(p: Param): Field {
-  switch (p.type) {
-    case "color":
-      return {
-        type: "custom",
-        label: p.label,
-        render: ({ value, onChange }) =>
-          createElement("input", {
-            type: "color",
-            value: (value as string | undefined) ?? p.def,
-            onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChange(e.currentTarget.value),
-          }),
-      };
-    case "text":
-      return { type: "textarea", label: p.label };
-    case "select":
-      return { type: "select", label: p.label, options: p.options };
-    default:
-      // range — у RangeParam type необязателен (может быть undefined)
-      return { type: "number", label: p.label, min: p.min, max: p.max };
-  }
-}
-
-export function fieldsFromSchema(schema: ParamSchema): Record<string, Field> {
-  const fields: Record<string, Field> = {};
-  for (const group of schema) {
-    for (const item of group.items) {
-      fields[item.key] = paramToField(item);
-    }
-  }
-  return fields;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 2. BlockModule[] → Puck Config.
+// 1. BlockModule[] → Puck Config.
 //    Актуальный doc — через EditorDocContext (см. Editor.tsx).
 // ─────────────────────────────────────────────────────────────────────────────
 // Валидность вставки — плоско по реестру (makeConfig → только зарегистрированные типы);

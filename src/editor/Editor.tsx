@@ -4,7 +4,7 @@
  * блоки нашим mod.render (через BlockPreview), а не вторым путём (ADR-0002).
  * Стартовый документ — examples/landing.sample.json (как в превью Фазы 0).
  */
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Puck } from "@measured/puck";
 import type { Data } from "@measured/puck";
 import "@measured/puck/puck.css";
@@ -45,20 +45,37 @@ const CANVAS_CSS = `
 `;
 
 export function Editor() {
-  const [doc, setDoc] = useState<StudioDocument>(INITIAL_DOC);
+  // Живой документ для пересчёта order держим в ref (база round-trip).
+  const docRef = useRef<StudioDocument>(INITIAL_DOC);
   const [data, setData] = useState<Data>(() => documentToPuck(INITIAL_DOC));
+
+  // Значение контекста рендера — документ, СТАБИЛЬНЫЙ по глобальным полям
+  // (тема/motion/версия). Правка props секции не меняет ссылку → превью соседних
+  // секций не перерисовываются (точечный ре-рендер, challenges §6). Секции на MVP
+  // читают из ctx только глобальное (фактически — ничего), поэтому «заморозка»
+  // sections безопасна. Если блок начнёт читать ctx.doc.sections — пересмотреть
+  // (семя для STUDIO-014).
+  const [ctxDoc, setCtxDoc] = useState<StudioDocument>(INITIAL_DOC);
 
   const config = useMemo(() => makeConfig(defaultRegistry), []);
 
   function handleChange(next: Data) {
     setData(next);
-    // База пересчёта order — предыдущее состояние документа (актуальные ключи),
-    // чтобы переиспользовать их и не перенумеровывать неизменные секции (STUDIO-011).
-    setDoc((prev) => puckToDocument(next, prev));
+    const nextDoc = puckToDocument(next, docRef.current);
+    docRef.current = nextDoc;
+    // Контекст обновляем ТОЛЬКО при смене глобальных полей: иначе вернётся прежняя
+    // ссылка (cur) и провайдер не разбудит потребителей (bail-out по Object.is).
+    setCtxDoc((cur) =>
+      cur.theme === nextDoc.theme &&
+      cur.motion === nextDoc.motion &&
+      cur.schemaVersion === nextDoc.schemaVersion
+        ? cur
+        : nextDoc,
+    );
   }
 
   return (
-    <EditorDocContext.Provider value={doc}>
+    <EditorDocContext.Provider value={ctxDoc}>
       <style>{FRAME_CSS}</style>
       <style>{CANVAS_CSS}</style>
       <Puck config={config} data={data} onChange={handleChange} />
