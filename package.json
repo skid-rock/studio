@@ -21,6 +21,7 @@
     "spike:craft:verify": "tsx spikes/editor-craft/verify.mts"
   },
   "dependencies": {
+    "@measured/puck": "^0.20.2",
     "fractional-indexing": "^3.2.0",
     "nanoid": "^5.1.15",
     "react": "^19.2.7",
@@ -30,7 +31,6 @@
   "devDependencies": {
     "@craftjs/core": "^0.2.12",
     "@eslint/js": "^10.0.1",
-    "@measured/puck": "^0.20.2",
     "@types/node": "^26.0.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
