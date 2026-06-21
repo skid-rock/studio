@@ -1,7 +1,7 @@
 # Технический бэклог (будущие улучшения)
 
 Журнал известных, осознанно отложенных улучшений — «чтобы не забыть». В отличие
-от [ADR](adr/) (зафиксированные принятые решения) здесь лежат места, которые
+от [ADR](../adr/) (зафиксированные принятые решения) здесь лежат места, которые
 сейчас работают приемлемо, но которые стоит подтянуть в будущей фазе. Каждый
 пункт: где, симптом, корень, варианты, рекомендация и условие-триггер.
 
@@ -10,7 +10,7 @@
 ## IMP-001. Реестр блоков: `any` как супертип гетерогенных модулей
 
 - **Статус:** решено в STUDIO-013 (вариант D — рантайм-парсер на модуль).
-- **Где:** [`src/render-core/registry.ts`](../src/render-core/registry.ts) —
+- **Где:** [`src/render-core/registry.ts`](../../src/render-core/registry.ts) —
   `type AnyBlockModule = BlockModule<any>` (с `eslint-disable no-explicit-any`).
 - **Появилось в:** STUDIO-006 (первый типизированный модуль `intro/envelope`).
 
@@ -99,6 +99,6 @@ error TS2322: 'RFn<EnvelopeState>'        is not assignable to 'RFn<Record<strin
 
 ### Ссылки
 
-- [ADR-0002](adr/ADR-0002-render-contract.md) — контракт render и реестра.
-- [ADR-0003](adr/ADR-0003-schema-format.md) — `ParamSchema`, `defaultsFromSchema`
+- [ADR-0002](../adr/ADR-0002-render-contract.md) — контракт render и реестра.
+- [ADR-0003](../adr/ADR-0003-schema-format.md) — `ParamSchema`, `defaultsFromSchema`
   (база для `parseBySchema` из варианта D).
