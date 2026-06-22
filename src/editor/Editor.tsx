@@ -14,12 +14,15 @@ import type { StudioDocument } from '../render-core/document';
 import { parseDocument } from '../render-core/document.schema';
 import { defaultRegistry } from '../sections/registry.default';
 import { DocumentActions } from './document-actions';
+import { buildExportHtml, downloadHtml, formatBytes } from './export-html';
 import { EditorDocContext } from './editor-doc';
 import { InlineEditBridge } from './inline-edit';
 import { documentToPuck, makeConfig, puckToDocument } from './puck-adapter';
 import { SectionScriptsBridge } from './section-scripts';
-import { themeCssById } from './theme-assets';
+import { resolveThemeCss, themeCssById } from './theme-assets';
 import { ThemeSwitcher } from './theme-switcher';
+import { ThemeOverrides } from './theme-overrides';
+import { UndoRedo } from './undo-redo';
 
 import baseCss from '../render-core/styles/base.css?raw';
 import fontsCss from '../render-core/styles/fonts.css?raw';
@@ -72,8 +75,8 @@ export function Editor() {
 
     const config = useMemo(() => makeConfig(defaultRegistry), []);
 
-    // CSS темы холста — по ThemeRef.id текущего документа (перерисовывается при смене).
-    const themeCss = themeCssById(ctxDoc.theme.id);
+    // CSS темы холста — по ThemeRef (id + оверрайды) текущего документа.
+    const themeCss = resolveThemeCss(ctxDoc.theme);
 
     function handleChange(next: Data) {
         setData(next);
@@ -108,6 +111,42 @@ export function Editor() {
         setCtxDoc(nextDoc);
     }
 
+    /** Собрать index.html текущего документа, замерить вес, скачать. */
+    function handleExport() {
+        const { html, bytes, withinBudget } = buildExportHtml(
+            docRef.current,
+            defaultRegistry,
+            { baseCss: FRAME_BASE_CSS, themeCss },
+        );
+        downloadHtml(html);
+        // Отчёт о весе: бюджет — самостоятельный index.html без внешних картинок/шрифтов.
+        const status = withinBudget ? 'в бюджете' : 'ПРЕВЫШЕН бюджет';
+        console.info(`Экспорт: ${formatBytes(bytes)} (${status})`);
+        alert(
+            `Экспортирован index.html\nВес: ${formatBytes(bytes)} — ${status}\n` +
+                `(картинки и шрифты подключаются ссылками и в этот вес не входят)`,
+        );
+    }
+
+    /** Изменить точечный оверрайд токена темы ('' — снять оверрайд). */
+    function handleOverrideChange(key: string, value: string) {
+        const prev = docRef.current.theme.overrides ?? {};
+        const overrides = { ...prev };
+
+        if (value) {
+            overrides[key] = value;
+        } else {
+            delete overrides[key];
+        }
+
+        const nextDoc: StudioDocument = {
+            ...docRef.current,
+            theme: { ...docRef.current.theme, overrides },
+        };
+        docRef.current = nextDoc;
+        setCtxDoc(nextDoc); // смена theme → новый ctx перекрашивает холст
+    }
+
     return (
         <EditorDocContext.Provider value={ctxDoc}>
             <style>{FRAME_BASE_CSS}</style>
@@ -123,13 +162,20 @@ export function Editor() {
                 overrides={{
                     headerActions: ({ children }) => (
                         <>
+                            <UndoRedo />
                             <ThemeSwitcher
                                 value={ctxDoc.theme.id}
                                 onChange={handleThemeChange}
                             />
+                            <ThemeOverrides
+                                value={ctxDoc.theme.overrides}
+                                presetCss={themeCssById(ctxDoc.theme.id)}
+                                onChange={handleOverrideChange}
+                            />
                             <DocumentActions
                                 getDoc={() => docRef.current}
                                 onLoad={handleLoad}
+                                onExport={handleExport}
                             />
                             {children}
                         </>
@@ -139,7 +185,9 @@ export function Editor() {
                     // не переписывая раскладку (ось «владение UX» — отдельная задача).
                     puck: ({ children }) => (
                         <InlineEditBridge>
-                            <SectionScriptsBridge>{children}</SectionScriptsBridge>
+                            <SectionScriptsBridge>
+                                {children}
+                            </SectionScriptsBridge>
                         </InlineEditBridge>
                     ),
                 }}

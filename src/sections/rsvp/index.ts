@@ -18,7 +18,12 @@ const schema: ParamSchema = [
     {
         group: 'RSVP',
         items: [
-            { key: 'title', label: 'Заголовок', type: 'text', def: 'Анкета гостя' },
+            {
+                key: 'title',
+                label: 'Заголовок',
+                type: 'text',
+                def: 'Анкета гостя',
+            },
             {
                 key: 'lead',
                 label: 'Подзаголовок',

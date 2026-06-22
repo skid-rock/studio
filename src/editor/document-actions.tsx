@@ -12,9 +12,15 @@ interface DocumentActionsProps {
     getDoc: () => StudioDocument;
     /** Применить загруженный документ (сброс холста). */
     onLoad: (doc: StudioDocument) => void;
+    /** Собрать и скачать index.html текущего документа + вернуть отчёт о весе. */
+    onExport: () => void;
 }
 
-export function DocumentActions({ getDoc, onLoad }: DocumentActionsProps) {
+export function DocumentActions({
+    getDoc,
+    onLoad,
+    onExport,
+}: DocumentActionsProps) {
     const fileRef = useRef<HTMLInputElement>(null);
 
     async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -39,6 +45,9 @@ export function DocumentActions({ getDoc, onLoad }: DocumentActionsProps) {
             </button>
             <button type="button" onClick={() => fileRef.current?.click()}>
                 Загрузить
+            </button>
+            <button type="button" onClick={onExport}>
+                Экспорт
             </button>
             <input
                 ref={fileRef}

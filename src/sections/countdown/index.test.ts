@@ -17,7 +17,9 @@ describe('countdown', () => {
 
     it('рендерит корневые countdown-атрибуты', () => {
         expect(html).toContain('data-countdown-root');
-        expect(html).toContain('data-countdown-target="2026-08-05T15:00:00+03:00"');
+        expect(html).toContain(
+            'data-countdown-target="2026-08-05T15:00:00+03:00"',
+        );
     });
 
     it('содержит 4 ячейки времени и подписи', () => {

@@ -22,7 +22,12 @@ const schema: ParamSchema = [
     {
         group: 'Дресс-код',
         items: [
-            { key: 'title', label: 'Заголовок', type: 'text', def: 'Дресс-код' },
+            {
+                key: 'title',
+                label: 'Заголовок',
+                type: 'text',
+                def: 'Дресс-код',
+            },
             {
                 key: 'text',
                 label: 'Описание',

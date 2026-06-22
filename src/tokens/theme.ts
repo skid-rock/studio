@@ -3,6 +3,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import type { ThemeRef } from '../render-core/document';
+import { appendOverridesCss } from './themes';
 
 const THEMES_DIR = join(dirname(fileURLToPath(import.meta.url)), 'dist');
 
@@ -18,20 +19,5 @@ export function loadThemeCss(themeId: string): string {
 
 /** CSS темы с точечными оверрайдами из документа. */
 export function resolveThemeCss(theme: ThemeRef): string {
-    const base = loadThemeCss(theme.id);
-    const overrides = theme.overrides;
-
-    if (!overrides || Object.keys(overrides).length === 0) {
-        return base;
-    }
-
-    const vars = Object.entries(overrides)
-        .map(([key, value]) => {
-            const name = key.startsWith('--') ? key : `--${key}`;
-
-            return `  ${name}: ${value};`;
-        })
-        .join('\n');
-
-    return `${base}\n:root {\n${vars}\n}`;
+    return appendOverridesCss(loadThemeCss(theme.id), theme.overrides);
 }

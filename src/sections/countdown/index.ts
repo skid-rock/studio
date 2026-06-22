@@ -34,9 +34,24 @@ const schema: ParamSchema = [
                 def: '2026-08-05T15:00:00+03:00',
             },
             { key: 'lDays', label: 'Подпись: дни', type: 'text', def: 'дней' },
-            { key: 'lHours', label: 'Подпись: часы', type: 'text', def: 'часов' },
-            { key: 'lMinutes', label: 'Подпись: минуты', type: 'text', def: 'минут' },
-            { key: 'lSeconds', label: 'Подпись: секунды', type: 'text', def: 'секунд' },
+            {
+                key: 'lHours',
+                label: 'Подпись: часы',
+                type: 'text',
+                def: 'часов',
+            },
+            {
+                key: 'lMinutes',
+                label: 'Подпись: минуты',
+                type: 'text',
+                def: 'минут',
+            },
+            {
+                key: 'lSeconds',
+                label: 'Подпись: секунды',
+                type: 'text',
+                def: 'секунд',
+            },
         ],
     },
 ];

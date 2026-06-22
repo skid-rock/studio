@@ -24,9 +24,12 @@ export function deserializeDocument(json: string): StudioDocument {
     try {
         raw = JSON.parse(json);
     } catch (err) {
-        throw new Error(`Невалидный JSON документа: ${(err as Error).message}`, {
-            cause: err,
-        });
+        throw new Error(
+            `Невалидный JSON документа: ${(err as Error).message}`,
+            {
+                cause: err,
+            },
+        );
     }
 
     return parseDocument(raw);

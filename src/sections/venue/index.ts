@@ -22,8 +22,18 @@ const schema: ParamSchema = [
     {
         group: 'Когда и где',
         items: [
-            { key: 'title', label: 'Заголовок', type: 'text', def: 'Когда и где' },
-            { key: 'place', label: 'Место', type: 'text', def: 'Ресторан «Усадьба»' },
+            {
+                key: 'title',
+                label: 'Заголовок',
+                type: 'text',
+                def: 'Когда и где',
+            },
+            {
+                key: 'place',
+                label: 'Место',
+                type: 'text',
+                def: 'Ресторан «Усадьба»',
+            },
             {
                 key: 'address',
                 label: 'Адрес',

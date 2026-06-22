@@ -26,14 +26,44 @@ const schema: ParamSchema = [
         items: [
             { key: 'title', label: 'Заголовок', type: 'text', def: 'Детали' },
 
-            { key: 'q1', label: 'Вопрос 1', type: 'text', def: 'Можно с детьми?' },
-            { key: 'a1', label: 'Ответ 1', type: 'text', def: 'Да, конечно — будем рады всей семье.' },
+            {
+                key: 'q1',
+                label: 'Вопрос 1',
+                type: 'text',
+                def: 'Можно с детьми?',
+            },
+            {
+                key: 'a1',
+                label: 'Ответ 1',
+                type: 'text',
+                def: 'Да, конечно — будем рады всей семье.',
+            },
 
-            { key: 'q2', label: 'Вопрос 2', type: 'text', def: 'Где парковка?' },
-            { key: 'a2', label: 'Ответ 2', type: 'text', def: 'Бесплатная стоянка у входа в ресторан.' },
+            {
+                key: 'q2',
+                label: 'Вопрос 2',
+                type: 'text',
+                def: 'Где парковка?',
+            },
+            {
+                key: 'a2',
+                label: 'Ответ 2',
+                type: 'text',
+                def: 'Бесплатная стоянка у входа в ресторан.',
+            },
 
-            { key: 'q3', label: 'Вопрос 3', type: 'text', def: 'Дарить ли подарки?' },
-            { key: 'a3', label: 'Ответ 3', type: 'text', def: 'Ваше присутствие — лучший подарок.' },
+            {
+                key: 'q3',
+                label: 'Вопрос 3',
+                type: 'text',
+                def: 'Дарить ли подарки?',
+            },
+            {
+                key: 'a3',
+                label: 'Ответ 3',
+                type: 'text',
+                def: 'Ваше присутствие — лучший подарок.',
+            },
 
             { key: 'q4', label: 'Вопрос 4', type: 'text', def: '' },
             { key: 'a4', label: 'Ответ 4', type: 'text', def: '' },

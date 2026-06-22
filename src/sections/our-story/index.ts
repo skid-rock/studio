@@ -24,16 +24,36 @@ const schema: ParamSchema = [
     {
         group: 'Наша история',
         items: [
-            { key: 'title', label: 'Заголовок', type: 'text', def: 'Наша история' },
+            {
+                key: 'title',
+                label: 'Заголовок',
+                type: 'text',
+                def: 'Наша история',
+            },
 
             { key: 'd1', label: 'Веха 1 — дата', type: 'text', def: '2019' },
-            { key: 't1', label: 'Веха 1 — текст', type: 'text', def: 'Познакомились' },
+            {
+                key: 't1',
+                label: 'Веха 1 — текст',
+                type: 'text',
+                def: 'Познакомились',
+            },
 
             { key: 'd2', label: 'Веха 2 — дата', type: 'text', def: '2022' },
-            { key: 't2', label: 'Веха 2 — текст', type: 'text', def: 'Начали жить вместе' },
+            {
+                key: 't2',
+                label: 'Веха 2 — текст',
+                type: 'text',
+                def: 'Начали жить вместе',
+            },
 
             { key: 'd3', label: 'Веха 3 — дата', type: 'text', def: '2025' },
-            { key: 't3', label: 'Веха 3 — текст', type: 'text', def: 'Сделал предложение' },
+            {
+                key: 't3',
+                label: 'Веха 3 — текст',
+                type: 'text',
+                def: 'Сделал предложение',
+            },
 
             { key: 'd4', label: 'Веха 4 — дата', type: 'text', def: '' },
             { key: 't4', label: 'Веха 4 — текст', type: 'text', def: '' },

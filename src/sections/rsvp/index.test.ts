@@ -61,7 +61,9 @@ describe('rsvp', () => {
     });
 
     it('поставляет идемпотентный клиентский скрипт демо-submit', () => {
-        expect(rsvpModule.js).toContain("document.querySelectorAll('form[data-rsvp]')");
+        expect(rsvpModule.js).toContain(
+            "document.querySelectorAll('form[data-rsvp]')",
+        );
         expect(rsvpModule.js).toContain("data-rsvp-init','1'");
         expect(rsvpModule.js).toContain('данные не сохраняются');
         expect(rsvpModule.js).toContain('Если action задан');

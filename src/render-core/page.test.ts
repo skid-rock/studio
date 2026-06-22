@@ -98,7 +98,9 @@ describe('buildPage — landing.sample.json', () => {
             { themeCss: '', baseCss: '' },
         );
 
-        expect(html).toContain('<script>(function(){window.__x=1;})();</script>');
+        expect(html).toContain(
+            '<script>(function(){window.__x=1;})();</script>',
+        );
         expect(html).toMatch(
             /<section>demo<\/section>\s*<script>\(function\(\)\{window\.__x=1;\}\)\(\);<\/script>\s*<\/body>/,
         );

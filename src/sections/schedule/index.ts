@@ -26,22 +26,52 @@ const schema: ParamSchema = [
     {
         group: 'Расписание',
         items: [
-            { key: 'title', label: 'Заголовок', type: 'text', def: 'Расписание дня' },
+            {
+                key: 'title',
+                label: 'Заголовок',
+                type: 'text',
+                def: 'Расписание дня',
+            },
 
             { key: 't1', label: 'Пункт 1 — время', type: 'text', def: '15:00' },
-            { key: 'e1', label: 'Пункт 1 — событие', type: 'text', def: 'Сбор гостей' },
+            {
+                key: 'e1',
+                label: 'Пункт 1 — событие',
+                type: 'text',
+                def: 'Сбор гостей',
+            },
 
             { key: 't2', label: 'Пункт 2 — время', type: 'text', def: '16:00' },
-            { key: 'e2', label: 'Пункт 2 — событие', type: 'text', def: 'Церемония' },
+            {
+                key: 'e2',
+                label: 'Пункт 2 — событие',
+                type: 'text',
+                def: 'Церемония',
+            },
 
             { key: 't3', label: 'Пункт 3 — время', type: 'text', def: '17:00' },
-            { key: 'e3', label: 'Пункт 3 — событие', type: 'text', def: 'Банкет' },
+            {
+                key: 'e3',
+                label: 'Пункт 3 — событие',
+                type: 'text',
+                def: 'Банкет',
+            },
 
             { key: 't4', label: 'Пункт 4 — время', type: 'text', def: '21:00' },
-            { key: 'e4', label: 'Пункт 4 — событие', type: 'text', def: 'Торт' },
+            {
+                key: 'e4',
+                label: 'Пункт 4 — событие',
+                type: 'text',
+                def: 'Торт',
+            },
 
             { key: 't5', label: 'Пункт 5 — время', type: 'text', def: '23:00' },
-            { key: 'e5', label: 'Пункт 5 — событие', type: 'text', def: 'Завершение' },
+            {
+                key: 'e5',
+                label: 'Пункт 5 — событие',
+                type: 'text',
+                def: 'Завершение',
+            },
         ],
     },
 ];

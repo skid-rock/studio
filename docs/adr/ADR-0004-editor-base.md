@@ -198,7 +198,7 @@ ADR-0004 вернуться, когда будет решена грануляр
 > `iframe.enabled = false`). Puck-специфика, выявленная при реализации: Puck
 > оборачивает блок в DnD-контейнер (`[data-puck-dnd]`) с `pointer-events: none`
 > на содержимом, поэтому для каретки на якоре **обязательны** `pointer-events:
-> auto` + `registerOverlayPortal` (детали и причина — в
+auto` + `registerOverlayPortal` (детали и причина — в
 > [ADR-0002](ADR-0002-render-contract.md), обновление STUDIO-015). На выбор движка
 > это не влияет (ось 1 «владение UX» остаётся решающей), но фиксирует, что
 > `registerOverlayPortal` для Puck-пути inline — не опция, а необходимость.
