@@ -53,6 +53,7 @@ export function defineBlock<P extends Record<string, unknown>>(
         schema: m.schema,
         defaults: m.defaults,
         css: m.css,
+        js: m.js,
         render: (raw, ctx) => m.render(parseBySchema<P>(m.schema, raw), ctx),
     };
 }

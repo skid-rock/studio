@@ -16,6 +16,7 @@ import { defaultRegistry } from '../sections/registry.default';
 import { EditorDocContext } from './editor-doc';
 import { InlineEditBridge } from './inline-edit';
 import { documentToPuck, makeConfig, puckToDocument } from './puck-adapter';
+import { SectionScriptsBridge } from './section-scripts';
 
 import baseCss from '../render-core/styles/base.css?raw';
 import fontsCss from '../render-core/styles/fonts.css?raw';
@@ -26,6 +27,11 @@ const INITIAL_DOC: StudioDocument = parseDocument(landingSample);
 
 /** CSS темы/базы для холста (как в src/App.tsx — через ?raw). */
 const FRAME_CSS = [baseCss, fontsCss, creamNavyCss].join('\n');
+// CSS всех модулей реестра (list() уже уникален по type, доп.дедуп не нужен).
+const MODULES_CSS = defaultRegistry
+    .list()
+    .map((m) => m.css ?? '')
+    .join('\n');
 
 /**
  * Режим холста: конверт в проде — полноэкранный fixed-оверлей; в холсте редактора
@@ -78,6 +84,7 @@ export function Editor() {
     return (
         <EditorDocContext.Provider value={ctxDoc}>
             <style>{FRAME_CSS}</style>
+            <style>{MODULES_CSS}</style>
             <style>{CANVAS_CSS}</style>
             <Puck
                 config={config}
@@ -89,7 +96,9 @@ export function Editor() {
                     // есть dispatch. overrides.puck оборачивает весь UI редактора,
                     // не переписывая раскладку (ось «владение UX» — отдельная задача).
                     puck: ({ children }) => (
-                        <InlineEditBridge>{children}</InlineEditBridge>
+                        <InlineEditBridge>
+                            <SectionScriptsBridge>{children}</SectionScriptsBridge>
+                        </InlineEditBridge>
                     ),
                 }}
             />

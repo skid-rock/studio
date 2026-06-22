@@ -30,5 +30,6 @@ export function buildPage(
 <style>${result.css}</style>
 </head><body>
 ${result.html}
+${result.js ? `<script>${result.js}</script>` : ''}
 </body></html>`;
 }

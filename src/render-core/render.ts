@@ -13,6 +13,7 @@ export function renderDocument(
 ): RenderResult {
     const ctx: RenderContext = { doc };
     const cssParts = new Map<string, string>(); // type -> css (дедуп по типу)
+    const jsParts = new Map<string, string>(); // type -> js (дедуп по типу)
     const htmlParts: string[] = [];
 
     for (const node of sortedSections(doc)) {
@@ -28,12 +29,16 @@ export function renderDocument(
         if (mod.css && !cssParts.has(mod.type)) {
             cssParts.set(mod.type, mod.css);
         }
+        if (mod.js && !jsParts.has(mod.type)) {
+            jsParts.set(mod.type, mod.js);
+        }
         htmlParts.push(mod.render(node.props, ctx));
     }
 
     return {
         html: htmlParts.join('\n'),
         css: [...cssParts.values()].join('\n'),
+        js: [...jsParts.values()].join('\n'),
     };
 }
 

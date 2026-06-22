@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`venue > стабилен по снапшоту на дефолтах 1`] = `
+"
+    <section class="s-venue">
+      <h2 class="s-venue__title" data-prop="title">Когда и где</h2>
+      <p class="s-venue__place" data-prop="place">Ресторан «Усадьба»</p>
+      <p class="s-venue__address" data-prop="address">Москва, ул. Пример, 12</p>
+      <p class="s-venue__datetime" data-prop="datetime">5 августа 2026, 15:00</p>
+      <img class="s-venue__map" src="/img/map.png" alt="Карта: Ресторан «Усадьба»" loading="lazy" />
+      <a class="s-venue__cta" href="https://yandex.ru/maps" target="_blank" rel="noopener" data-prop="cta">Открыть в картах</a>
+    </section>"
+`;

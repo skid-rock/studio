@@ -1,0 +1,10 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`dress-code > стабилен по снапшоту на дефолтах 1`] = `
+"
+    <section class="s-dress">
+      <h2 class="s-dress__title" data-prop="title">Дресс-код</h2>
+      <p class="s-dress__text" data-prop="text">Будем благодарны, если поддержите палитру торжества.</p>
+      <div class="s-dress__palette"><span class="s-dress__swatch" style="background:#275889" aria-hidden="true"></span><span class="s-dress__swatch" style="background:#c97b63" aria-hidden="true"></span><span class="s-dress__swatch" style="background:#f3ece1" aria-hidden="true"></span></div>
+    </section>"
+`;

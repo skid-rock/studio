@@ -33,6 +33,7 @@ function makeDemoModule(overrides: Partial<BlockModule> = {}): BlockModule {
         defaults: defaultsFromSchema(schema),
         render: (props) => `<section>${String(props.title)}</section>`,
         css: '.demo { color: red; }',
+        js: '(function(){window.__demo=true;})();',
         ...overrides,
     };
 }
@@ -88,6 +89,18 @@ describe('renderDocument', () => {
         expect(result.css).toBe('.demo { color: red; }');
     });
 
+    it('дедуплицирует JS по type (один скрипт на тип)', () => {
+        const registry = createRegistry([makeDemoModule()]);
+        const doc = makeDoc([
+            { id: 'a', type: 'demo', order: 'a0', props: { title: 'A' } },
+            { id: 'b', type: 'demo', order: 'a1', props: { title: 'B' } },
+        ]);
+
+        const result = renderDocument(doc, { registry });
+
+        expect(result.js).toBe('(function(){window.__demo=true;})();');
+    });
+
     it('собирает CSS только от использованных модулей', () => {
         const demo = makeDemoModule({ css: '.demo { color: red; }' });
         const hero = makeDemoModule({
@@ -123,6 +136,17 @@ describe('renderDocument', () => {
 
         expect(result.css).not.toContain(':root {');
         expect(result.css).not.toContain('--color-navy: #275889');
+    });
+
+    it('возвращает пустой js для документа без JS-секций', () => {
+        const registry = createRegistry([makeDemoModule({ js: undefined })]);
+        const doc = makeDoc([
+            { id: 's', type: 'demo', order: 'a0', props: { title: 'X' } },
+        ]);
+
+        const result = renderDocument(doc, { registry });
+
+        expect(result.js).toBe('');
     });
 
     it('передаёт контекст документа в render', () => {

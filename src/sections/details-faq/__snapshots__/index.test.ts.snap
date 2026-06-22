@@ -1,0 +1,22 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`details-faq > стабилен по снапшоту на дефолтах 1`] = `
+"
+    <section class="s-faq">
+      <h2 class="s-faq__title" data-prop="title">Детали</h2>
+      <dl class="s-faq__list">
+      <div class="s-faq__item">
+        <dt class="s-faq__q" data-prop="q1">Можно с детьми?</dt>
+        <dd class="s-faq__a" data-prop="a1">Да, конечно — будем рады всей семье.</dd>
+      </div>
+      <div class="s-faq__item">
+        <dt class="s-faq__q" data-prop="q2">Где парковка?</dt>
+        <dd class="s-faq__a" data-prop="a2">Бесплатная стоянка у входа в ресторан.</dd>
+      </div>
+      <div class="s-faq__item">
+        <dt class="s-faq__q" data-prop="q3">Дарить ли подарки?</dt>
+        <dd class="s-faq__a" data-prop="a3">Ваше присутствие — лучший подарок.</dd>
+      </div>
+      </dl>
+    </section>"
+`;

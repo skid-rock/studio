@@ -43,6 +43,12 @@ if (existsSync(sealSrc)) {
     copyFileSync(sealSrc, join(OUT_DIR, 'img/seal.png'));
 }
 
+// Картинка-превью карты для секции venue (кладётся вручную в public/img/).
+const mapSrc = join(ROOT, 'public/img/map.png');
+if (existsSync(mapSrc)) {
+    copyFileSync(mapSrc, join(OUT_DIR, 'img/map.png'));
+}
+
 const fontsSrc = join(ROOT, 'public/fonts');
 if (existsSync(fontsSrc)) {
     cpSync(fontsSrc, join(OUT_DIR, 'fonts'), { recursive: true });

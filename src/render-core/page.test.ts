@@ -87,4 +87,34 @@ describe('buildPage — landing.sample.json', () => {
 
         expect(html.toLowerCase()).not.toContain('contenteditable');
     });
+
+    it('вставляет <script> перед </body>, когда result.js непустой', () => {
+        const html = buildPage(
+            {
+                html: '<section>demo</section>',
+                css: '.demo{}',
+                js: '(function(){window.__x=1;})();',
+            },
+            { themeCss: '', baseCss: '' },
+        );
+
+        expect(html).toContain('<script>(function(){window.__x=1;})();</script>');
+        expect(html).toMatch(
+            /<section>demo<\/section>\s*<script>\(function\(\)\{window\.__x=1;\}\)\(\);<\/script>\s*<\/body>/,
+        );
+    });
+
+    it('не вставляет <script>, когда result.js пустой', () => {
+        const html = buildPage(
+            {
+                html: '<section>demo</section>',
+                css: '.demo{}',
+                js: '',
+            },
+            { themeCss: '', baseCss: '' },
+        );
+
+        expect(html).not.toContain('<script></script>');
+        expect(html).not.toContain('window.__x');
+    });
 });

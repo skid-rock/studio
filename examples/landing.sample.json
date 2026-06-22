@@ -32,6 +32,36 @@
             "props": {}
         },
         {
+            "id": "s_venue",
+            "type": "venue",
+            "order": "a1q",
+            "props": {}
+        },
+        {
+            "id": "s_dress",
+            "type": "dress-code",
+            "order": "a1t",
+            "props": {}
+        },
+        {
+            "id": "s_faq",
+            "type": "details-faq",
+            "order": "a1x",
+            "props": {}
+        },
+        {
+            "id": "s_rsvp",
+            "type": "rsvp",
+            "order": "a1y",
+            "props": {}
+        },
+        {
+            "id": "s_countdown",
+            "type": "countdown",
+            "order": "a1z",
+            "props": {}
+        },
+        {
             "id": "s_closing",
             "type": "closing",
             "order": "a2",
