@@ -15,6 +15,7 @@
         "export": "tsx scripts/export.mts",
         "pretest": "npm run tokens",
         "test": "vitest run",
+        "verify": "npm run tokens && npm run lint && npm run build && npm run test",
         "test:watch": "vitest",
         "spike": "vite --config spikes/editor/vite.config.ts",
         "spike:verify": "tsx spikes/editor/verify.mts",
