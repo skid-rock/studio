@@ -5,6 +5,7 @@
  * Стартовый документ — examples/landing.sample.json (как в превью Фазы 0).
  */
 import { useMemo, useRef, useState } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import { Puck } from '@measured/puck';
 import type { Data } from '@measured/puck';
 import '@measured/puck/puck.css';
@@ -55,6 +56,22 @@ const CANVAS_CSS = `
   position: absolute;
 }
 `;
+
+/**
+ * Оверрайд Puck.puck — обёртка всего UI редактора edit-time-мостами. Вынесен на
+ * уровень модуля СОЗНАТЕЛЬНО: Puck читает overrides.puck как тип компонента
+ * (`CustomPuck = overrides.puck`) и при смене его ссылки размонтирует/перемонтирует
+ * весь UI, включая поля боковой панели — из-за этого фокус слетал после каждого
+ * введённого символа. Стабильная ссылка (модульный компонент, не inline-стрелка)
+ * убирает ремоунт. Мосты зависят только от children, состояние Editor им не нужно.
+ */
+function PuckOverride({ children }: { children: ReactNode }): ReactElement {
+    return (
+        <InlineEditBridge>
+            <SectionScriptsBridge>{children}</SectionScriptsBridge>
+        </InlineEditBridge>
+    );
+}
 
 export function Editor() {
     // Живой документ для пересчёта order держим в ref (база round-trip).
@@ -183,13 +200,9 @@ export function Editor() {
                     // Мост inline-правки монтируется внутри Puck-стора — отсюда у него
                     // есть dispatch. overrides.puck оборачивает весь UI редактора,
                     // не переписывая раскладку (ось «владение UX» — отдельная задача).
-                    puck: ({ children }) => (
-                        <InlineEditBridge>
-                            <SectionScriptsBridge>
-                                {children}
-                            </SectionScriptsBridge>
-                        </InlineEditBridge>
-                    ),
+                    // Ссылка стабильна (модульный PuckOverride) — иначе Puck ремоунтит
+                    // весь UI на каждый ре-рендер и фокус полей панели слетает.
+                    puck: PuckOverride,
                 }}
             />
         </EditorDocContext.Provider>
