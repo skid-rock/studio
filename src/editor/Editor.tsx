@@ -14,16 +14,13 @@ import landingSample from '../../examples/landing.sample.json';
 import type { StudioDocument } from '../render-core/document';
 import { parseDocument } from '../render-core/document.schema';
 import { defaultRegistry } from '../sections/registry.default';
-import { DocumentActions } from './document-actions';
 import { buildExportHtml, downloadHtml, formatBytes } from './export-html';
 import { EditorDocContext } from './editor-doc';
+import { HeaderActions, HeaderActionsProvider } from './header-actions';
 import { InlineEditBridge } from './inline-edit';
 import { documentToPuck, makeConfig, puckToDocument } from './puck-adapter';
 import { SectionScriptsBridge } from './section-scripts';
 import { resolveThemeCss, themeCssById } from './theme-assets';
-import { ThemeSwitcher } from './theme-switcher';
-import { ThemeOverrides } from './theme-overrides';
-import { UndoRedo } from './undo-redo';
 
 import baseCss from '../render-core/styles/base.css?raw';
 import fontsCss from '../render-core/styles/fonts.css?raw';
@@ -170,41 +167,38 @@ export function Editor() {
             <style>{themeCss}</style>
             <style>{MODULES_CSS}</style>
             <style>{CANVAS_CSS}</style>
-            <Puck
-                key={revision}
-                config={config}
-                data={data}
-                onChange={handleChange}
-                iframe={{ enabled: false }}
-                overrides={{
-                    headerActions: ({ children }) => (
-                        <>
-                            <UndoRedo />
-                            <ThemeSwitcher
-                                value={ctxDoc.theme.id}
-                                onChange={handleThemeChange}
-                            />
-                            <ThemeOverrides
-                                value={ctxDoc.theme.overrides}
-                                presetCss={themeCssById(ctxDoc.theme.id)}
-                                onChange={handleOverrideChange}
-                            />
-                            <DocumentActions
-                                getDoc={() => docRef.current}
-                                onLoad={handleLoad}
-                                onExport={handleExport}
-                            />
-                            {children}
-                        </>
-                    ),
-                    // Мост inline-правки монтируется внутри Puck-стора — отсюда у него
-                    // есть dispatch. overrides.puck оборачивает весь UI редактора,
-                    // не переписывая раскладку (ось «владение UX» — отдельная задача).
-                    // Ссылка стабильна (модульный PuckOverride) — иначе Puck ремоунтит
-                    // весь UI на каждый ре-рендер и фокус полей панели слетает.
-                    puck: PuckOverride,
+            {/* Порт шапки: значение пересоздаётся каждый ре-рендер (ОК — ре-рендер,
+                не ремоунт), а ссылка HeaderActions стабильна → фокус полей шапки цел. */}
+            <HeaderActionsProvider
+                value={{
+                    themeId: ctxDoc.theme.id,
+                    overrides: ctxDoc.theme.overrides,
+                    presetCss: themeCssById(ctxDoc.theme.id),
+                    onThemeChange: handleThemeChange,
+                    onOverrideChange: handleOverrideChange,
+                    getDoc: () => docRef.current,
+                    onLoad: handleLoad,
+                    onExport: handleExport,
                 }}
-            />
+            >
+                <Puck
+                    key={revision}
+                    config={config}
+                    data={data}
+                    onChange={handleChange}
+                    iframe={{ enabled: false }}
+                    overrides={{
+                        // Стабильная ссылка — иначе Puck ремоунтит шапку на каждый
+                        // ре-рендер и текстовые поля ThemeOverrides теряют фокус.
+                        headerActions: HeaderActions,
+                        // Мост inline-правки монтируется внутри Puck-стора — отсюда у
+                        // него есть dispatch. overrides.puck оборачивает весь UI
+                        // редактора. Ссылка стабильна (модульный PuckOverride) — иначе
+                        // Puck ремоунтит весь UI и фокус полей боковой панели слетает.
+                        puck: PuckOverride,
+                    }}
+                />
+            </HeaderActionsProvider>
         </EditorDocContext.Provider>
     );
 }
