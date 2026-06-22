@@ -1,0 +1,14 @@
+{
+    "color": {
+        "cream": { "$type": "color", "$value": "#f6f1ea" },
+        "cream-alt": { "$type": "color", "$value": "#efe7db" },
+        "navy": { "$type": "color", "$value": "#2f5043" },
+        "navy-dark": { "$type": "color", "$value": "#21392f" },
+        "terracotta": { "$type": "color", "$value": "#c27d6f" },
+        "terracotta-light": { "$type": "color", "$value": "#cf8e80" },
+        "text": { "$type": "color", "$value": "{color.navy}" },
+        "text-muted": { "$type": "color", "$value": "#5c6b60" },
+        "white": { "$type": "color", "$value": "#ffffff" },
+        "overlay": { "$type": "color", "$value": "rgba(47, 80, 67, 0.08)" }
+    }
+}

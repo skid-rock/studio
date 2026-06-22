@@ -11,7 +11,7 @@
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
-        "tokens": "style-dictionary build --config src/tokens/config.json",
+        "tokens": "tsx src/tokens/build.mts",
         "export": "tsx scripts/export.mts",
         "pretest": "npm run tokens",
         "test": "vitest run",

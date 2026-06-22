@@ -16,14 +16,14 @@
   --font-display: "Source Serif Pro", "Cormorant Garamond", Georgia, serif;
   --font-script: "Florisel", "Felidae", cursive;
   --font-body: "Inter", system-ui, sans-serif;
-  --color-cream: #fffaf1;
-  --color-cream-alt: #fcfaf5;
-  --color-navy: #275889;
-  --color-navy-dark: #1e4568;
-  --color-terracotta: #a3313a;
-  --color-terracotta-light: #a4313a;
-  --color-text-muted: #595b4e;
+  --color-cream: #f6f1ea;
+  --color-cream-alt: #efe7db;
+  --color-navy: #2f5043;
+  --color-navy-dark: #21392f;
+  --color-terracotta: #c27d6f;
+  --color-terracotta-light: #cf8e80;
+  --color-text-muted: #5c6b60;
   --color-white: #ffffff;
-  --color-overlay: rgba(39, 88, 137, 0.08);
+  --color-overlay: rgba(47, 80, 67, 0.08);
   --color-text: var(--color-navy);
 }

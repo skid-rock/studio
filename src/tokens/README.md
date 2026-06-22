@@ -4,10 +4,12 @@
 
 ## Структура
 
-- `source/` — DTCG JSON (палитра, типографика, размеры, motion).
+- `source/base/` — общие DTCG-токены (типографика, размеры, motion).
+- `source/themes/<id>/` — палитра каждой темы (`color.json`).
 - `dist/` — сгенерированные CSS-файлы тем (не править руками).
-- `config.json` — конфиг Style Dictionary.
-- `theme.ts` — загрузка CSS темы по `theme.id` из документа.
+- `themes.ts` — реестр курированных тем (`id` + человекочитаемое имя).
+- `build.mts` — программный билд Style Dictionary по каждой теме.
+- `theme.ts` — загрузка CSS темы по `theme.id` из документа (Node, экспорт).
 
 ## Сборка
 
@@ -17,7 +19,8 @@ npm run tokens
 make tokens
 ```
 
-Результат: `dist/cream-navy.css` с CSS-переменными (`--color-navy`, `--font-display`, …).
+Для каждой темы из `themes.ts`: `source/base/**` + `source/themes/<id>/**` → `dist/<id>.css`
+с CSS-переменными (`--color-navy`, `--font-display`, …).
 
 ## Граница «тема vs инстанс»
 

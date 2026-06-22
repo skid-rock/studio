@@ -13,20 +13,22 @@ import landingSample from '../../examples/landing.sample.json';
 import type { StudioDocument } from '../render-core/document';
 import { parseDocument } from '../render-core/document.schema';
 import { defaultRegistry } from '../sections/registry.default';
+import { DocumentActions } from './document-actions';
 import { EditorDocContext } from './editor-doc';
 import { InlineEditBridge } from './inline-edit';
 import { documentToPuck, makeConfig, puckToDocument } from './puck-adapter';
 import { SectionScriptsBridge } from './section-scripts';
+import { themeCssById } from './theme-assets';
+import { ThemeSwitcher } from './theme-switcher';
 
 import baseCss from '../render-core/styles/base.css?raw';
 import fontsCss from '../render-core/styles/fonts.css?raw';
-import creamNavyCss from '../tokens/dist/cream-navy.css?raw';
 
 /** Стартовый документ редактора — демо-лендинг Фазы 0 (конверт + hero + closing). */
 const INITIAL_DOC: StudioDocument = parseDocument(landingSample);
 
-/** CSS темы/базы для холста (как в src/App.tsx — через ?raw). */
-const FRAME_CSS = [baseCss, fontsCss, creamNavyCss].join('\n');
+/** CSS базы холста (тема подключается динамически по ThemeRef.id). */
+const FRAME_BASE_CSS = [baseCss, fontsCss].join('\n');
 // CSS всех модулей реестра (list() уже уникален по type, доп.дедуп не нужен).
 const MODULES_CSS = defaultRegistry
     .list()
@@ -56,6 +58,10 @@ export function Editor() {
     const docRef = useRef<StudioDocument>(INITIAL_DOC);
     const [data, setData] = useState<Data>(() => documentToPuck(INITIAL_DOC));
 
+    // revision — ключ ремоунта Puck: смена форсит свежий маунт со свежими data
+    // (используется при загрузке документа, чтобы холст пересобрался с нуля).
+    const [revision, setRevision] = useState(0);
+
     // Значение контекста рендера — документ, СТАБИЛЬНЫЙ по глобальным полям
     // (тема/motion/версия). Правка props секции не меняет ссылку → превью соседних
     // секций не перерисовываются (точечный ре-рендер, challenges §6). Секции на MVP
@@ -65,6 +71,9 @@ export function Editor() {
     const [ctxDoc, setCtxDoc] = useState<StudioDocument>(INITIAL_DOC);
 
     const config = useMemo(() => makeConfig(defaultRegistry), []);
+
+    // CSS темы холста — по ThemeRef.id текущего документа (перерисовывается при смене).
+    const themeCss = themeCssById(ctxDoc.theme.id);
 
     function handleChange(next: Data) {
         setData(next);
@@ -81,17 +90,50 @@ export function Editor() {
         );
     }
 
+    /** Применить загруженный документ: сброс живого состояния и ремоунт холста. */
+    function handleLoad(loaded: StudioDocument) {
+        docRef.current = loaded;
+        setData(documentToPuck(loaded));
+        setCtxDoc(loaded); // тема/motion могли смениться → обновить контекст рендера
+        setRevision((r) => r + 1);
+    }
+
+    /** Сменить тему документа: правит ThemeRef.id → новый ctx перекрашивает холст. */
+    function handleThemeChange(id: string) {
+        const nextDoc: StudioDocument = {
+            ...docRef.current,
+            theme: { ...docRef.current.theme, id },
+        };
+        docRef.current = nextDoc;
+        setCtxDoc(nextDoc);
+    }
+
     return (
         <EditorDocContext.Provider value={ctxDoc}>
-            <style>{FRAME_CSS}</style>
+            <style>{FRAME_BASE_CSS}</style>
+            <style>{themeCss}</style>
             <style>{MODULES_CSS}</style>
             <style>{CANVAS_CSS}</style>
             <Puck
+                key={revision}
                 config={config}
                 data={data}
                 onChange={handleChange}
                 iframe={{ enabled: false }}
                 overrides={{
+                    headerActions: ({ children }) => (
+                        <>
+                            <ThemeSwitcher
+                                value={ctxDoc.theme.id}
+                                onChange={handleThemeChange}
+                            />
+                            <DocumentActions
+                                getDoc={() => docRef.current}
+                                onLoad={handleLoad}
+                            />
+                            {children}
+                        </>
+                    ),
                     // Мост inline-правки монтируется внутри Puck-стора — отсюда у него
                     // есть dispatch. overrides.puck оборачивает весь UI редактора,
                     // не переписывая раскладку (ось «владение UX» — отдельная задача).
