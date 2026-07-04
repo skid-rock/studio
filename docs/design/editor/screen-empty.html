@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Экран / Пустой документ — мокап редактора (STUDIO-030)</title>
+    <link rel="stylesheet" href="editor.css" />
+</head>
+<body>
+    <!-- Состояние: пустой документ — подсказка на холсте + CTA, панель-заглушка -->
+    <div class="ed">
+        <header class="ed-header">
+            <span class="ed-header__doc">Без названия</span>
+            <button class="btn btn--icon is-disabled" title="Отменить">↶</button>
+            <button class="btn btn--icon is-disabled" title="Повторить">↷</button>
+            <div class="ed-header__sep"></div>
+            <span class="theme-select">
+                <span class="theme-select__swatch"></span>
+                Cream &amp; Navy
+                <span class="theme-select__caret">▼</span>
+            </span>
+            <button class="btn">Токены…</button>
+            <div class="ed-header__spacer"></div>
+            <button class="btn">Загрузить</button>
+            <button class="btn">Сохранить</button>
+            <button class="btn btn--primary">Экспорт HTML</button>
+        </header>
+
+        <aside class="ed-palette">
+            <h2 class="ed-palette__title">Блоки</h2>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Конверт-заставка</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Hero (имена и дата)</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Наша история (вехи)</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Расписание дня</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Обратный отсчёт</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Когда и где (+ карта)</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Дресс-код (палитра)</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Детали / FAQ (вопрос-ответ)</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>RSVP-форма</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Closing (подпись)</div>
+        </aside>
+
+        <main class="ed-canvas">
+            <div class="cv-empty">
+                Перетащите блок из палитры
+                <br />
+                <button class="btn btn--primary">Добавить Hero</button>
+            </div>
+        </main>
+
+        <aside class="ed-panel">
+            <div class="ed-panel__empty">Выберите секцию на холсте</div>
+        </aside>
+    </div>
+</body>
+</html>

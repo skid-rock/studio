@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Экран / Попап оверрайдов токенов — мокап редактора (STUDIO-030)</title>
+    <link rel="stylesheet" href="editor.css" />
+</head>
+<body>
+    <!-- Состояние: нажата кнопка «Токены…» — поверх основного экрана попап
+         оверрайдов (STUDIO-022): строки «токен → значение» + «Сбросить» -->
+    <div class="ed">
+        <header class="ed-header">
+            <span class="ed-header__doc">Полина &amp; Илья — свадьба</span>
+            <button class="btn btn--icon" title="Отменить">↶</button>
+            <button class="btn btn--icon is-disabled" title="Повторить">↷</button>
+            <div class="ed-header__sep"></div>
+            <span class="theme-select">
+                <span class="theme-select__swatch"></span>
+                Cream &amp; Navy
+                <span class="theme-select__caret">▼</span>
+            </span>
+            <button class="btn">Токены…</button>
+            <div class="ed-header__spacer"></div>
+            <button class="btn">Загрузить</button>
+            <button class="btn">Сохранить</button>
+            <button class="btn btn--primary">Экспорт HTML</button>
+        </header>
+
+        <aside class="ed-palette">
+            <h2 class="ed-palette__title">Блоки</h2>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Конверт-заставка</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Hero (имена и дата)</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Наша история (вехи)</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Расписание дня</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Обратный отсчёт</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Когда и где (+ карта)</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Дресс-код (палитра)</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Детали / FAQ (вопрос-ответ)</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>RSVP-форма</div>
+            <div class="block-card"><span class="block-card__handle">⠿</span>Closing (подпись)</div>
+        </aside>
+
+        <main class="ed-canvas">
+            <div class="cv-page">
+                <div class="cv-section">
+                    <section class="s-hero">
+                        <p class="s-hero__eyebrow">мы женимся</p>
+                        <h1 class="s-hero__names">Полина &amp; Илья</h1>
+                        <p class="s-hero__date">05.08.2026</p>
+                        <p class="s-hero__flourish">ждём вас!</p>
+                    </section>
+                </div>
+                <div class="cv-section">
+                    <section class="s-story">
+                        <h2 class="s-story__title">Наша история</h2>
+                        <div class="s-story__milestone">
+                            <span class="s-story__date">2019</span>
+                            <span class="s-story__text">Познакомились</span>
+                        </div>
+                        <div class="s-story__milestone">
+                            <span class="s-story__date">2022</span>
+                            <span class="s-story__text">Начали жить вместе</span>
+                        </div>
+                        <div class="s-story__milestone">
+                            <span class="s-story__date">2025</span>
+                            <span class="s-story__text">Сделал предложение</span>
+                        </div>
+                    </section>
+                </div>
+                <div class="cv-section">
+                    <section class="s-rsvp">
+                        <h2 class="s-rsvp__title">Анкета гостя</h2>
+                        <p class="s-rsvp__lead">Заполните анкету до 01.07.2026, чтобы мы всё подготовили :)</p>
+                        <form class="s-rsvp__form">
+                            <label class="s-rsvp__field">
+                                <span>Имя и фамилия</span>
+                                <input type="text" />
+                            </label>
+                            <div class="s-rsvp__field">
+                                <span>Сможете прийти?</span>
+                                <label class="s-rsvp__radio"><input type="radio" name="attend" checked /> Да, с удовольствием</label>
+                                <label class="s-rsvp__radio"><input type="radio" name="attend" /> К сожалению, нет</label>
+                            </div>
+                            <label class="s-rsvp__field">
+                                <span>Предпочитаемые напитки</span>
+                                <input type="text" placeholder="Вино, сок, вода…" />
+                            </label>
+                            <button type="button" class="s-rsvp__btn">Отправить</button>
+                        </form>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <aside class="ed-panel">
+            <div class="ed-panel__empty">Выберите секцию на холсте</div>
+        </aside>
+
+        <!-- Оверлей попапа — поверх всего экрана редактора -->
+        <div class="ed-overlay">
+            <div class="tokens-popup">
+                <h3 class="tokens-popup__title">Оверрайды токенов</h3>
+                <p class="tokens-popup__hint">Точечные правки поверх темы Cream &amp; Navy</p>
+                <div class="token-row">
+                    <span class="token-row__name">color.navy</span>
+                    <input type="color" value="#275889" />
+                    <input type="text" value="#275889" />
+                </div>
+                <div class="token-row">
+                    <span class="token-row__name">color.cream</span>
+                    <input type="color" value="#fffaf1" />
+                    <input type="text" value="#fffaf1" />
+                </div>
+                <div class="token-row">
+                    <span class="token-row__name">color.terracotta</span>
+                    <input type="color" value="#a3313a" />
+                    <input type="text" value="#a3313a" />
+                </div>
+                <div class="token-row">
+                    <span class="token-row__name">font.display</span>
+                    <select>
+                        <option selected>Source Serif Pro</option>
+                        <option>Cormorant Garamond</option>
+                        <option>Georgia</option>
+                    </select>
+                </div>
+                <div class="tokens-popup__footer">
+                    <button class="btn">Сбросить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

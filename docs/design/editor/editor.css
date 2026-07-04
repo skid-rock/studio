@@ -1,0 +1,835 @@
+/*
+ * Мокапы UI собственного редактора (STUDIO-030) — общий CSS всех страниц.
+ * Хром редактора — токены --chrome-* из дизайн-системы
+ * (docs/design/design-system.md): плавающие панели, глубина фоном, акцент
+ * фиксированный. Контент холста — строго токены темы cream-navy
+ * (var(--color-*, --font-*, --radius-*)).
+ * Спека: gd-brain/tasks/studio/STUDIO-030/analysis/implementation-plan.md, §4
+ * (композиция зон пересмотрена по design-system.md).
+ */
+
+/* Токены проекта (сгенерированы Style Dictionary, npm run tokens) */
+@import url('../../../src/tokens/dist/cream-navy.css');
+
+/* ── Шрифты: реальные файлы проекта (пути относительно этого файла) ───────── */
+
+@font-face {
+    font-family: 'Source Serif Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: url('../../../public/fonts/SourceSerifPro-Light.woff') format('woff');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Source Serif Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../../../public/fonts/SourceSerifPro-Regul.woff') format('woff');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Florisel';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../../../public/fonts/Floriselscript.woff') format('woff');
+    font-display: swap;
+}
+
+/* Inter — кириллица */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 300 500;
+    src: url('../../../public/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0Q5n-wU.woff2')
+        format('woff2');
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+    font-display: swap;
+}
+
+/* Inter — латиница */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 300 500;
+    src: url('../../../public/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2')
+        format('woff2');
+    unicode-range:
+        U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+        U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
+        U+FFFD;
+    font-display: swap;
+}
+
+/* ── Токены хрома (дизайн-система, docs/design/design-system.md) ──────────── */
+
+:root {
+    /* Поверхности и текст */
+    --chrome-scene: #ececea; /* фон-сцена, «глубина» под панелями */
+    --chrome-panel: #ffffff; /* плавающие панели, шапка, попапы */
+    --chrome-hover: #f4f4f2; /* hover карточек и кнопок */
+    --chrome-border: #eaeae7; /* тонкие внутренние разделители */
+    --chrome-text: #1f2937; /* основной текст UI */
+    --chrome-muted: #6b7280; /* вторичный текст, подписи */
+    --chrome-accent: #1f2937; /* акцент хрома: primary, фокус, выделение (решение №1) */
+    --chrome-on-accent: #ffffff; /* текст/иконки на акцентном фоне */
+    --chrome-scrim: rgba(31, 41, 55, 0.4); /* затемнение под попапами */
+    --chrome-danger: var(--color-terracotta); /* опасные действия */
+
+    /* Геометрия */
+    --chrome-radius-lg: 16px; /* панели, попапы */
+    --chrome-radius-md: 10px; /* кнопки, поля, карточки */
+    --chrome-radius-pill: 999px; /* переключатели, индикаторы */
+    --chrome-gap: 12px; /* воздух между панелями и краями окна */
+    --chrome-pad: 16px; /* внутренний отступ панелей */
+
+    /* Тени (глубина вместо границ) */
+    --chrome-shadow-panel:
+        0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+    --chrome-shadow-pop: 0 16px 48px rgba(0, 0, 0, 0.16);
+
+    /* Сцена: лёгкий шум (feTurbulence ~4%) + свет сверху по центру (решение №3) */
+    --chrome-scene-bg:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
+        radial-gradient(
+            1100px 640px at 50% 0%,
+            #f3f3f0 0%,
+            #ececea 60%,
+            #e4e4e1 100%
+        );
+}
+
+/* ── Каркас страницы-мокапа ───────────────────────────────────────────────── */
+
+body {
+    margin: 0;
+    padding: 24px 0;
+    background: #dedede; /* подложка вокруг рамки экрана, служебный серый */
+    font-family: var(--font-body);
+    color: var(--chrome-text);
+}
+
+/* Экран редактора 1440×900: сцена с плавающими карточками — шапка сверху,
+   палитра и панель по бокам, холст лежит прямо на сцене (план §4.1,
+   композиция — design-system.md, принципы 2–3) */
+.ed {
+    position: relative; /* якорь для оверлея попапа токенов */
+    width: 1440px;
+    height: 900px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    display: grid;
+    grid-template:
+        'header header header' 56px
+        'palette canvas panel' 1fr
+        / 240px 1fr 320px;
+    gap: var(--chrome-gap);
+    padding: var(--chrome-gap);
+    background-color: var(--chrome-scene);
+    background-image: var(--chrome-scene-bg);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12); /* рамка мокапа, не часть UI */
+    overflow: hidden;
+}
+
+/* Общий вид плавающей панели: карточка с крупным радиусом и мягкой тенью,
+   без бордеров по контуру (компонент «Панель») */
+.ed-header,
+.ed-palette,
+.ed-panel {
+    background: var(--chrome-panel);
+    border-radius: var(--chrome-radius-lg);
+    box-shadow: var(--chrome-shadow-panel);
+}
+
+/* ── Шапка (план §4.3) ────────────────────────────────────────────────────── */
+
+.ed-header {
+    grid-area: header;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 var(--chrome-pad);
+}
+
+.ed-header__doc {
+    font-size: 13px;
+    color: var(--chrome-muted);
+    margin-right: 8px;
+}
+
+.ed-header__spacer {
+    flex: 1;
+}
+
+/* Разделитель групп кнопок в шапке */
+.ed-header__sep {
+    width: 1px;
+    height: 24px;
+    background: var(--chrome-border);
+    margin: 0 4px;
+}
+
+/* Кнопки хрома */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--chrome-border);
+    border-radius: var(--chrome-radius-md);
+    background: var(--chrome-panel);
+    font: 500 13px var(--font-body);
+    color: var(--chrome-text);
+    cursor: pointer;
+}
+
+.btn--icon {
+    width: 32px;
+    padding: 0;
+    font-size: 15px;
+}
+
+.btn--primary {
+    background: var(--chrome-accent);
+    border-color: var(--chrome-accent);
+    color: var(--chrome-on-accent);
+}
+
+.btn--danger {
+    color: var(--chrome-danger);
+}
+
+.btn.is-disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* Переключатель темы: свотч + имя пресета + каретка (статичная имитация select).
+   Свотч — легальное место токенов темы в хроме: он показывает саму тему */
+.theme-select {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--chrome-border);
+    border-radius: var(--chrome-radius-md);
+    background: var(--chrome-panel);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.theme-select__swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-cream);
+    border: 5px solid var(--color-navy); /* «двойной» свотч темы: кайма + сердцевина */
+    box-sizing: border-box;
+}
+
+.theme-select__caret {
+    color: var(--chrome-muted);
+    font-size: 10px;
+}
+
+/* ── Палитра блоков (план §4.4; постоянная колонка — решение №2) ──────────── */
+
+.ed-palette {
+    grid-area: palette;
+    padding: 12px 10px;
+    overflow-y: auto;
+}
+
+.ed-palette__title {
+    margin: 4px 10px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--chrome-muted);
+}
+
+.block-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 10px;
+    border-radius: var(--chrome-radius-md);
+    font-size: 13px;
+    cursor: grab;
+}
+
+.block-card__handle {
+    color: var(--chrome-muted);
+    opacity: 0.6;
+    font-size: 13px;
+}
+
+/* Статичная демонстрация hover-состояния карточки */
+.block-card.is-hover {
+    background: var(--chrome-hover);
+}
+
+/* ── Холст (план §4.5): страница лежит прямо на сцене, без своей панели ───── */
+
+.ed-canvas {
+    grid-area: canvas;
+    overflow-y: auto;
+    padding: 28px 24px 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Страница лендинга: центрированная колонка на токенах контента; скругление и
+   тень — подача хрома («карточка» на сцене), сам лендинг прямоугольный */
+.cv-page {
+    width: var(--container-max);
+    background: var(--color-cream);
+    color: var(--color-text);
+    border-radius: var(--chrome-radius-lg);
+    box-shadow: var(--chrome-shadow-panel);
+}
+
+/* Обёртка секции: обычная / hover / выделенная (компонент «Холст / Секция») */
+.cv-section {
+    position: relative;
+}
+
+.cv-section.is-hover {
+    outline: 1px solid color-mix(in srgb, var(--chrome-accent) 40%, transparent);
+    outline-offset: -1px;
+}
+
+.cv-section.is-selected {
+    outline: 2px solid var(--chrome-accent);
+    outline-offset: -2px;
+}
+
+/* Мини-тулбар выделенной секции: над секцией справа */
+.cv-toolbar {
+    position: absolute;
+    top: -38px;
+    right: 0;
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    background: var(--chrome-panel);
+    border-radius: var(--chrome-radius-md);
+    box-shadow: var(--chrome-shadow-panel);
+    z-index: 2;
+}
+
+.cv-toolbar .btn {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    font-size: 13px;
+}
+
+/* Drop-индикатор между секциями (drag-состояние) */
+.cv-drop {
+    height: 2px;
+    background: var(--chrome-accent);
+    border-radius: var(--chrome-radius-pill);
+    margin: 0 -8px; /* чуть шире колонки, чтобы читался как слот */
+}
+
+/* Ghost перетаскиваемой секции */
+.cv-ghost {
+    opacity: 0.55;
+    transform: rotate(1.5deg);
+    box-shadow: var(--chrome-shadow-pop);
+    z-index: 3;
+}
+
+/* Пустой холст: подсказка + CTA (состояние «Пустой документ») */
+.cv-empty {
+    width: var(--container-max);
+    box-sizing: border-box;
+    padding: 96px 32px;
+    border: 2px dashed color-mix(in srgb, var(--chrome-accent) 30%, transparent);
+    border-radius: var(--chrome-radius-lg);
+    background: var(--chrome-panel);
+    text-align: center;
+    color: var(--chrome-muted);
+    font-size: 14px;
+}
+
+.cv-empty .btn {
+    margin-top: 20px;
+}
+
+/* Inline-правка текста: пунктирная рамка вокруг якоря + каретка + тултип */
+.inline-edit {
+    position: relative;
+    outline: 1px dashed var(--chrome-accent);
+    outline-offset: 3px;
+}
+
+.inline-caret {
+    display: inline-block;
+    width: 1px;
+    height: 0.9em;
+    background: currentColor;
+    vertical-align: -0.08em;
+    margin-left: 2px;
+}
+
+.inline-tooltip {
+    position: absolute;
+    top: -40px;
+    right: -4px; /* к правому краю якоря — не перекрывает eyebrow над заголовком */
+    padding: 5px 10px;
+    background: var(--chrome-text);
+    color: var(--chrome-panel);
+    font: 400 11px var(--font-body);
+    border-radius: var(--chrome-radius-md);
+    white-space: nowrap;
+    z-index: 2;
+}
+
+/* ── Демо-секции холста (по мотивам src/sections, тексты из сэмпла) ───────── */
+
+.s-hero {
+    padding: 56px 24px 48px;
+    text-align: center;
+}
+
+.s-hero__eyebrow {
+    margin: 0 0 10px;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-transform: lowercase;
+}
+
+.s-hero__names {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 40px;
+}
+
+.s-hero__date {
+    margin: 14px 0 0;
+    font-family: var(--font-display);
+    font-size: 18px;
+}
+
+/* Рукописный акцент — показывает font.script (Florisel) в контенте холста */
+.s-hero__flourish {
+    margin: 16px 0 0;
+    font-family: var(--font-script);
+    font-size: 26px;
+    color: var(--color-navy);
+}
+
+.s-story {
+    padding: 48px 28px;
+    background: var(--color-cream-alt);
+}
+
+.s-story__title {
+    margin: 0 0 24px;
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 26px;
+}
+
+.s-story__milestone {
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+    padding: 8px 0;
+}
+
+.s-story__date {
+    flex: 0 0 56px;
+    font-family: var(--font-display);
+    font-size: 18px;
+}
+
+.s-story__text {
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+.s-rsvp {
+    padding: 48px 24px 56px;
+    text-align: center;
+}
+
+.s-rsvp__title {
+    margin: 0 0 8px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 26px;
+}
+
+.s-rsvp__lead {
+    margin: 0 auto 24px;
+    max-width: 320px;
+    font-size: 13px;
+    opacity: 0.85;
+}
+
+.s-rsvp__form {
+    max-width: 300px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: left;
+    font-size: 13px;
+}
+
+.s-rsvp__field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.s-rsvp__field > span {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+}
+
+.s-rsvp__form input[type='text'] {
+    padding: 10px 12px;
+    border: 1.5px solid var(--color-navy);
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+    font: inherit;
+}
+
+.s-rsvp__radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.s-rsvp__btn {
+    margin-top: 4px;
+    padding: 11px 24px;
+    border: none;
+    border-radius: var(--radius-pill);
+    background: var(--color-navy);
+    color: var(--color-white);
+    font: 500 13px var(--font-body);
+    cursor: pointer;
+}
+
+/* ── Панель свойств (план §4.6) ───────────────────────────────────────────── */
+
+.ed-panel {
+    grid-area: panel;
+    overflow-y: auto;
+}
+
+.ed-panel__header {
+    padding: 15px var(--chrome-pad);
+    border-bottom: 1px solid var(--chrome-border);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.ed-panel__empty {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--chrome-muted);
+    font-size: 13px;
+}
+
+.field-group {
+    padding: 14px var(--chrome-pad) 6px;
+    border-bottom: 1px solid var(--chrome-border);
+}
+
+.field-group:last-of-type {
+    border-bottom: none;
+}
+
+.field-group__title {
+    margin: 0 0 12px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--chrome-muted);
+}
+
+.field {
+    margin-bottom: 14px;
+}
+
+.field__label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+/* Виджет text → textarea (~3 строки) */
+.field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 62px;
+    padding: 8px 10px;
+    border: 1px solid var(--chrome-border);
+    border-radius: var(--chrome-radius-md);
+    font: 400 13px var(--font-body);
+    color: var(--chrome-text);
+    resize: vertical;
+}
+
+/* Виджет select → dropdown */
+.field select {
+    width: 100%;
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid var(--chrome-border);
+    border-radius: var(--chrome-radius-md);
+    background: var(--chrome-panel);
+    font: 400 13px var(--font-body);
+    color: var(--chrome-text);
+}
+
+/* Виджет color → свотч 24×24 + hex-инпут */
+.field--color {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.field--color input[type='color'] {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid var(--chrome-border);
+    border-radius: var(--chrome-radius-md);
+    background: none;
+    cursor: pointer;
+}
+
+.field input[type='text'] {
+    height: 30px;
+    box-sizing: border-box;
+    padding: 0 8px;
+    border: 1px solid var(--chrome-border);
+    border-radius: var(--chrome-radius-md);
+    font: 400 13px var(--font-body);
+    color: var(--chrome-text);
+}
+
+.field--color input[type='text'] {
+    width: 90px;
+}
+
+/* Виджет range → слайдер + число (unit — в подписи поля) */
+.field--range {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.field--range input[type='range'] {
+    flex: 1;
+    accent-color: var(--chrome-accent);
+}
+
+.field--range input[type='number'] {
+    width: 60px;
+    height: 30px;
+    box-sizing: border-box;
+    padding: 0 6px;
+    border: 1px solid var(--chrome-border);
+    border-radius: var(--chrome-radius-md);
+    font: 400 13px var(--font-body);
+}
+
+/* Фокус контролов панели — фиксированный акцент хрома */
+.field textarea:focus,
+.field select:focus,
+.field input:focus {
+    outline: 2px solid var(--chrome-accent);
+    outline-offset: -1px;
+}
+
+/* ── Попап оверрайдов токенов (состояние «Токены…», план §4.7.5) ──────────── */
+
+.ed-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--chrome-scrim);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 120px;
+    z-index: 10;
+}
+
+.tokens-popup {
+    width: 380px;
+    padding: 18px 20px 20px;
+    background: var(--chrome-panel);
+    border-radius: var(--chrome-radius-lg);
+    box-shadow: var(--chrome-shadow-pop);
+}
+
+.tokens-popup__title {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.tokens-popup__hint {
+    margin: 0 0 12px;
+    font-size: 12px;
+    color: var(--chrome-muted);
+}
+
+.token-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--chrome-border);
+}
+
+.token-row:last-of-type {
+    border-bottom: none;
+}
+
+.token-row__name {
+    flex: 1;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+}
+
+.token-row input[type='color'] {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid var(--chrome-border);
+    border-radius: var(--chrome-radius-md);
+    background: none;
+}
+
+.token-row input[type='text'] {
+    width: 80px;
+    height: 28px;
+    box-sizing: border-box;
+    padding: 0 8px;
+    border: 1px solid var(--chrome-border);
+    border-radius: var(--chrome-radius-md);
+    font: 400 12px var(--font-body);
+}
+
+.token-row select {
+    width: 170px;
+    height: 28px;
+    border: 1px solid var(--chrome-border);
+    border-radius: var(--chrome-radius-md);
+    background: var(--chrome-panel);
+    font: 400 12px var(--font-body);
+}
+
+.tokens-popup__footer {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 14px;
+}
+
+/* ── Страница components.html (витрина компонентов) ───────────────────────── */
+
+.spec {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.spec__title {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 8px 0 4px;
+}
+
+.spec__lead {
+    font-size: 13px;
+    color: var(--chrome-muted);
+    margin: 0 0 24px;
+}
+
+.spec-item {
+    margin-bottom: 16px;
+    padding: 18px 20px 20px;
+    background: var(--chrome-panel);
+    border: 1px solid var(--chrome-border);
+    border-radius: var(--chrome-radius-lg);
+}
+
+.spec-item__name {
+    margin: 0 0 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    color: var(--chrome-muted);
+}
+
+.spec-item__row {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.spec-item__variant {
+    font-size: 11px;
+    color: var(--chrome-muted);
+    margin: 0 0 8px;
+}
+
+/* Кусочек сцены на витрине: показывает панель в родной среде (градиент + шум) */
+.spec-scene {
+    padding: 24px;
+    border-radius: var(--chrome-radius-md);
+    background-color: var(--chrome-scene);
+    background-image: var(--chrome-scene-bg);
+}
+
+/* Демо компонента «Панель» на витрине */
+.spec-panel-demo {
+    width: 220px;
+    box-sizing: border-box;
+    padding: var(--chrome-pad);
+    background: var(--chrome-panel);
+    border-radius: var(--chrome-radius-lg);
+    box-shadow: var(--chrome-shadow-panel);
+    font-size: 13px;
+    color: var(--chrome-muted);
+}
+
+/* Узкая колонка-обёртка для виджетов панели на витрине */
+.spec-item .panel-width {
+    width: 288px; /* внутренняя ширина панели: 320 − 2×16 паддинга */
+}
+
+/* Мини-макет секции для вариантов обёртки на витрине */
+.spec-section-demo {
+    width: 280px;
+    background: var(--color-cream);
+    color: var(--color-text);
+}
+
+.spec-section-demo .s-hero {
+    padding: 28px 16px 24px;
+}
+
+.spec-section-demo .s-hero__names {
+    font-size: 24px;
+}
