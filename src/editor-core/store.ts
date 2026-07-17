@@ -63,8 +63,12 @@ export function createEditorStore(
     let past: StudioDocument[] = [];
     let future: StudioDocument[] = [];
     const listeners = new Set<() => void>();
+    // Кэш снапшота состояния: getState() обязан возвращать стабильную ссылку между
+    // изменениями (контракт внешних сторов вроде useSyncExternalStore в оболочке).
+    let stateCache: EditorState | null = null;
 
     const emit = (): void => {
+        stateCache = null;
         for (const listener of listeners) {
             listener();
         }
@@ -96,7 +100,9 @@ export function createEditorStore(
 
     return {
         getState() {
-            return { document: doc, selectedId };
+            stateCache ??= { document: doc, selectedId };
+
+            return stateCache;
         },
         subscribe(listener) {
             listeners.add(listener);

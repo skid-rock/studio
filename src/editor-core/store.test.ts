@@ -196,6 +196,47 @@ describe('createEditorStore — selection', () => {
     });
 });
 
+describe('createEditorStore — стабильность снапшота', () => {
+    it('getState возвращает ту же ссылку между изменениями', () => {
+        const store = makeStore();
+
+        expect(store.getState()).toBe(store.getState());
+    });
+
+    it('команда даёт новый снапшот, но кэш стабилен до следующего изменения', () => {
+        const store = makeStore();
+        const before = store.getState();
+
+        store.addSection({ type: 'hero' });
+
+        const after = store.getState();
+
+        expect(after).not.toBe(before);
+        expect(store.getState()).toBe(after);
+    });
+
+    it('select и undo/redo тоже обновляют ссылку снапшота', () => {
+        const store = makeStore();
+
+        store.addSection({ type: 'hero', id: 's1' });
+
+        const afterAdd = store.getState();
+
+        store.select('s1');
+        const afterSelect = store.getState();
+
+        expect(afterSelect).not.toBe(afterAdd);
+
+        store.undo();
+        expect(store.getState()).not.toBe(afterSelect);
+
+        const afterUndo = store.getState();
+
+        store.redo();
+        expect(store.getState()).not.toBe(afterUndo);
+    });
+});
+
 describe('createEditorStore — subscribe', () => {
     it('listener вызывается на изменение; unsubscribe отписывает', () => {
         const store = makeStore();

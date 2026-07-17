@@ -110,6 +110,30 @@ export default tseslint.config(
             ],
         },
     },
+    // editor-own — свой редактор (React-оболочка над editor-core) строится без Puck/CraftJS.
+    // Машинная гарантия эпика «редактор без Puck»; render-core и src/editor/ разрешены.
+    {
+        files: ['src/editor-own/**/*.{ts,tsx}'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['@measured/puck', '@measured/puck/*'],
+                            message:
+                                'editor-own — редактор без Puck (STUDIO-032).',
+                        },
+                        {
+                            group: ['@craftjs/core', '@craftjs/core/*'],
+                            message:
+                                'editor-own не зависит от CraftJS (STUDIO-032).',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
     prettier,
     // Вертикальные отступы между логическими блоками (autofix через eslint --fix).
     // Prettier их не добавляет; правило совместимо с eslint-config-prettier.
