@@ -3,12 +3,17 @@ import { describe, expect, it } from 'vitest';
 import sampleJson from '../../examples/document.sample.json';
 import {
     addSection,
+    duplicateSection,
     moveSection,
     removeSection,
+    setTheme,
+    setThemeOverrides,
     sortedSections,
+    updateSectionProps,
     type StudioDocument,
 } from './document';
 import { parseDocument } from './document.schema';
+import type { ParamSchema } from './schema';
 
 /** Минимальный документ с одной секцией для изолированных сценариев. */
 function makeSingleSectionDoc(order = 'a0'): StudioDocument {
@@ -172,5 +177,113 @@ describe('removeSection', () => {
         removeSection(doc, 's_intro');
 
         expect(JSON.stringify(doc)).toBe(snapshot);
+    });
+});
+
+describe('duplicateSection', () => {
+    it('копирует props с новым id и order между оригиналом и следующим', () => {
+        const doc = parseDocument(sampleJson);
+        const next = duplicateSection(doc, 's_intro');
+        const sorted = sortedSections(next);
+        const clone = sorted.find(
+            (section) => section.id !== 's_intro' && section.id !== 's_hero',
+        )!;
+
+        expect(sorted.map((section) => section.id)).toEqual([
+            's_intro',
+            clone.id,
+            's_hero',
+        ]);
+        expect(clone.type).toBe('intro/envelope');
+        expect(clone.props).toEqual(
+            doc.sections.find((section) => section.id === 's_intro')!.props,
+        );
+        expect(clone.props).not.toBe(
+            doc.sections.find((section) => section.id === 's_intro')!.props,
+        );
+        expect(clone.order > 'a0').toBe(true);
+        expect(clone.order < 'a1').toBe(true);
+    });
+
+    it('возвращает тот же документ, если id не найден', () => {
+        const doc = parseDocument(sampleJson);
+        const next = duplicateSection(doc, 'missing');
+
+        expect(next).toBe(doc);
+    });
+});
+
+describe('updateSectionProps', () => {
+    const schema: ParamSchema = [
+        {
+            group: 'content',
+            items: [
+                { type: 'text', key: 'title', label: 'Title', def: 'Hello' },
+                { type: 'text', key: 'subtitle', label: 'Sub', def: 'World' },
+            ],
+        },
+    ];
+
+    it('мёржит patch без schema как есть', () => {
+        const doc = makeSingleSectionDoc();
+        const next = updateSectionProps(doc, 'only', {
+            title: 'X',
+            junk: 1,
+        });
+
+        expect(next.sections[0].props).toEqual({ title: 'X', junk: 1 });
+    });
+
+    it('сужает props по schema: мусор отброшен, дефолты добраны', () => {
+        const doc: StudioDocument = {
+            ...makeSingleSectionDoc(),
+            sections: [
+                {
+                    id: 'only',
+                    type: 'hero',
+                    order: 'a0',
+                    props: { title: 'Old', junk: true },
+                },
+            ],
+        };
+        const next = updateSectionProps(
+            doc,
+            'only',
+            { title: 'New', junk: false },
+            schema,
+        );
+
+        expect(next.sections[0].props).toEqual({
+            title: 'New',
+            subtitle: 'World',
+        });
+    });
+});
+
+describe('setTheme / setThemeOverrides', () => {
+    it('меняет id темы, сохраняя overrides', () => {
+        const doc: StudioDocument = {
+            ...makeSingleSectionDoc(),
+            theme: { id: 'cream-navy', overrides: { '--color-bg': '#fff' } },
+        };
+        const next = setTheme(doc, 'forest-blush');
+
+        expect(next.theme).toEqual({
+            id: 'forest-blush',
+            overrides: { '--color-bg': '#fff' },
+        });
+    });
+
+    it('заменяет overrides целиком', () => {
+        const doc: StudioDocument = {
+            ...makeSingleSectionDoc(),
+            theme: {
+                id: 'cream-navy',
+                overrides: { '--color-bg': '#fff' },
+            },
+        };
+        const next = setThemeOverrides(doc, { '--color-fg': '#000' });
+
+        expect(next.theme.overrides).toEqual({ '--color-fg': '#000' });
     });
 });

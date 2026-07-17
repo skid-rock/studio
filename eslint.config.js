@@ -70,6 +70,46 @@ export default tseslint.config(
             ],
         },
     },
+    // Граница «ядро редактирования ↛ React/движок» (STUDIO-031):
+    // editor-core — агностичный стор StudioDocument (selection, история, команды) без UI.
+    // Зависит только от render-core; React/Puck/Craft и React-оболочка src/editor/ запрещены.
+    {
+        files: ['src/editor-core/**/*.{ts,tsx}'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                'react',
+                                'react/*',
+                                'react-dom',
+                                'react-dom/*',
+                            ],
+                            message:
+                                'editor-core агностичен к React — импорт запрещён (STUDIO-031).',
+                        },
+                        {
+                            group: ['@measured/puck', '@measured/puck/*'],
+                            message:
+                                'editor-core не зависит от Puck — стор строится на StudioDocument (STUDIO-031).',
+                        },
+                        {
+                            group: ['@craftjs/core', '@craftjs/core/*'],
+                            message:
+                                'editor-core не зависит от CraftJS (STUDIO-031).',
+                        },
+                        {
+                            group: ['**/editor', '**/editor/**'],
+                            message:
+                                'editor-core — верхний слой относительно React-оболочки src/editor/; импорт из editor/ запрещён (STUDIO-031).',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
     prettier,
     // Вертикальные отступы между логическими блоками (autofix через eslint --fix).
     // Prettier их не добавляет; правило совместимо с eslint-config-prettier.

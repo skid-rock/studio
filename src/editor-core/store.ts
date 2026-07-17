@@ -1,0 +1,187 @@
+import type { StudioDocument } from '../render-core/document';
+import {
+    addSection as docAddSection,
+    duplicateSection as docDuplicateSection,
+    moveSection as docMoveSection,
+    removeSection as docRemoveSection,
+    setTheme as docSetTheme,
+    setThemeOverrides as docSetThemeOverrides,
+    updateSectionProps as docUpdateSectionProps,
+} from '../render-core/document';
+import type { BlockRegistry } from '../render-core/registry';
+
+/** Снимок состояния редактирования: документ (источник правды) + выбранная секция. */
+export interface EditorState {
+    document: StudioDocument;
+    selectedId: string | null;
+}
+
+/** Описание вставляемой секции. props опц. — добираются дефолтами блока из реестра. */
+export interface NewSection {
+    type: string;
+    props?: Record<string, unknown>;
+    id?: string;
+}
+
+/**
+ * Публичный порт ядра редактирования — без React/DOM. UI подписывается (subscribe) и
+ * шлёт команды; состояние он читает через getState(). Границу «ядро ↛ React/Puck»
+ * стережёт ESLint (STUDIO-031, scoped на editor-core).
+ */
+export interface EditorStore {
+    getState(): EditorState;
+    subscribe(listener: () => void): () => void;
+
+    select(id: string | null): void;
+
+    addSection(section: NewSection, index?: number): void;
+    removeSection(id: string): void;
+    moveSection(id: string, toIndex: number): void;
+    duplicateSection(id: string): void;
+    updateProps(id: string, patch: Record<string, unknown>): void;
+    setTheme(themeId: string): void;
+    setThemeOverrides(overrides: Record<string, string>): void;
+
+    undo(): void;
+    redo(): void;
+    canUndo(): boolean;
+    canRedo(): boolean;
+}
+
+/**
+ * Создать стор редактирования над StudioDocument. Источник правды — документ; стор
+ * добавляет ephemeral-состояние (selection) и историю снимков документа (undo/redo).
+ * Команды переиспользуют чистые операции render-core (document.ts) — стор их только
+ * оркестрирует (история + оповещение подписчиков).
+ */
+export function createEditorStore(
+    initial: StudioDocument,
+    registry: BlockRegistry,
+): EditorStore {
+    let doc = initial;
+    let selectedId: string | null = null;
+    let past: StudioDocument[] = [];
+    let future: StudioDocument[] = [];
+    const listeners = new Set<() => void>();
+
+    const emit = (): void => {
+        for (const listener of listeners) {
+            listener();
+        }
+    };
+
+    // Сбросить selection, если выбранной секции больше нет в документе.
+    const reconcileSelection = (): void => {
+        if (
+            selectedId !== null &&
+            !doc.sections.some((section) => section.id === selectedId)
+        ) {
+            selectedId = null;
+        }
+    };
+
+    // Применить транзакцию над документом: старый документ уходит в past (для undo),
+    // ветка redo сбрасывается. Если результат тот же объект — ничего не делаем.
+    const commit = (next: StudioDocument): void => {
+        if (next === doc) {
+            return;
+        }
+
+        past = [...past, doc];
+        future = [];
+        doc = next;
+        reconcileSelection();
+        emit();
+    };
+
+    return {
+        getState() {
+            return { document: doc, selectedId };
+        },
+        subscribe(listener) {
+            listeners.add(listener);
+
+            return () => {
+                listeners.delete(listener);
+            };
+        },
+
+        select(id) {
+            if (id === selectedId) {
+                return;
+            }
+
+            selectedId = id;
+            emit();
+        },
+
+        addSection(section, index) {
+            const mod = registry.get(section.type);
+            const props = section.props ?? { ...(mod?.defaults ?? {}) };
+
+            commit(
+                docAddSection(
+                    doc,
+                    { type: section.type, props, id: section.id },
+                    index,
+                ),
+            );
+        },
+        removeSection(id) {
+            commit(docRemoveSection(doc, id));
+        },
+        moveSection(id, toIndex) {
+            commit(docMoveSection(doc, id, toIndex));
+        },
+        duplicateSection(id) {
+            commit(docDuplicateSection(doc, id));
+        },
+        updateProps(id, patch) {
+            const section = doc.sections.find((s) => s.id === id);
+            const schema = section
+                ? registry.get(section.type)?.schema
+                : undefined;
+
+            commit(docUpdateSectionProps(doc, id, patch, schema));
+        },
+        setTheme(themeId) {
+            commit(docSetTheme(doc, themeId));
+        },
+        setThemeOverrides(overrides) {
+            commit(docSetThemeOverrides(doc, overrides));
+        },
+
+        undo() {
+            if (past.length === 0) {
+                return;
+            }
+
+            const prev = past[past.length - 1];
+
+            past = past.slice(0, -1);
+            future = [doc, ...future];
+            doc = prev;
+            reconcileSelection();
+            emit();
+        },
+        redo() {
+            if (future.length === 0) {
+                return;
+            }
+
+            const next = future[0];
+
+            future = future.slice(1);
+            past = [...past, doc];
+            doc = next;
+            reconcileSelection();
+            emit();
+        },
+        canUndo() {
+            return past.length > 0;
+        },
+        canRedo() {
+            return future.length > 0;
+        },
+    };
+}

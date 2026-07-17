@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
 
 import { orderBetween } from './order';
+import { parseBySchema, type ParamSchema } from './schema';
 
 /** Версия схемы документа. Растёт при несовместимых изменениях модели. */
 export const CURRENT_SCHEMA_VERSION = 1;
@@ -111,4 +112,69 @@ export function removeSection(doc: StudioDocument, id: string): StudioDocument {
         ...doc,
         sections: doc.sections.filter((section) => section.id !== id),
     };
+}
+
+/** Дублировать секцию по id: копия props, новый id, order — сразу после оригинала. */
+export function duplicateSection(
+    doc: StudioDocument,
+    id: string,
+): StudioDocument {
+    const list = sortedSections(doc);
+    const index = list.findIndex((section) => section.id === id);
+
+    if (index === -1) {
+        return doc;
+    }
+
+    const original = list[index];
+    const next = list[index + 1] ?? null;
+    const order = orderBetween(original.order, next?.order ?? null);
+
+    const clone: SectionNode = {
+        id: nanoid(),
+        type: original.type,
+        order,
+        props: { ...original.props },
+    };
+
+    return { ...doc, sections: [...doc.sections, clone] };
+}
+
+/**
+ * Обновить props секции: patch мёржится поверх текущих props секции. Если передана
+ * schema блока — итог сужается parseBySchema (STUDIO-013): невалидные/неизвестные
+ * поля отбрасываются, отсутствующие добираются дефолтами. Без schema — patch как есть.
+ */
+export function updateSectionProps(
+    doc: StudioDocument,
+    id: string,
+    patch: Record<string, unknown>,
+    schema?: ParamSchema,
+): StudioDocument {
+    return {
+        ...doc,
+        sections: doc.sections.map((section) => {
+            if (section.id !== id) {
+                return section;
+            }
+
+            const merged = { ...section.props, ...patch };
+            const props = schema ? parseBySchema(schema, merged) : merged;
+
+            return { ...section, props };
+        }),
+    };
+}
+
+/** Сменить пресет темы по id (точечные оверрайды токенов сохраняются). */
+export function setTheme(doc: StudioDocument, themeId: string): StudioDocument {
+    return { ...doc, theme: { ...doc.theme, id: themeId } };
+}
+
+/** Заменить оверрайды токенов темы (пустой объект — очистить оверрайды). */
+export function setThemeOverrides(
+    doc: StudioDocument,
+    overrides: Record<string, string>,
+): StudioDocument {
+    return { ...doc, theme: { ...doc.theme, overrides } };
 }
