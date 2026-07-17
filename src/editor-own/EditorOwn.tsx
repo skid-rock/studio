@@ -7,6 +7,8 @@ import { parseDocument } from '../render-core/document.schema';
 import { defaultRegistry } from '../sections/registry.default';
 import { resolveThemeCss } from '../editor/theme-assets';
 import { Canvas } from './canvas';
+import { Palette } from './palette';
+import { PropertiesPanel } from './properties-panel';
 
 import baseCss from '../render-core/styles/base.css?raw';
 import fontsCss from '../render-core/styles/fonts.css?raw';
@@ -94,8 +96,22 @@ export function EditorOwn(): ReactElement {
                 </span>
             </header>
 
+            <Palette
+                store={store}
+                registry={defaultRegistry}
+                doc={state.document}
+                selectedId={state.selectedId}
+            />
+
             <Canvas
                 store={store}
+                doc={state.document}
+                selectedId={state.selectedId}
+            />
+
+            <PropertiesPanel
+                store={store}
+                registry={defaultRegistry}
                 doc={state.document}
                 selectedId={state.selectedId}
             />

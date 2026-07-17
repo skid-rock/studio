@@ -1,18 +1,23 @@
-/* Хром собственного редактора (STUDIO-032). Токены — по docs/design/design-system.md. */
+/* Хром собственного редактора (STUDIO-032/033). Токены — по docs/design/design-system.md. */
 .own-root {
     --chrome-accent: #1f2937;
     --chrome-danger: #b3261e;
     --chrome-bg: #eceef1;
     --chrome-surface: #ffffff;
     --chrome-radius: 10px;
+    --chrome-gap: 12px;
 
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    height: 100vh;
+    display: grid;
+    grid-template:
+        'topbar topbar topbar' auto
+        'palette canvas panel' 1fr
+        / 240px 1fr 320px;
     background: var(--chrome-bg);
 }
 
 .own-topbar {
+    grid-area: topbar;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -30,7 +35,7 @@
 }
 
 .own-canvas {
-    flex: 1;
+    grid-area: canvas;
     overflow: auto;
     padding: 32px 16px 64px;
 }
@@ -143,4 +148,156 @@
     padding: 24px;
     color: var(--chrome-danger);
     font: 13px/1.4 system-ui, sans-serif;
+}
+
+/* ===== Палитра блоков (STUDIO-033) ===== */
+
+.own-palette {
+    grid-area: palette;
+    overflow: auto;
+    margin: var(--chrome-gap) 0 var(--chrome-gap) var(--chrome-gap);
+    padding: 12px;
+    background: var(--chrome-surface);
+    border-radius: var(--chrome-radius);
+    box-shadow: 0 2px 8px rgba(31, 41, 55, 0.08);
+    font: 14px/1.4 system-ui, sans-serif;
+    color: var(--chrome-accent);
+}
+
+.own-palette__title {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(31, 41, 55, 0.55);
+}
+
+.own-block-card {
+    display: block;
+    width: 100%;
+    margin: 0 0 6px;
+    padding: 10px 12px;
+    text-align: left;
+    font: 13px/1.3 system-ui, sans-serif;
+    color: var(--chrome-accent);
+    background: transparent;
+    border: 1px solid rgba(31, 41, 55, 0.14);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.own-block-card:hover {
+    background: rgba(31, 41, 55, 0.06);
+}
+
+/* ===== Панель свойств (STUDIO-033) ===== */
+
+.own-panel {
+    grid-area: panel;
+    overflow: auto;
+    margin: var(--chrome-gap) var(--chrome-gap) var(--chrome-gap) 0;
+    padding: 12px;
+    background: var(--chrome-surface);
+    border-radius: var(--chrome-radius);
+    box-shadow: 0 2px 8px rgba(31, 41, 55, 0.08);
+    font: 14px/1.4 system-ui, sans-serif;
+    color: var(--chrome-accent);
+}
+
+.own-panel__header {
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(31, 41, 55, 0.12);
+    font-weight: 600;
+}
+
+.own-panel__empty {
+    margin: 0;
+    padding: 32px 12px;
+    text-align: center;
+    color: rgba(31, 41, 55, 0.5);
+    font-size: 13px;
+}
+
+.own-field-group {
+    margin: 0 0 16px;
+}
+
+.own-field-group__title {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(31, 41, 55, 0.55);
+}
+
+.own-field {
+    display: block;
+    margin: 0 0 10px;
+}
+
+.own-field__label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    color: rgba(31, 41, 55, 0.7);
+}
+
+.own-field__textarea,
+.own-field__select,
+.own-field__color input[type='text'],
+.own-field__range input[type='number'] {
+    width: 100%;
+    padding: 6px 8px;
+    font: 13px/1.4 system-ui, sans-serif;
+    color: var(--chrome-accent);
+    background: var(--chrome-surface);
+    border: 1px solid rgba(31, 41, 55, 0.2);
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.own-field__textarea {
+    min-height: 62px;
+    resize: vertical;
+}
+
+/* color: свотч + hex-текст (мокап: editor.css:603-632). */
+.own-field__color {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.own-field__color input[type='color'] {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid rgba(31, 41, 55, 0.2);
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.own-field__color input[type='text'] {
+    width: 90px;
+    flex: none;
+}
+
+/* range: ползунок + число (мокап: editor.css:634-654). */
+.own-field__range {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.own-field__range input[type='range'] {
+    flex: 1;
+    accent-color: var(--chrome-accent);
+}
+
+.own-field__range input[type='number'] {
+    width: 64px;
+    flex: none;
 }

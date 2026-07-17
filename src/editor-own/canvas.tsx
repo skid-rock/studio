@@ -57,7 +57,7 @@ export function Canvas({ store, doc, selectedId }: CanvasProps): ReactElement {
             <div className="own-page">
                 {sections.length === 0 && (
                     <p className="own-empty">
-                        Документ пуст. Палитра блоков появится в STUDIO-033.
+                        Документ пуст. Добавьте блок из палитры слева.
                     </p>
                 )}
                 {sections.map((node, index) => (
