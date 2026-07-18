@@ -2,7 +2,7 @@
 # Короткие команды-обёртки над npm-скриптами.
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview lint format tokens export verify clean \
+.PHONY: help install dev build preview lint format tokens export verify e2e clean \
 	spike spike-verify spike-craft spike-craft-verify
 
 help: ## Показать список доступных команд
@@ -36,6 +36,9 @@ export: ## Статический экспорт примера лендинга
 
 verify: ## Единый гейт сдачи: токены + lint + build (tsc) + тесты
 	npm run verify
+
+e2e: ## e2e-смоук редактора (Playwright)
+	npm run test:e2e
 
 spike: ## Спайк редактора на Puck (браузер, STUDIO-008)
 	npm run spike

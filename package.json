@@ -16,6 +16,8 @@
         "pretest": "npm run tokens",
         "test": "vitest run",
         "verify": "npm run tokens && npm run lint && npm run build && npm run test",
+        "test:e2e": "playwright test",
+        "verify:e2e": "npm run verify && npm run test:e2e",
         "test:watch": "vitest"
     },
     "dependencies": {
@@ -27,6 +29,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
+        "@playwright/test": "^1.61.1",
         "@stylistic/eslint-plugin": "^5.10.0",
         "@types/node": "^26.0.0",
         "@types/react": "^19.2.17",

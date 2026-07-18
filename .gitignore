@@ -7,3 +7,7 @@ node_modules
 *.log
 .DS_Store
 .vite
+
+# Playwright (STUDIO-036)
+test-results/
+playwright-report/

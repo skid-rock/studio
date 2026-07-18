@@ -7,6 +7,11 @@ import react from '@vitejs/plugin-react';
 // Один вход: свой редактор (STUDIO-035).
 export default defineConfig({
     plugins: [react()],
+    server: {
+        // Не дефолт Vite (5173): уйти с занятого/привычного порта
+        port: 5577,
+        strictPort: true,
+    },
     test: {
         include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     },
