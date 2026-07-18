@@ -78,26 +78,6 @@
     opacity: 0.4;
 }
 
-/* Drop-индикатор: линия в промежутке (before — над секцией, after — под последней). */
-.own-section[data-drop='before']::before,
-.own-section[data-drop='after']::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--chrome-accent);
-    z-index: 10;
-}
-
-.own-section[data-drop='before']::before {
-    top: -2px;
-}
-
-.own-section[data-drop='after']::after {
-    bottom: -2px;
-}
-
 /* Мини-тулбар секции: виден при наведении и у выделенной. */
 .own-toolbar {
     position: absolute;
