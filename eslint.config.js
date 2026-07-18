@@ -9,8 +9,7 @@ import prettier from 'eslint-config-prettier';
 // Flat-config ESLint. eslint-config-prettier отключает правила, конфликтующие с Prettier.
 // @stylistic/padding-line-between-statements — после prettier: с Prettier не конфликтует.
 export default tseslint.config(
-    // spikes/ — одноразовые спайки (напр. STUDIO-008), вне прод-сборки и линта.
-    { ignores: ['dist', 'spikes'] },
+    { ignores: ['dist'] },
     {
         extends: [js.configs.recommended, ...tseslint.configs.recommended],
         files: ['**/*.{ts,tsx}'],
@@ -53,12 +52,12 @@ export default tseslint.config(
                         {
                             group: ['@measured/puck', '@measured/puck/*'],
                             message:
-                                'render-core/sections не должны зависеть от Puck-редактора (ADR-0001, STUDIO-027).',
+                                'render-core/sections не должны зависеть от Puck-редактора (ADR-0001, STUDIO-027; движок удалён в STUDIO-035).',
                         },
                         {
                             group: ['@craftjs/core', '@craftjs/core/*'],
                             message:
-                                'render-core/sections не должны зависеть от CraftJS-редактора (ADR-0001, STUDIO-027).',
+                                'render-core/sections не должны зависеть от CraftJS-редактора (ADR-0001, STUDIO-027; движок удалён в STUDIO-035).',
                         },
                         {
                             group: ['**/editor', '**/editor/**'],
@@ -93,12 +92,12 @@ export default tseslint.config(
                         {
                             group: ['@measured/puck', '@measured/puck/*'],
                             message:
-                                'editor-core не зависит от Puck — стор строится на StudioDocument (STUDIO-031).',
+                                'editor-core не зависит от Puck — стор строится на StudioDocument (STUDIO-031; движок удалён в STUDIO-035).',
                         },
                         {
                             group: ['@craftjs/core', '@craftjs/core/*'],
                             message:
-                                'editor-core не зависит от CraftJS (STUDIO-031).',
+                                'editor-core не зависит от CraftJS (STUDIO-031; движок удалён в STUDIO-035).',
                         },
                         {
                             group: ['**/editor', '**/editor/**'],
@@ -110,10 +109,10 @@ export default tseslint.config(
             ],
         },
     },
-    // editor-own — свой редактор (React-оболочка над editor-core) строится без Puck/CraftJS.
-    // Машинная гарантия эпика «редактор без Puck»; render-core и src/editor/ разрешены.
+    // editor — собственный редактор без Puck/CraftJS (STUDIO-032, выпил движка —
+    // STUDIO-035, ADR-0005). Машинная гарантия эпика «редактор без Puck».
     {
-        files: ['src/editor-own/**/*.{ts,tsx}'],
+        files: ['src/editor/**/*.{ts,tsx}'],
         rules: {
             'no-restricted-imports': [
                 'error',
@@ -122,12 +121,12 @@ export default tseslint.config(
                         {
                             group: ['@measured/puck', '@measured/puck/*'],
                             message:
-                                'editor-own — редактор без Puck (STUDIO-032).',
+                                'editor — собственный редактор без Puck/CraftJS (STUDIO-032, выпил движка — STUDIO-035, ADR-0005).',
                         },
                         {
                             group: ['@craftjs/core', '@craftjs/core/*'],
                             message:
-                                'editor-own не зависит от CraftJS (STUDIO-032).',
+                                'editor — собственный редактор без Puck/CraftJS (STUDIO-032, выпил движка — STUDIO-035, ADR-0005).',
                         },
                     ],
                 },

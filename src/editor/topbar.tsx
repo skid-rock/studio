@@ -2,10 +2,6 @@
  * Шапка своего редактора (STUDIO-034): undo/redo, темы, оверрайды токенов,
  * сохранение/загрузка документа, экспорт HTML.
  *
- * Компоненты шапки переиспользуются из src/editor/ — они чистый React/DOM без Puck
- * (ESLint-ограждение editor-own запрещает только Puck/CraftJS, STUDIO-032);
- * физический переезд файлов — STUDIO-035.
- *
  * Урок STUDIO-015: Topbar — модульный компонент (стабильная ссылка), данные идут
  * пропсами. Смена данных ре-рендерит шапку, а не ремоунтит — фокус текстовых
  * полей ThemeOverrides (шрифты) сохраняется.
@@ -15,15 +11,15 @@ import type { ReactElement } from 'react';
 import type { EditorStore } from '../editor-core';
 import type { StudioDocument } from '../render-core/document';
 import { defaultRegistry } from '../sections/registry.default';
-import { ThemeSwitcher } from '../editor/theme-switcher';
-import { ThemeOverrides } from '../editor/theme-overrides';
-import { DocumentActions } from '../editor/document-actions';
-import { themeCssById, resolveThemeCss } from '../editor/theme-assets';
+import { ThemeSwitcher } from './theme-switcher';
+import { ThemeOverrides } from './theme-overrides';
+import { DocumentActions } from './document-actions';
+import { themeCssById, resolveThemeCss } from './theme-assets';
 import {
     buildExportHtml,
     downloadHtml,
     formatBytes,
-} from '../editor/export-html';
+} from './export-html';
 import { FRAME_BASE_CSS } from './frame-css';
 
 export interface TopbarProps {

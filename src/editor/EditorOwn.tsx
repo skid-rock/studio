@@ -5,11 +5,12 @@ import landingSample from '../../examples/landing.sample.json';
 import { createEditorStore } from '../editor-core';
 import { parseDocument } from '../render-core/document.schema';
 import { defaultRegistry } from '../sections/registry.default';
-import { resolveThemeCss } from '../editor/theme-assets';
+import { resolveThemeCss } from './theme-assets';
 import { Canvas } from './canvas';
 import { CANVAS_CSS, FRAME_BASE_CSS, MODULES_CSS } from './frame-css';
 import { Palette } from './palette';
 import { PropertiesPanel } from './properties-panel';
+import { runModuleJs } from './section-scripts';
 import { Topbar } from './topbar';
 
 import chromeCss from './chrome.css?raw';
@@ -49,6 +50,20 @@ export function EditorOwn(): ReactElement {
 
         return () => window.removeEventListener('keydown', onKey);
     }, []);
+
+    // Live-JS секций: после каждой перерисовки холста прогоняем клиентские
+    // скрипты модулей (countdown и т.п.). rAF — дать React дорисовать блоки.
+    useEffect(() => {
+        const raf = requestAnimationFrame(() => {
+            const root = document.querySelector('.own-page');
+
+            if (root) {
+                runModuleJs(root);
+            }
+        });
+
+        return () => cancelAnimationFrame(raf);
+    }, [state.document]);
 
     return (
         <div className="own-root">

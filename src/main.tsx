@@ -1,8 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Editor } from './editor/Editor';
+import { EditorOwn } from './editor/EditorOwn';
 
-// Точка входа React-оболочки. Фаза 1: монтируем визуальный редактор (STUDIO-010).
+// Точка входа: собственный редактор — единственный (STUDIO-035, ADR-0005).
 const root = document.getElementById('root');
 
 if (!root) {
@@ -11,6 +11,6 @@ if (!root) {
 
 createRoot(root).render(
     <StrictMode>
-        <Editor />
+        <EditorOwn />
     </StrictMode>,
 );

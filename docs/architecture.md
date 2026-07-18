@@ -4,34 +4,35 @@
 течёт документ**. ADR остаются как «почему так решили» — здесь на них ссылки, без
 дублирования.
 
-> Карта отражает **актуальное** состояние кода (ранний этап Фазы 1: `src/editor/`
-> уже существует). Корневой [README](../README.md) местами описывает Фазу 0 «без
-> редактора» — он отстаёт; источник правды по структуре — этот документ и код.
+> Карта отражает **актуальное** состояние кода после STUDIO-035: единственный
+> редактор — собственный (`editor-core` + `editor`). Источник правды по структуре —
+> этот документ и код.
 
 ## 1. Рамка: проект — гексагон
 
 Studio построен в парадигме портов и адаптеров (knowledge перенесён из Go — см.
 [improvements/roadmap-control.md](improvements/roadmap-control.md)):
 
-| Мир Go                       | studio                                                                      |
-| ---------------------------- | --------------------------------------------------------------------------- |
-| Домен / ядро без фреймворка  | `render-core/` — чистые `(props, ctx) → string`, не знают про React         |
-| Доменная модель / агрегат    | `StudioDocument` — единственный источник правды                             |
-| Доменные модули              | `sections/` (envelope, hero, closing)                                       |
-| Driving-адаптер              | `editor/` — React-оболочка на Puck, тонкий маппинг в/из `StudioDocument`    |
-| Сменная реализация за портом | движок Puck, изолирован адаптером ([ADR-0004](adr/ADR-0004-editor-base.md)) |
+| Мир Go                       | studio                                                                                          |
+| ---------------------------- | ----------------------------------------------------------------------------------------------- |
+| Домен / ядро без фреймворка  | `render-core/` — чистые `(props, ctx) → string`, не знают про React                             |
+| Доменная модель / агрегат    | `StudioDocument` — единственный источник правды                                                 |
+| Доменные модули              | `sections/` (envelope, hero, closing, …)                                                        |
+| Driving-адаптер              | `editor/` — React-UI поверх `editor-core`                                                       |
+| Сменная реализация за портом | UI редактора изолирован стором ([ADR-0005](adr/ADR-0005-editor-own-engine.md))                  |
 
 Смысл: на архитектурной оси (границы, направление зависимостей) работаем как в
-бэкенде; React/Puck — сменная деталь за адаптером, а не сердце системы.
+бэкенде; React — сменная деталь оболочки, а не сердце системы.
 
 ## 2. Слои и зависимости
 
-| Слой               | Папка                                     | Ответственность                                                     | Зависит от                             |
-| ------------------ | ----------------------------------------- | ------------------------------------------------------------------- | -------------------------------------- |
-| Ядро (агностичное) | [`src/render-core/`](../src/render-core/) | модель документа, схема параметров, реестр, render, сборка страницы | — (ванильный TS)                       |
-| Секции             | [`src/sections/`](../src/sections/)       | модули блоков (`BlockModule`) + реестр по умолчанию                 | `render-core`                          |
-| Токены             | [`src/tokens/`](../src/tokens/)           | токены темы (DTCG JSON → CSS), загрузка CSS темы                    | — (типы из `render-core`)              |
-| Редактор           | [`src/editor/`](../src/editor/)           | React-оболочка на Puck, маппинг модели ↔ Puck, превью               | `render-core`, `sections`, Puck, React |
+| Слой               | Папка                                           | Ответственность                                                              | Зависит от                        |
+| ------------------ | ----------------------------------------------- | ---------------------------------------------------------------------------- | --------------------------------- |
+| Ядро (агностичное) | [`src/render-core/`](../src/render-core/)       | модель документа, схема параметров, реестр, render, сборка страницы          | — (ванильный TS)                  |
+| Секции             | [`src/sections/`](../src/sections/)             | модули блоков (`BlockModule`) + реестр по умолчанию                          | `render-core`                     |
+| Токены             | [`src/tokens/`](../src/tokens/)                 | токены темы (DTCG JSON → CSS), загрузка CSS темы                             | — (типы из `render-core`)         |
+| Стор редактора     | [`src/editor-core/`](../src/editor-core/)       | команды, selection, undo/redo над `StudioDocument` (без React)               | `render-core`                     |
+| Редактор           | [`src/editor/`](../src/editor/)                 | React-UI: холст, палитра, панель свойств, inline, шапка, темы, экспорт       | `editor-core`, `render-core`, `sections`, React |
 
 Все стрелки зависимостей направлены **внутрь** — к ядру. Ядро ни про кого из
 внешних слоёв не знает.
@@ -41,40 +42,39 @@ graph TD
   classDef core fill:#e8f0ff,stroke:#3b6fd4,color:#000;
   classDef react fill:#ffe2c2,stroke:#d2691e,color:#000;
 
-  subgraph EXT["React / движок (Puck) — только здесь"]
-    EDITOR["editor/<br/>React-оболочка, адаптер Puck"]:::react
-    MAIN["main.tsx · App.tsx<br/>точка входа"]:::react
+  subgraph EXT["React — только здесь"]
+    EDITOR["editor/<br/>React-UI над editor-core"]:::react
+    MAIN["main.tsx<br/>точка входа"]:::react
   end
 
+  ECORE["editor-core/<br/>стор · команды · undo/redo"]:::core
   SECTIONS["sections/<br/>модули блоков + registry.default"]
   TOKENS["tokens/<br/>токены темы → CSS"]
   CORE["render-core/<br/>модель · схема · реестр · render · page"]:::core
 
+  EDITOR --> ECORE
   EDITOR --> CORE
   EDITOR --> SECTIONS
-  MAIN --> SECTIONS
-  MAIN --> CORE
+  MAIN --> EDITOR
+  ECORE --> CORE
   SECTIONS --> CORE
   TOKENS -.типы.-> CORE
 
-  %% Ядро не имеет исходящих стрелок к React/движку — в этом весь инвариант.
+  %% Ядро не имеет исходящих стрелок к React — в этом весь инвариант.
 ```
 
 ## 3. Правило зависимостей (главный инвариант)
 
-**`render-core/` и `sections/` не импортируют React, `react-dom`, `@measured/puck`
-и `../editor`.** React и Puck живут только в `src/editor/` и точке входа
+**`render-core/`, `sections/` и `editor-core/` не импортируют React, `react-dom`,
+движки редактора и `../editor`.** React живёт только в `src/editor/` и точке входа
 `src/main.tsx`. Так прод-выход не тащит React ([ADR-0001](adr/ADR-0001-repo-structure.md),
 [ADR-0002](adr/ADR-0002-render-contract.md)).
 
 Граница **проверяется машинно**: правило `no-restricted-imports` в
-[`eslint.config.js`](../eslint.config.js) (scoped на `render-core/` и `sections/`)
-запрещает импорт React, `react-dom`, `@measured/puck`, `@craftjs/core` и `../editor`
-— нарушение валит `make lint` (сделано в STUDIO-027, пункт R1 из
-[improvements/roadmap-control.md](improvements/roadmap-control.md)). В адаптере Puck
-([`src/editor/puck-adapter.ts`](../src/editor/puck-adapter.ts)) импорты из Puck —
-только `import type` (кроме точки входа `Editor.tsx`), чтобы тип движка не утекал в
-рантайм-зависимости.
+[`eslint.config.js`](../eslint.config.js) (scoped на `render-core/`, `sections/`,
+`editor-core/`) запрещает импорт React, `react-dom`, `@measured/puck`, `@craftjs/core`
+и `../editor` — нарушение валит `make lint` (STUDIO-027 / STUDIO-031). Запрет Puck/Craft
+оставлен как защита от возврата движка после STUDIO-035.
 
 ## 4. Поток данных: документ → HTML/CSS
 
@@ -109,28 +109,24 @@ RenderResult { html, css }                      (types.ts)
   ([`src/tokens/theme.ts`](../src/tokens/theme.ts), `loadThemeCss`/`resolveThemeCss`);
   CSS темы инжектится в `buildPage`.
 
-**Один путь рендера.** Тот же `renderDocument` используется и в превью редактора, и
-в статическом экспорте (Node, без React) — это анти-drift и анти-bloat
-([ADR-0002](adr/ADR-0002-render-contract.md)).
+**Один путь рендера.** Тот же `renderDocument` / `mod.render` используется и в
+превью редактора (`BlockPreview`), и в статическом экспорте (Node, без React) —
+это анти-drift и анти-bloat ([ADR-0002](adr/ADR-0002-render-contract.md)).
 
-## 5. Изоляция движка (адаптер Puck)
+## 5. Изоляция движка редактора
 
-Puck редактирует дерево React-компонентов, но **не рендерит блоки по-своему** —
-оборачивает наш строковый render:
+Собственный редактор не рендерит блоки «по-своему» — оборачивает наш строковый
+render:
 
-- На каждый тип блока — Puck-компонент, чей React-`render` — обёртка
-  [`BlockPreview`](../src/editor/block-preview.tsx): зовёт `mod.render(props, ctx)`
-  и вставляет результат через `dangerouslySetInnerHTML`. Второго пути разметки нет —
-  тот же `mod.render`, что в экспорте (анти-drift).
-- Панель свойств генерируется из `ParamSchema` модуля
-  ([`fields-from-schema.ts`](../src/editor/fields-from-schema.ts)).
-- Модель Puck маппится в/из `StudioDocument`
-  ([`puck-adapter.ts`](../src/editor/puck-adapter.ts): `documentToPuck` /
-  `puckToDocument`); порядок секций — дробный `order`, пересчитывается по минимуму.
+- [`BlockPreview`](../src/editor/block-preview.tsx) зовёт `mod.render(props, ctx)`
+  и вставляет результат через `dangerouslySetInnerHTML`. Второго пути разметки нет.
+- Панель свойств строится из `ParamSchema` модуля
+  ([`schema-fields.tsx`](../src/editor/schema-fields.tsx)).
+- Источник правды — `StudioDocument` в [`editor-core`](../src/editor-core/); UI
+  подписывается на стор, адаптера документ↔движок нет.
 
-Источник правды остаётся `StudioDocument`; Puck — сменная деталь за тонким
-адаптером. Поэтому замена движка — переписать `src/editor/`, не трогая ядро
-([ADR-0004](adr/ADR-0004-editor-base.md), финальный выбор движка отложен).
+Границу держат `editor-core` (без React) и ESLint-ограждения. Замена оболочки —
+переписать `src/editor/`, не трогая ядро ([ADR-0005](adr/ADR-0005-editor-own-engine.md)).
 
 ## 6. Карта файлов ядра (`render-core/`)
 
@@ -155,8 +151,10 @@ Puck редактирует дерево React-компонентов, но **н
   (`(props, ctx) → строка`); один путь рендера; гранулярность inline (якоря `data-prop`).
 - [ADR-0003](adr/ADR-0003-schema-format.md) — формат схемы параметров (`ParamSchema`),
   schema-driven панель.
-- [ADR-0004](adr/ADR-0004-editor-base.md) — основа редактора (Puck за тонким
-  адаптером; финальный выбор движка отложен).
+- [ADR-0004](adr/ADR-0004-editor-base.md) — основа редактора на Puck (superseded;
+  историческое, до STUDIO-035).
+- [ADR-0005](adr/ADR-0005-editor-own-engine.md) — собственный движок редактора;
+  `@measured/puck` удалён.
 
 ## Ссылки
 

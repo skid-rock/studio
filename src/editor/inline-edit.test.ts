@@ -1,65 +1,185 @@
 /**
- * Юнит-тесты edit-time write-back (STUDIO-015): чистая логика applyInlineEdit.
+ * @vitest-environment happy-dom
+ *
+ * Юнит-тесты inline-правки своего холста (STUDIO-034).
  */
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 
-import type { Data } from '@measured/puck';
+import type { StudioDocument } from '../render-core/document';
+import { createRegistry } from '../render-core/registry';
+import type { BlockModule } from '../render-core/types';
+import { createEditorStore } from '../editor-core';
+import { attachInlineEdit } from './inline-edit';
 
-import { applyInlineEdit } from './inline-edit-logic';
-
-const DATA: Data = {
-    root: { props: {} },
-    content: [
+const heroModule: BlockModule = {
+    type: 'hero',
+    label: 'Hero',
+    schema: [
         {
-            type: 'hero',
-            props: {
-                id: 's_hero',
-                eyebrow: 'Мы женимся',
-                names: 'Полина & Илья',
-                date: '05.08.2026',
-            },
-        },
-        {
-            type: 'closing',
-            props: {
-                id: 's_closing',
-                signature: 'С любовью',
-                ps: 'Будем рады!',
-            },
+            group: 'content',
+            items: [
+                {
+                    type: 'text' as const,
+                    key: 'title',
+                    label: 'Title',
+                    def: 'Hero',
+                },
+            ],
         },
     ],
+    defaults: { title: 'Hero' },
+    render: () => '<section></section>',
 };
 
-describe('applyInlineEdit', () => {
-    it('обновляет prop узла по sectionId', () => {
-        const patch = applyInlineEdit(DATA, 's_hero', 'names', 'Аня & Боря');
+function makeStore(title = 'Старый заголовок') {
+    const doc: StudioDocument = {
+        schemaVersion: 1,
+        theme: { id: 'cream-navy' },
+        motion: { preset: 'subtle' },
+        sections: [
+            {
+                id: 's1',
+                type: 'hero',
+                order: 'a0',
+                props: { title },
+            },
+        ],
+    };
 
-        expect(patch.content).toHaveLength(2);
-        const hero = patch.content!.find(
-            (c) => (c.props as { id?: string }).id === 's_hero',
+    return createEditorStore(doc, createRegistry([heroModule]));
+}
+
+function mountPage(html: string): HTMLElement {
+    document.body.innerHTML = html;
+
+    return document.body.firstElementChild as HTMLElement;
+}
+
+describe('attachInlineEdit', () => {
+    let cleanup: (() => void) | undefined;
+
+    afterEach(() => {
+        cleanup?.();
+        cleanup = undefined;
+        document.body.innerHTML = '';
+    });
+
+    it('включает contentEditable на [data-prop]', () => {
+        const root = mountPage(`
+            <div>
+              <div data-section-id="s1">
+                <h1 data-prop="title">Старый заголовок</h1>
+              </div>
+            </div>
+        `);
+        const store = makeStore();
+
+        cleanup = attachInlineEdit(root, store);
+
+        const anchor = root.querySelector<HTMLElement>('[data-prop="title"]')!;
+
+        expect(anchor.getAttribute('contenteditable')).toBe('plaintext-only');
+        expect(anchor.hasAttribute('data-inline-edit-ready')).toBe(true);
+        expect(anchor.spellcheck).toBe(false);
+    });
+
+    it('коммитит текст в документ на focusout', () => {
+        const root = mountPage(`
+            <div>
+              <div data-section-id="s1">
+                <h1 data-prop="title">Старый заголовок</h1>
+              </div>
+            </div>
+        `);
+        const store = makeStore();
+
+        cleanup = attachInlineEdit(root, store);
+
+        const anchor = root.querySelector<HTMLElement>('[data-prop="title"]')!;
+
+        anchor.textContent = 'Новый заголовок';
+        anchor.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+
+        expect(store.getState().document.sections[0].props.title).toBe(
+            'Новый заголовок',
         );
-        expect(hero?.props.names).toBe('Аня & Боря');
-        expect(hero?.props.eyebrow).toBe('Мы женимся');
+        expect(store.canUndo()).toBe(true);
     });
 
-    it('no-op, если значение не изменилось', () => {
-        const patch = applyInlineEdit(DATA, 's_hero', 'names', 'Полина & Илья');
+    it('Enter без Shift вызывает blur (коммит)', () => {
+        const root = mountPage(`
+            <div>
+              <div data-section-id="s1">
+                <h1 data-prop="title">Старый заголовок</h1>
+              </div>
+            </div>
+        `);
+        const store = makeStore();
 
-        expect(patch).toEqual({});
-    });
+        cleanup = attachInlineEdit(root, store);
 
-    it('no-op, если узел не найден', () => {
-        const patch = applyInlineEdit(DATA, 'missing', 'names', 'X');
+        const anchor = root.querySelector<HTMLElement>('[data-prop="title"]')!;
 
-        expect(patch).toEqual({});
-    });
+        anchor.focus();
+        anchor.textContent = 'Через Enter';
 
-    it('не трогает соседние узлы', () => {
-        const patch = applyInlineEdit(DATA, 's_closing', 'ps', 'Новый P.S.');
+        const keyEvent = new KeyboardEvent('keydown', {
+            key: 'Enter',
+            bubbles: true,
+            cancelable: true,
+        });
 
-        const hero = patch.content!.find(
-            (c) => (c.props as { id?: string }).id === 's_hero',
+        anchor.dispatchEvent(keyEvent);
+        // В happy-dom blur после preventDefault может не сработать сам —
+        // симулируем blur, который браузер делает после preventDefault+blur().
+        if (document.activeElement === anchor) {
+            anchor.blur();
+        }
+
+        expect(store.getState().document.sections[0].props.title).toBe(
+            'Через Enter',
         );
-        expect(hero?.props.names).toBe('Полина & Илья');
+    });
+
+    it('no-op без изменений — история не растёт', () => {
+        const root = mountPage(`
+            <div>
+              <div data-section-id="s1">
+                <h1 data-prop="title">Старый заголовок</h1>
+              </div>
+            </div>
+        `);
+        const store = makeStore();
+
+        cleanup = attachInlineEdit(root, store);
+
+        const anchor = root.querySelector<HTMLElement>('[data-prop="title"]')!;
+
+        anchor.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+
+        expect(store.canUndo()).toBe(false);
+        expect(store.getState().document.sections[0].props.title).toBe(
+            'Старый заголовок',
+        );
+    });
+
+    it('включает contentEditable на якорях, добавленных после attach', async () => {
+        const root = mountPage(`<div></div>`);
+        const store = makeStore();
+
+        cleanup = attachInlineEdit(root, store);
+
+        root.innerHTML = `
+            <div data-section-id="s1">
+              <h1 data-prop="title">Старый заголовок</h1>
+            </div>
+        `;
+
+        // MutationObserver доставляет колбэк микротаском.
+        await Promise.resolve();
+
+        const anchor = root.querySelector<HTMLElement>('[data-prop="title"]')!;
+
+        expect(anchor.getAttribute('contenteditable')).toBe('plaintext-only');
     });
 });

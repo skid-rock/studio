@@ -5,7 +5,7 @@ import type { EditorStore } from '../editor-core';
 import { sortedSections } from '../render-core/document';
 import type { SectionNode, StudioDocument } from '../render-core/document';
 import { defaultRegistry } from '../sections/registry.default';
-import { BlockPreview } from '../editor/block-preview';
+import { BlockPreview } from './block-preview';
 import { attachInlineEdit } from './inline-edit';
 
 export interface CanvasProps {

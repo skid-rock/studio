@@ -16,14 +16,9 @@
         "pretest": "npm run tokens",
         "test": "vitest run",
         "verify": "npm run tokens && npm run lint && npm run build && npm run test",
-        "test:watch": "vitest",
-        "spike": "vite --config spikes/editor/vite.config.ts",
-        "spike:verify": "tsx spikes/editor/verify.mts",
-        "spike:craft": "vite --config spikes/editor-craft/vite.config.ts",
-        "spike:craft:verify": "tsx spikes/editor-craft/verify.mts"
+        "test:watch": "vitest"
     },
     "dependencies": {
-        "@measured/puck": "^0.20.2",
         "fractional-indexing": "^3.2.0",
         "nanoid": "^5.1.15",
         "react": "^19.2.7",
@@ -31,7 +26,6 @@
         "zod": "^4.4.3"
     },
     "devDependencies": {
-        "@craftjs/core": "^0.2.12",
         "@eslint/js": "^10.0.1",
         "@stylistic/eslint-plugin": "^5.10.0",
         "@types/node": "^26.0.0",

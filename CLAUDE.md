@@ -8,24 +8,27 @@ studio — конструктор лендингов: визуальный ре�
 
 ## Правило границ (главный инвариант)
 
-`src/render-core/` и `src/sections/` **не импортируют** React, `react-dom`,
-`@measured/puck`, `../editor`. React и Puck — только в `src/editor/` и точке входа
-`src/main.tsx`. В `src/editor/` импорты из Puck — `import type`, кроме `Editor.tsx`.
+`src/render-core/`, `src/sections/` и `src/editor-core/` **не импортируют** React,
+`react-dom`, движки редактора и `../editor`. React — только в `src/editor/` и точке
+входа `src/main.tsx`.
 
 Граница **проверяется машинно**: ESLint-правило `no-restricted-imports` (scoped на
-`render-core/`/`sections/`, STUDIO-027) валит `make lint` при импорте React/движка в
-ядро. Любое предложение, тянущее React/движок в ядро или секции, — нарушение.
+`render-core/`/`sections/`/`editor-core/`, STUDIO-027/031) валит `make lint` при
+импорте React/движка в ядро. Любое предложение, тянущее React/движок в ядро или
+секции, — нарушение.
 
 ## Где что лежит
 
 - `src/render-core/` — агностичное ядро: модель (`document.ts`), zod-валидация
   (`document.schema.ts`), схема параметров (`schema.ts`), реестр (`registry.ts`),
   render (`render.ts`), сборка страницы (`page.ts`), дробный порядок (`order.ts`).
-- `src/sections/` — модули блоков (`intro-envelope`, `hero`, `closing`) +
+- `src/sections/` — модули блоков (`intro-envelope`, `hero`, `closing`, …) +
   `registry.default.ts`. Зависит от `render-core`, не наоборот.
 - `src/tokens/` — токены темы (DTCG JSON → CSS через Style Dictionary), `theme.ts`.
-- `src/editor/` — React-оболочка на Puck (driving-адаптер): `Editor.tsx`,
-  `puck-adapter.ts`, `block-preview.tsx`, `fields-from-schema.ts`.
+- `src/editor-core/` — агностичный стор редактора: команды, selection, undo/redo
+  над `StudioDocument` (без React).
+- `src/editor/` — собственный редактор (React-UI): холст, палитра, панель свойств,
+  inline-правка, шапка, темы, экспорт; `BlockPreview` оборачивает `mod.render`.
 - `docs/adr/` — принятые решения; `docs/improvements/` — роадмапы и техдолг.
 
 Полная карта слоёв и поток данных — [docs/architecture.md](docs/architecture.md).
@@ -33,7 +36,7 @@ studio — конструктор лендингов: визуальный ре�
 ## Ключевые инварианты
 
 - **Источник правды — `StudioDocument`** (`src/render-core/document.ts`). Редактор
-  его лишь маппит в/из Puck; правки идут в документ.
+  правит документ через `editor-core`; UI лишь отражает стор.
 - **Render — чистая строка HTML**, агностичная к React: `RenderFn = (props, ctx) =>
 string`, без `document`/`window`/DOM (работает и в Node).
 - **Один путь рендера**: `renderDocument` используется и в превью, и в экспорте.

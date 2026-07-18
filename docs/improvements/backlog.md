@@ -95,7 +95,8 @@ error TS2322: 'RFn<EnvelopeState>'        is not assignable to 'RFn<Record<strin
 реестре стёртый модуль с замыканием `render = (raw) => typedRender(parseBySchema(...))`.
 `BlockModule<any>`/`eslint-disable` из `registry.ts` убраны; стирание стало sound
 (сужение `unknown → P` обеспечено рантайм-проверкой). Тот же парсер применяется при
-записи props из редактора (`puckToDocument`). Неточный комментарий про
+записи props из редактора (`puckToDocument` — историческое, до STUDIO-035;
+сейчас — через `editor-core`). Неточный комментарий про
 «ковариантность defaults» в `registry.ts` исправлен (единственный блокер —
 контравариантность `render`).
 

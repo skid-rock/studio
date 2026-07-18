@@ -12,8 +12,8 @@
 ### **StudioDocument**
 
 Корневой объект лендинга и **единственный источник правды**: `schemaVersion`,
-`theme`, `motion`, `sections[]`. Редактор лишь маппит его в/из Puck; все правки
-идут в документ.
+`theme`, `motion`, `sections[]`. Редактор правит документ через `editor-core`;
+все правки идут в документ.
 [document.ts](../src/render-core/document.ts)
 
 ### **SectionNode**
@@ -66,7 +66,7 @@ order **только** у одной секции (`orderBetween(prev, next)`), 
 ### **render-core**
 
 Агностичное ядро (ванильный TS): модель документа, схема параметров, реестр,
-render, сборка страницы. **Не импортирует** React/Puck — граница проверяется линтом
+render, сборка страницы. **Не импортирует** React/движки — граница проверяется линтом
 ([ADR-0001](adr/ADR-0001-repo-structure.md), STUDIO-027).
 [src/render-core/](../src/render-core/) · [README](../src/render-core/README.md)
 
@@ -165,12 +165,18 @@ CSS-переменными). Источник правды — JSON, CSS рук�
 
 ## Редактор
 
-### **editor (driving-адаптер)**
+### **editor (собственный редактор)**
 
-React-оболочка на Puck: тонкий маппинг модели ↔ Puck, автопанель из схемы, превью.
-Единственное место, где живут React/Puck. Замена движка = переписать `src/editor/`,
-не трогая ядро ([ADR-0004](adr/ADR-0004-editor-base.md)).
+React-UI поверх `editor-core`: холст, палитра, панель свойств, inline-правка,
+шапка, темы, экспорт. Единственное место, где живёт React. Замена оболочки =
+переписать `src/editor/`, не трогая ядро ([ADR-0005](adr/ADR-0005-editor-own-engine.md)).
 [src/editor/](../src/editor/)
+
+### **editor-core**
+
+Агностичный стор редактора: команды, selection, undo/redo над `StudioDocument`
+без React. UI подписывается на стор; адаптера документ↔движок нет.
+[src/editor-core/](../src/editor-core/)
 
 ### **BlockPreview**
 
@@ -179,18 +185,21 @@ React-обёртка превью: зовёт тот же `mod.render(props, ctx
 одним render (анти-drift).
 [block-preview.tsx](../src/editor/block-preview.tsx)
 
-### **documentToPuck / puckToDocument**
+### **schema-fields (автопанель)**
 
-Маппинг состояния редактора (`Puck.Data`) в/из `StudioDocument` без потерь
-(round-trip). Порядок секций — дробный `order`, пересчитывается по минимуму.
-[puck-adapter.ts](../src/editor/puck-adapter.ts)
+Строит поля панели свойств из `ParamSchema` модуля (range/text/select/color).
+Перевод схемы в контролы изолирован в одном модуле.
+[schema-fields.tsx](../src/editor/schema-fields.tsx)
 
-### **fieldsFromSchema (автопанель)**
+### **documentToPuck / puckToDocument** (историческое, до STUDIO-035)
 
-Строит поля панели свойств Puck из `ParamSchema` модуля (range→number,
-text→textarea, select→select, color→custom). Перевод схемы в контролы изолирован в
-одном модуле.
-[fields-from-schema.ts](../src/editor/fields-from-schema.ts)
+Маппинг состояния Puck-редактора в/из `StudioDocument`. Удалён вместе с
+`@measured/puck` в STUDIO-035; см. [ADR-0004](adr/ADR-0004-editor-base.md).
+
+### **fieldsFromSchema** (историческое, до STUDIO-035)
+
+Строила поля панели свойств Puck из `ParamSchema`. Заменена на `schema-fields`
+в собственном редакторе.
 
 ## Процесс / контроль
 
@@ -221,16 +230,18 @@ render помечает редактируемые места атрибутам
 
 ### **гексагон / порты-адаптеры**
 
-Парадигма проекта: ядро (`render-core`/`sections`) — домен без фреймворка; `editor`
-— driving-адаптер; Puck — сменная реализация за адаптером. Все зависимости
+Парадигма проекта: ядро (`render-core`/`sections`) — домен без фреймворка;
+`editor-core` — стор; `editor` — React-UI (driving-адаптер). Все зависимости
 направлены внутрь, к ядру.
 [architecture.md](architecture.md) §1–3
 
 ### **правило границ (машинная проверка)**
 
-Главный инвариант: `render-core/` и `sections/` не импортируют React, `react-dom`,
-`@measured/puck`, `../editor`. Проверяется линтом (`no-restricted-imports`,
-STUDIO-027) — нарушение валит `make lint`.
+Главный инвариант: `render-core/`, `sections/` и `editor-core/` не импортируют
+React, `react-dom`, движки редактора, `../editor`. Проверяется линтом
+(`no-restricted-imports`, STUDIO-027/031) — нарушение валит `make lint`.
+Запрет `@measured/puck`/`@craftjs/core` оставлен как защита от возврата
+(STUDIO-035).
 [architecture.md](architecture.md) §3 · [CLAUDE.md](../CLAUDE.md)
 
 ### **ADR**

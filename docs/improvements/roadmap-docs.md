@@ -112,8 +112,9 @@
 
 - **Артефакт:** `docs/architecture-editor.md`.
 - **Зачем:** зафиксировать устройство адаптера, когда он стабилизируется.
-- **Содержит:** `BlockPreview`, `documentToPuck`/`puckToDocument`, изоляцию Puck,
-  round-trip и anti-drift, «режим холста» для full-bleed секций.
+- **Содержит:** `BlockPreview`, изоляцию UI редактора через `editor-core`,
+  anti-drift, «режим холста» для full-bleed секций.
+  (`documentToPuck`/`puckToDocument` — неактуально после STUDIO-035).
 - **Польза:** оба. **Приоритет:** низкий. **Триггер:** Фаза 1, после стабилизации
   `editor/`.
 
