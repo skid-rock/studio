@@ -192,3 +192,34 @@ error TS2322: 'RFn<EnvelopeState>'        is not assignable to 'RFn<Record<strin
 либо явно зафиксировать текущий выбор как осознанный (комментарием в модуле) и
 закрыть запись. Триггер — любой баг на пересечении inline-правки с DnD/кликами
 или заметный рост документа.
+
+---
+
+## IMP-005. IDE: ложная TS2591 на e2e-смоуке (`Buffer` / Node-типы)
+
+- **Статус:** решено (сразу после STUDIO-036).
+- **Где:** [`e2e/editor-smoke.spec.ts`](../../e2e/editor-smoke.spec.ts),
+  [`playwright.config.ts`](../../playwright.config.ts).
+- **Появилось в:** STUDIO-036 (e2e вне корневого `tsconfig` — осознанно).
+
+### Симптом
+
+Линт и `npm run test:e2e` зелёные, а IDE подсвечивает
+`TS2591: Cannot find name Buffer` (и в orphan-проекте не видит типы Node /
+`@playwright/test`).
+
+### Корень
+
+`e2e/` и `playwright.config.ts` не входят в корневой `tsconfig.json`
+(`include: src, vite.config.ts, examples`) — typecheck гейта их не трогает
+(как `scripts/`). IDE открывает файл как orphan с DOM-либами без `@types/node`.
+Плюс спека мерила вес через `Buffer.byteLength`, а прод —
+`TextEncoder` в `export-html.ts`.
+
+### Решение
+
+- Замер веса в смоуке — через `new TextEncoder().encode(html).length` (как в
+  `src/editor/export-html.ts`).
+- Отдельный [`e2e/tsconfig.json`](../../e2e/tsconfig.json) с `"types": ["node"]`
+  и `include` на спеки + корневой `playwright.config.ts` — только для IDE;
+  в `npm run build` / `verify` не подключён.

@@ -84,7 +84,7 @@ test('экспорт: вес в бюджете 190 KiB, якоря размет�
     const html = readFileSync(filePath!, 'utf-8');
 
     // Вес — независимо от alert, тем же способом, что buildExportHtml
-    expect(Buffer.byteLength(html, 'utf-8')).toBeLessThanOrEqual(BUDGET_BYTES);
+    expect(new TextEncoder().encode(html).length).toBeLessThanOrEqual(BUDGET_BYTES);
 
     // Ключевые якоря экспортированной разметки
     expect(html.toLowerCase()).toContain('<!doctype html>');
