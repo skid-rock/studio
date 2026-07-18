@@ -41,6 +41,8 @@ export interface EditorStore {
     updateProps(id: string, patch: Record<string, unknown>): void;
     setTheme(themeId: string): void;
     setThemeOverrides(overrides: Record<string, string>): void;
+    /** Заменить документ целиком (загрузка из файла). Идёт через историю — откатывается Ctrl+Z. */
+    loadDocument(next: StudioDocument): void;
 
     undo(): void;
     redo(): void;
@@ -155,6 +157,11 @@ export function createEditorStore(
         },
         setThemeOverrides(overrides) {
             commit(docSetThemeOverrides(doc, overrides));
+        },
+        loadDocument(next) {
+            // commit сам сбросит ветку redo и снимет selection, если выбранной
+            // секции нет в новом документе (reconcileSelection).
+            commit(next);
         },
 
         undo() {

@@ -31,6 +31,7 @@
 
 .own-topbar__actions {
     display: flex;
+    align-items: center;
     gap: 6px;
 }
 
@@ -300,4 +301,29 @@
 .own-field__range input[type='number'] {
     width: 64px;
     flex: none;
+}
+
+/* Контролы шапки (STUDIO-034): переиспользуемые компоненты из src/editor/
+   рендерят голые select/details/button — подгоняем под тулбар по тегам. */
+.own-topbar__actions select,
+.own-topbar__actions button,
+.own-topbar__actions input[type='text'] {
+    font: inherit;
+    font-size: 13px;
+}
+
+/* Оверрайды токенов: details раскрывается вниз и растит шапку — как в Puck-версии. */
+.own-topbar__actions details {
+    font-size: 13px;
+}
+
+.own-topbar__actions details > summary {
+    cursor: pointer;
+}
+
+.own-topbar__actions details > label {
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }

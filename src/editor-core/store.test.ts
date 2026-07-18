@@ -254,3 +254,65 @@ describe('createEditorStore — subscribe', () => {
         expect(listener).toHaveBeenCalledTimes(2);
     });
 });
+
+describe('createEditorStore — loadDocument', () => {
+    it('заменяет документ целиком', () => {
+        const store = makeStore(
+            docWithSections([
+                { id: 'a', type: 'hero', order: 'a0', props: { title: 'A' } },
+            ]),
+        );
+        const loaded = docWithSections([
+            { id: 'b', type: 'hero', order: 'a0', props: { title: 'B' } },
+        ]);
+
+        store.loadDocument(loaded);
+
+        expect(store.getState().document).toBe(loaded);
+        expect(store.getState().document.sections.map((s) => s.id)).toEqual([
+            'b',
+        ]);
+    });
+
+    it('undo возвращает прежний документ; redo-ветка сбрасывается', () => {
+        const store = makeStore();
+
+        store.addSection({ type: 'hero', id: 's1' });
+        store.addSection({ type: 'hero', id: 's2' });
+        store.undo();
+        expect(store.canRedo()).toBe(true);
+
+        const loaded = docWithSections([
+            { id: 'x', type: 'hero', order: 'a0', props: { title: 'X' } },
+        ]);
+
+        store.loadDocument(loaded);
+
+        expect(store.canRedo()).toBe(false);
+        expect(store.getState().document.sections.map((s) => s.id)).toEqual([
+            'x',
+        ]);
+
+        store.undo();
+        expect(store.getState().document.sections.map((s) => s.id)).toEqual([
+            's1',
+        ]);
+    });
+
+    it('снимает selection, если выбранной секции нет в новом документе', () => {
+        const store = makeStore(
+            docWithSections([
+                { id: 'a', type: 'hero', order: 'a0', props: {} },
+            ]),
+        );
+
+        store.select('a');
+        store.loadDocument(
+            docWithSections([
+                { id: 'b', type: 'hero', order: 'a0', props: {} },
+            ]),
+        );
+
+        expect(store.getState().selectedId).toBeNull();
+    });
+});

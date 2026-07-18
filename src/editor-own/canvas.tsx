@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { DragEvent, ReactElement } from 'react';
 
 import type { EditorStore } from '../editor-core';
@@ -6,6 +6,7 @@ import { sortedSections } from '../render-core/document';
 import type { SectionNode, StudioDocument } from '../render-core/document';
 import { defaultRegistry } from '../sections/registry.default';
 import { BlockPreview } from '../editor/block-preview';
+import { attachInlineEdit } from './inline-edit';
 
 export interface CanvasProps {
     store: EditorStore;
@@ -19,6 +20,19 @@ export function Canvas({ store, doc, selectedId }: CanvasProps): ReactElement {
     const [dragId, setDragId] = useState<string | null>(null);
     // Индекс промежутка (0..n) под курсором, куда упадёт секция; null — нет цели.
     const [dropGap, setDropGap] = useState<number | null>(null);
+    const pageRef = useRef<HTMLDivElement | null>(null);
+
+    // Inline-правка живёт на корне страницы: делегирование событий покрывает все
+    // секции, включая добавленные позже (см. inline-edit.ts).
+    useEffect(() => {
+        const el = pageRef.current;
+
+        if (!el) {
+            return;
+        }
+
+        return attachInlineEdit(el, store);
+    }, [store]);
 
     const sections = sortedSections(doc);
 
@@ -54,7 +68,7 @@ export function Canvas({ store, doc, selectedId }: CanvasProps): ReactElement {
                 handleDrop();
             }}
         >
-            <div className="own-page">
+            <div className="own-page" ref={pageRef}>
                 {sections.length === 0 && (
                     <p className="own-empty">
                         Документ пуст. Добавьте блок из палитры слева.
