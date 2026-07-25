@@ -13,6 +13,8 @@
         "format": "prettier --write .",
         "tokens": "tsx src/tokens/build.mts",
         "export": "tsx scripts/export.mts",
+        "figma:inventory": "tsx scripts/figma/inventory.mts",
+        "figma:export": "tsx scripts/figma/export-asset.mts",
         "pretest": "npm run tokens",
         "test": "vitest run",
         "verify": "npm run tokens && npm run lint && npm run build && npm run test",

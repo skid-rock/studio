@@ -3,7 +3,8 @@
 
 .DEFAULT_GOAL := help
 .PHONY: help install dev build preview lint format tokens export verify e2e clean \
-	spike spike-verify spike-craft spike-craft-verify
+	spike spike-verify spike-craft spike-craft-verify \
+	figma-inventory figma-export
 
 help: ## Показать список доступных команд
 	@echo "Доступные команды:"
@@ -51,6 +52,12 @@ spike-craft: ## Спайк редактора на Craft.js (браузер, STU
 
 spike-craft-verify: ## Headless-проверка спайка на Craft.js (PASS/FAIL)
 	npm run spike:craft:verify
+
+figma-inventory: ## Инвентарь фрейма Figma одним вызовом (ARGS="32:127 --depth 2")
+	npm run figma:inventory -- $(ARGS)
+
+figma-export: ## Экспорт ассета из Figma в 2x (ARGS="238:2 public/img/dress-code/x.png")
+	npm run figma:export -- $(ARGS)
 
 clean: ## Удалить node_modules и dist
 	rm -rf node_modules dist

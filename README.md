@@ -23,6 +23,26 @@ make clean     # удалить node_modules и dist
 `make help` — список всех команд. Под капотом — npm-скрипты (`dev`, `build`,
 `preview`, `lint`, `format`, `verify`, `export`).
 
+### Перенос секции из Figma
+
+Обвязка над CLI [`figma-use`](https://github.com/dannote/figma-use) — канал
+design→code (решение D8 в gd-brain). Требует Figma desktop, поднятой с
+`--remote-debugging-port=9222`; проверка живости — `figma-use status`.
+
+```bash
+# инвентарь фрейма одним вызовом: sizing, выравнивание, повороты,
+# эффекты, скругления, типографика, bbox + renderBounds
+make figma-inventory ARGS="32:127"
+make figma-inventory ARGS="32:127 --depth 2 --out /tmp/section.json"
+
+# растровый ассет в 2x (флаг --scale у самого figma-use не работает)
+make figma-export ARGS="238:2 public/img/dress-code/shell-rings.png"
+make figma-export ARGS="238:2 icon.svg --format SVG"
+```
+
+Скрипты — [`scripts/figma/`](scripts/figma/); пошаговый порядок работ — рецепт
+переноса секции в gd-brain (`docs/knowledge/tools/figma/figma-to-studio-recipe.md`).
+
 ## Карта папок
 
 ```
