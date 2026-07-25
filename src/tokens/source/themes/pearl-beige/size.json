@@ -1,0 +1,5 @@
+{
+    "section": {
+        "pad-x": { "$type": "dimension", "$value": "clamp(1.25rem, 8vw, 2rem)" }
+    }
+}

@@ -1,0 +1,31 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-reveal: 1.2s;
+  --duration-fast: 0.35s;
+  --container-max: 420px;
+  --container-wide: 960px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-pill: 999px;
+  --section-pad-y: clamp(3rem, 8vw, 5rem);
+  --section-pad-x: clamp(1.25rem, 8vw, 2rem);
+  --font-display: "Arina", "Cormorant Garamond", Georgia, serif;
+  --font-script: "Florisel", "Felidae", cursive;
+  --font-body: "Open Sans Condensed", "Open Sans Condensed Light", "Inter", system-ui, sans-serif;
+  --color-cream: #ffffff;
+  --color-cream-alt: #f7f5f1;
+  --color-navy: #151414;
+  --color-navy-dark: #0d0c0c;
+  --color-terracotta: #a89a86;
+  --color-terracotta-light: #c2b5a3;
+  --color-text-muted: #5a5654;
+  --color-white: #ffffff;
+  --color-overlay: rgba(21, 20, 20, 0.08);
+  --color-surface-muted: #d9d9d9;
+  --color-accent-soft: #d3cbbd;
+  --color-text: var(--color-navy);
+}

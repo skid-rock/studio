@@ -3,7 +3,6 @@
  * Тот же renderDocument + buildPage, что и превью в браузере.
  */
 import {
-    copyFileSync,
     cpSync,
     existsSync,
     mkdirSync,
@@ -38,15 +37,12 @@ const html = buildPage(result, { themeCss, baseCss }, 'Полина & Илья')
 mkdirSync(join(OUT_DIR, 'img'), { recursive: true });
 writeFileSync(join(OUT_DIR, 'index.html'), html, 'utf8');
 
-const sealSrc = join(ROOT, 'public/img/seal.png');
-if (existsSync(sealSrc)) {
-    copyFileSync(sealSrc, join(OUT_DIR, 'img/seal.png'));
-}
-
-// Картинка-превью карты для секции venue (кладётся вручную в public/img/).
-const mapSrc = join(ROOT, 'public/img/map.png');
-if (existsSync(mapSrc)) {
-    copyFileSync(mapSrc, join(OUT_DIR, 'img/map.png'));
+// Картинки секций копируем каталогом целиком: секции ссылаются на пути внутри
+// public/img/ (seal.png у конверта, map.png у venue, dress-code/* у палитры),
+// поимённый список тут разъезжался бы с реестром при каждой новой секции.
+const imgSrc = join(ROOT, 'public/img');
+if (existsSync(imgSrc)) {
+    cpSync(imgSrc, join(OUT_DIR, 'img'), { recursive: true });
 }
 
 const fontsSrc = join(ROOT, 'public/fonts');

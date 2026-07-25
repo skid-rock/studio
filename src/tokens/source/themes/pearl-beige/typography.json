@@ -1,0 +1,12 @@
+{
+    "font": {
+        "display": {
+            "$type": "fontFamily",
+            "$value": "\"Arina\", \"Cormorant Garamond\", Georgia, serif"
+        },
+        "body": {
+            "$type": "fontFamily",
+            "$value": "\"Open Sans Condensed\", \"Open Sans Condensed Light\", \"Inter\", system-ui, sans-serif"
+        }
+    }
+}

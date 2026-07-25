@@ -9,6 +9,8 @@
         "text": { "$type": "color", "$value": "{color.navy}" },
         "text-muted": { "$type": "color", "$value": "#5a5a5e" },
         "white": { "$type": "color", "$value": "#ffffff" },
-        "overlay": { "$type": "color", "$value": "rgba(43, 43, 47, 0.08)" }
+        "overlay": { "$type": "color", "$value": "rgba(43, 43, 47, 0.08)" },
+        "surface-muted": { "$type": "color", "$value": "#e4e1da" },
+        "accent-soft": { "$type": "color", "$value": "#ded0b4" }
     }
 }

@@ -25,5 +25,7 @@
   --color-text-muted: #595b4e;
   --color-white: #ffffff;
   --color-overlay: rgba(39, 88, 137, 0.08);
+  --color-surface-muted: #ece7dd;
+  --color-accent-soft: #d8e0ea;
   --color-text: var(--color-navy);
 }

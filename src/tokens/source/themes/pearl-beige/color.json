@@ -1,0 +1,16 @@
+{
+    "color": {
+        "cream": { "$type": "color", "$value": "#ffffff" },
+        "cream-alt": { "$type": "color", "$value": "#f7f5f1" },
+        "navy": { "$type": "color", "$value": "#151414" },
+        "navy-dark": { "$type": "color", "$value": "#0d0c0c" },
+        "terracotta": { "$type": "color", "$value": "#a89a86" },
+        "terracotta-light": { "$type": "color", "$value": "#c2b5a3" },
+        "text": { "$type": "color", "$value": "{color.navy}" },
+        "text-muted": { "$type": "color", "$value": "#5a5654" },
+        "white": { "$type": "color", "$value": "#ffffff" },
+        "overlay": { "$type": "color", "$value": "rgba(21, 20, 20, 0.08)" },
+        "surface-muted": { "$type": "color", "$value": "#d9d9d9" },
+        "accent-soft": { "$type": "color", "$value": "#d3cbbd" }
+    }
+}

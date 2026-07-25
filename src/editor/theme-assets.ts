@@ -14,11 +14,13 @@ import type { ThemeRef } from '../render-core/document';
 import creamNavyCss from '../tokens/dist/cream-navy.css?raw';
 import forestBlushCss from '../tokens/dist/forest-blush.css?raw';
 import charcoalGoldCss from '../tokens/dist/charcoal-gold.css?raw';
+import pearlBeigeCss from '../tokens/dist/pearl-beige.css?raw';
 
 export const THEME_CSS: Record<string, string> = {
     'cream-navy': creamNavyCss,
     'forest-blush': forestBlushCss,
     'charcoal-gold': charcoalGoldCss,
+    'pearl-beige': pearlBeigeCss,
 };
 
 /** CSS темы по id с безопасным фолбэком на дефолт. */
