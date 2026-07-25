@@ -223,3 +223,49 @@ error TS2322: 'RFn<EnvelopeState>'        is not assignable to 'RFn<Record<strin
 - Отдельный [`e2e/tsconfig.json`](../../e2e/tsconfig.json) с `"types": ["node"]`
   и `include` на спеки + корневой `playwright.config.ts` — только для IDE;
   в `npm run build` / `verify` не подключён.
+
+---
+
+## IMP-006. Тема регистрируется в двух местах — тихий фолбэк на дефолт
+
+- **Статус:** решено (сразу после STUDIO-038).
+- **Где:** [`src/editor/theme-assets.ts`](../../src/editor/theme-assets.ts),
+  [`src/tokens/themes.ts`](../../src/tokens/themes.ts).
+- **Появилось в:** STUDIO-007 (ручная карта `?raw`-импортов), наступили в
+  STUDIO-038 (тема `pearl-beige`).
+
+### Симптом
+
+Тема добавлена в реестр `THEMES`, собран `dist/<id>.css`, переключатель её
+показывает — а холст рисует дефолтную тему. Ни ошибки, ни предупреждения:
+`themeById` (`themes.ts`) по контракту глушит неизвестный id фолбэком на
+`DEFAULT_THEME_ID`, и промах в карте неотличим от «пользователь открыл документ
+с удалённой темой».
+
+### Корень
+
+Два пути резолва CSS темы были разной природы:
+
+- Node-путь [`src/tokens/theme.ts`](../../src/tokens/theme.ts) — `themeCssPath`
+  **выводит** путь из id (`dist/<id>.css`), рассинхрон невозможен;
+- браузерный [`theme-assets.ts`](../../src/editor/theme-assets.ts) — ручные
+  `import … from '../tokens/dist/<id>.css?raw'` плюс руками собранная карта
+  `THEME_CSS`. Единственное место, где id дублируется вручную.
+
+Тест [`src/tokens/themes.test.ts`](../../src/tokens/themes.test.ts) проверял
+только наличие `dist/<id>.css` с ключевыми переменными — карту редактора он не
+видел вовсе.
+
+### Решение
+
+- `THEME_CSS` строится глобом по `dist/*.css` (`import.meta.glob` с
+  `query: '?raw'`, `eager: true`), ключ — имя файла без расширения. Ручной шаг
+  исчез: браузерный путь стал такой же производной от id, как Node-путь.
+- Новый [`src/editor/theme-assets.test.ts`](../../src/editor/theme-assets.test.ts)
+  сверяет **множества**: ключи `THEME_CSS` = id из `THEMES`. Расхождение влево —
+  тема есть в реестре, но `dist/<id>.css` не собран (`npm run tokens`); вправо —
+  осиротевший CSS удалённой темы.
+- Ограничение теста: под vitest CSS отключён и `?raw` отдаёт пустую строку для
+  любого `.css` (так же и на прямом импорте, не только на глобе) — поэтому
+  проверяются только ключи. Содержимое тем остаётся за `themes.test.ts`, где
+  чтение идёт через `node:fs` мимо трансформа Vite.
