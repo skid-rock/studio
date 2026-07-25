@@ -17,10 +17,11 @@
  * Решение по каналу — D8 в gd-brain (docs/strategy/decisions/2026-07-25-figma-channel.md).
  */
 import { writeFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
 
 import { evalInFigma, FigmaUseError } from './figma-use.mts';
 
-type Format = 'PNG' | 'JPG' | 'SVG' | 'PDF';
+export type Format = 'PNG' | 'JPG' | 'SVG' | 'PDF';
 
 const FORMATS: Format[] = ['PNG', 'JPG', 'SVG', 'PDF'];
 
@@ -29,7 +30,11 @@ const FORMATS: Format[] = ['PNG', 'JPG', 'SVG', 'PDF'];
  * бинарного канала у `eval` нет. Для SVG/PDF масштаб не применяется (вектор),
  * поэтому constraint ставится только для растра.
  */
-function buildScript(nodeId: string, format: Format, scale: number): string {
+export function buildScript(
+    nodeId: string,
+    format: Format,
+    scale: number,
+): string {
     const settings =
         format === 'PNG' || format === 'JPG'
             ? `{ format: ${JSON.stringify(format)}, constraint: { type: "SCALE", value: ${scale} } }`
@@ -56,7 +61,7 @@ function buildScript(nodeId: string, format: Format, scale: number): string {
 }
 
 /** Размер PNG из заголовка IHDR — чтобы проверить масштаб числом, а не на глаз. */
-function pngSize(buffer: Buffer): string | undefined {
+export function pngSize(buffer: Buffer): string | undefined {
     const isPng = buffer.length > 24 && buffer.readUInt32BE(0) === 0x89504e47;
 
     return isPng
@@ -64,7 +69,7 @@ function pngSize(buffer: Buffer): string | undefined {
         : undefined;
 }
 
-function parseArgs(argv: string[]): {
+export function parseArgs(argv: string[]): {
     nodeId: string;
     out: string;
     scale: number;
@@ -112,44 +117,51 @@ function parseArgs(argv: string[]): {
     return { nodeId, out, scale, format: resolved };
 }
 
-const { nodeId, out, scale, format } = parseArgs(process.argv.slice(2));
+function main(argv: string[]): void {
+    const { nodeId, out, scale, format } = parseArgs(argv);
 
-try {
-    const raw = evalInFigma(buildScript(nodeId, format, scale));
-    const result = JSON.parse(raw) as {
-        error?: string;
-        name: string;
-        rotation: number;
-        base64: string;
-    };
+    try {
+        const raw = evalInFigma(buildScript(nodeId, format, scale));
+        const result = JSON.parse(raw) as {
+            error?: string;
+            name: string;
+            rotation: number;
+            base64: string;
+        };
 
-    if (result.error) {
-        throw new FigmaUseError(result.error);
-    }
+        if (result.error) {
+            throw new FigmaUseError(result.error);
+        }
 
-    const buffer = Buffer.from(result.base64, 'base64');
+        const buffer = Buffer.from(result.base64, 'base64');
 
-    writeFileSync(out, buffer);
+        writeFileSync(out, buffer);
 
-    const size = pngSize(buffer);
-    const rotated = Math.abs(result.rotation) > 0.001;
+        const size = pngSize(buffer);
+        const rotated = Math.abs(result.rotation) > 0.001;
 
-    console.log(
-        `${out} — «${result.name}», ${format}${format === 'PNG' || format === 'JPG' ? ` @${scale}x` : ''}, ` +
-            `${(buffer.length / 1024).toFixed(1)} КБ${size ? `, ${size}` : ''}`,
-    );
-
-    if (rotated) {
         console.log(
-            `  ⚠ узел повёрнут на ${result.rotation.toFixed(2)}° — ассет уже повёрнут, ` +
-                'CSS-поворот не применять, размеры брать из renderBounds',
+            `${out} — «${result.name}», ${format}${format === 'PNG' || format === 'JPG' ? ` @${scale}x` : ''}, ` +
+                `${(buffer.length / 1024).toFixed(1)} КБ${size ? `, ${size}` : ''}`,
         );
-    }
-} catch (error) {
-    if (error instanceof FigmaUseError) {
-        console.error(`✗ ${error.message}`);
-        process.exit(1);
-    }
 
-    throw error;
+        if (rotated) {
+            console.log(
+                `  ⚠ узел повёрнут на ${result.rotation.toFixed(2)}° — ассет уже повёрнут, ` +
+                    'CSS-поворот не применять, размеры брать из renderBounds',
+            );
+        }
+    } catch (error) {
+        if (error instanceof FigmaUseError) {
+            console.error(`✗ ${error.message}`);
+            process.exit(1);
+        }
+
+        throw error;
+    }
+}
+
+// Запуск только когда файл вызван командой: при импорте из тестов main молчит.
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+    main(process.argv.slice(2));
 }

@@ -42,6 +42,15 @@ export function evalInFigma(script: string, maxOutputMb = 64): string {
         );
     }
 
+    return interpretEvalOutput(stdout);
+}
+
+/**
+ * Классифицирует сырой stdout `figma-use eval`: отдаёт результат либо бросает
+ * `FigmaUseError`. Вынесено отдельно от запуска процесса, чтобы разбор ответа
+ * проверялся тестами без живой Figma.
+ */
+export function interpretEvalOutput(stdout: string): string {
     const output = stdout.trim();
 
     // CLI печатает ошибки Plugin API в stdout с маркером ✗ и нулевым кодом выхода —

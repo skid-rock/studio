@@ -13,6 +13,13 @@ export default defineConfig({
         strictPort: true,
     },
     test: {
-        include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+        // scripts/**/*.test.mts — обвязка над figma-use (STUDIO-041): она живёт
+        // вне src, но её чистые части (разбор аргументов, сборка eval-скриптов,
+        // классификация ответа канала) проверяются здесь же.
+        include: [
+            'src/**/*.test.ts',
+            'src/**/*.test.tsx',
+            'scripts/**/*.test.mts',
+        ],
     },
 });

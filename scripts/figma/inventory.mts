@@ -13,6 +13,7 @@
  * Решение по каналу — D8 в gd-brain (docs/strategy/decisions/2026-07-25-figma-channel.md).
  */
 import { writeFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
 
 import { evalInFigma, FigmaUseError } from './figma-use.mts';
 
@@ -67,7 +68,7 @@ const SCALAR_FIELDS = [
  * `figma.mixed` (смешанные значения у текста и скруглений) отдаём строкой
  * "MIXED" — так видно, что свойство неоднородно, и оно не исчезает молча.
  */
-function buildScript(rootId: string, depth: number): string {
+export function buildScript(rootId: string, depth: number): string {
     return `return (async () => {
   const MAX_DEPTH = ${depth};
   const FIELDS = ${JSON.stringify(SCALAR_FIELDS)};
@@ -128,7 +129,7 @@ function buildScript(rootId: string, depth: number): string {
 })()`;
 }
 
-function parseArgs(argv: string[]): {
+export function parseArgs(argv: string[]): {
     nodeId: string;
     depth: number;
     out?: string;
@@ -162,23 +163,30 @@ function parseArgs(argv: string[]): {
     return { nodeId: positional[0], depth, out };
 }
 
-const { nodeId, depth, out } = parseArgs(process.argv.slice(2));
+function main(argv: string[]): void {
+    const { nodeId, depth, out } = parseArgs(argv);
 
-try {
-    const raw = evalInFigma(buildScript(nodeId, depth));
-    const pretty = JSON.stringify(JSON.parse(raw), null, 2);
+    try {
+        const raw = evalInFigma(buildScript(nodeId, depth));
+        const pretty = JSON.stringify(JSON.parse(raw), null, 2);
 
-    if (out) {
-        writeFileSync(out, pretty + '\n', 'utf8');
-        console.log(`${out} — ${pretty.length} символов`);
-    } else {
-        console.log(pretty);
+        if (out) {
+            writeFileSync(out, pretty + '\n', 'utf8');
+            console.log(`${out} — ${pretty.length} символов`);
+        } else {
+            console.log(pretty);
+        }
+    } catch (error) {
+        if (error instanceof FigmaUseError) {
+            console.error(`✗ ${error.message}`);
+            process.exit(1);
+        }
+
+        throw error;
     }
-} catch (error) {
-    if (error instanceof FigmaUseError) {
-        console.error(`✗ ${error.message}`);
-        process.exit(1);
-    }
+}
 
-    throw error;
+// Запуск только когда файл вызван командой: при импорте из тестов main молчит.
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+    main(process.argv.slice(2));
 }

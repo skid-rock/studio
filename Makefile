@@ -3,7 +3,6 @@
 
 .DEFAULT_GOAL := help
 .PHONY: help install dev build preview lint format tokens export verify e2e clean \
-	spike spike-verify spike-craft spike-craft-verify \
 	figma-inventory figma-export
 
 help: ## Показать список доступных команд
@@ -40,18 +39,6 @@ verify: ## Единый гейт сдачи: токены + lint + build (tsc) +
 
 e2e: ## e2e-смоук редактора (Playwright)
 	npm run test:e2e
-
-spike: ## Спайк редактора на Puck (браузер, STUDIO-008)
-	npm run spike
-
-spike-verify: ## Headless-проверка спайка на Puck (PASS/FAIL)
-	npm run spike:verify
-
-spike-craft: ## Спайк редактора на Craft.js (браузер, STUDIO-008)
-	npm run spike:craft
-
-spike-craft-verify: ## Headless-проверка спайка на Craft.js (PASS/FAIL)
-	npm run spike:craft:verify
 
 figma-inventory: ## Инвентарь фрейма Figma одним вызовом (ARGS="32:127 --depth 2")
 	npm run figma:inventory -- $(ARGS)
