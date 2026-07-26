@@ -3,7 +3,17 @@
 
 .DEFAULT_GOAL := help
 .PHONY: help install dev build preview lint format tokens export verify e2e clean \
-	figma-inventory figma-export
+	figma-inventory figma-export figma-lint
+
+# Пресет линта «studio» для макетов Figma: состав правил задан явным списком,
+# потому что секция lint.rules в .figma-use.json линтером игнорируется
+# (проверено на figma-use v0.13.5). Обоснование состава — docs/figma-lint-preset.md.
+FIGMA_LINT_RULES := \
+	--rule no-hardcoded-colors --rule text-style-required --rule effect-style-required \
+	--rule consistent-radius --rule touch-target-size --rule min-text-size \
+	--rule no-default-names --rule no-hidden-layers --rule no-groups \
+	--rule no-empty-frames --rule no-deeply-nested --rule no-mixed-styles \
+	--rule no-detached-instances
 
 help: ## Показать список доступных команд
 	@echo "Доступные команды:"
@@ -45,6 +55,9 @@ figma-inventory: ## Инвентарь фрейма Figma одним вызов�
 
 figma-export: ## Экспорт ассета из Figma в 2x (ARGS="238:2 public/img/dress-code/x.png")
 	npm run figma:export -- $(ARGS)
+
+figma-lint: ## Линт макета Figma пресетом studio (PAGE="Sections" или ARGS="--root 32:127")
+	figma-use lint $(if $(PAGE),--page "$(PAGE)",) $(FIGMA_LINT_RULES) -v $(ARGS)
 
 clean: ## Удалить node_modules и dist
 	rm -rf node_modules dist

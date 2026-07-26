@@ -38,10 +38,16 @@ make figma-inventory ARGS="32:127 --depth 2 --out /tmp/section.json"
 # растровый ассет в 2x (флаг --scale у самого figma-use не работает)
 make figma-export ARGS="238:2 public/img/dress-code/shell-rings.png"
 make figma-export ARGS="238:2 icon.svg --format SVG"
+
+# линт макета пресетом studio — перед переносом секции
+make figma-lint PAGE="Sections"
+make figma-lint ARGS="--root 32:127"
 ```
 
-Скрипты — [`scripts/figma/`](scripts/figma/); пошаговый порядок работ — рецепт
-переноса секции в gd-brain (`docs/knowledge/tools/figma/figma-to-studio-recipe.md`).
+Скрипты — [`scripts/figma/`](scripts/figma/); состав и обоснование пресета
+линта — [docs/figma-lint-preset.md](docs/figma-lint-preset.md); пошаговый порядок
+работ — рецепт переноса секции в gd-brain
+(`docs/knowledge/tools/figma/figma-to-studio-recipe.md`).
 
 ## Карта папок
 
