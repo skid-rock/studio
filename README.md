@@ -42,6 +42,9 @@ make figma-export ARGS="238:2 icon.svg --format SVG"
 # линт макета пресетом studio — перед переносом секции
 make figma-lint PAGE="Sections"
 make figma-lint ARGS="--root 32:127"
+
+# структура секции + машинный стресс-тест сужения до 320
+make figma-check ARGS="--root 32:127"
 ```
 
 Скрипты — [`scripts/figma/`](scripts/figma/); состав и обоснование пресета

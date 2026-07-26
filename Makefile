@@ -3,7 +3,7 @@
 
 .DEFAULT_GOAL := help
 .PHONY: help install dev build preview lint format tokens export verify e2e clean \
-	figma-inventory figma-export figma-lint
+	figma-inventory figma-export figma-lint figma-check
 
 # Пресет линта «studio» для макетов Figma: состав правил задан явным списком,
 # потому что секция lint.rules в .figma-use.json линтером игнорируется
@@ -58,6 +58,9 @@ figma-export: ## Экспорт ассета из Figma в 2x (ARGS="238:2 publi
 
 figma-lint: ## Линт макета Figma пресетом studio (PAGE="Sections" или ARGS="--root 32:127")
 	figma-use lint $(if $(PAGE),--page "$(PAGE)",) $(FIGMA_LINT_RULES) -v $(ARGS)
+
+figma-check: ## Чекер секции: структура + стресс-тест ресайза (ARGS="--root 32:127")
+	npm run figma:check -- $(ARGS)
 
 clean: ## Удалить node_modules и dist
 	rm -rf node_modules dist
