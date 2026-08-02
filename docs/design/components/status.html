@@ -1,0 +1,56 @@
+<!-- @dsCard group="Компоненты" name="Статус и подсказки" subtitle="Прогресс, спиннер, бейдж, подменю, тултип со стрелкой" viewport="660x1160" -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — Статус и подсказки</title><link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../styles/docs.css"><style>.tip-row{display:flex;gap:20px;flex-wrap:wrap;align-items:center}</style></head>
+<body class="ds">
+<p class="ds__title">Статус и подсказки</p>
+<p class="ds__lead">Всё, чем интерфейс отвечает на действие: идёт, сколько, сколько штук, что дальше. Ни один из этих элементов не должен быть заметнее холста.</p>
+<div class="demo">
+
+<p class="demo-head">Прогресс и спиннер</p>
+<div class="ch-panel">
+<div class="stack" style="gap:14px">
+<div class="ch-field"><span class="ch-field__label">Экспорт — 64%</span><span class="ch-progress"><span class="ch-progress__bar" style="width:64%"></span></span></div>
+<div class="ch-field"><span class="ch-field__label">Загрузка ассетов — сколько ещё, неизвестно</span><span class="ch-progress ch-progress--indeterminate"><span class="ch-progress__bar"></span></span></div>
+<div class="row"><span class="ch-spinner"></span><span>Публикуем…</span><button type="button" class="ch-btn ch-btn--sm ch-btn--ghost">Отменить</button></div>
+<div class="row"><button type="button" class="ch-btn ch-btn--primary" disabled><span class="ch-spinner" style="border-top-color:var(--chrome-on-accent)"></span>Публикуем</button></div>
+</div>
+</div>
+<p class="note">Спиннер — для «не знаем, сколько ждать», полоса — когда знаем. Обе крутилки замирают при <code>prefers-reduced-motion</code>.</p>
+
+<p class="demo-head">Бейдж</p>
+<div class="ch-panel">
+<div class="row">
+<button type="button" class="ch-btn ch-btn--ghost">Комментарии<span class="ch-badge">12</span></button>
+<button type="button" class="ch-btn ch-btn--ghost">Правки<span class="ch-badge ch-badge--accent">3</span></button>
+<button type="button" class="ch-btn ch-btn--ghost">Ошибки<span class="ch-badge ch-badge--danger">1</span></button>
+<span class="ch-choice">Черновик<span class="ch-badge ch-badge--dot ch-badge--accent"></span></span>
+</div>
+</div>
+
+<p class="demo-head">Подменю</p>
+<div class="ch-panel" style="min-height:220px">
+<div class="ch-menu" style="width:220px">
+<button type="button" class="ch-menu__item">Дублировать<span class="ch-menu__key">⌘D</span></button>
+<span class="ch-menu__wrap is-open">
+<button type="button" class="ch-menu__item ch-menu__item--sub">Переместить<span class="ch-menu__key"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+<span class="ch-menu"><button type="button" class="ch-menu__item">В начало</button><button type="button" class="ch-menu__item">На один вверх</button><button type="button" class="ch-menu__item">На один вниз</button><button type="button" class="ch-menu__item">В конец</button></span>
+</span>
+<hr class="ch-menu__sep">
+<button type="button" class="ch-menu__item ch-menu__item--danger">Удалить<span class="ch-menu__key">⌫</span></button>
+</div>
+</div>
+<p class="note">Подменю — тот же <code>.ch-menu</code> внутри <code>.ch-menu__wrap</code>: отдельного компонента для второго уровня нет. Раскрывается по hover, по <code>.is-open</code> и по фокусу внутри — клавиатура работает без скрипта.</p>
+
+<p class="demo-head">Тултип со стрелкой</p>
+<div class="ch-panel">
+<div class="tip-row">
+<span class="ch-tooltip ch-tooltip--top">Дублировать секцию</span>
+<span class="ch-tooltip ch-tooltip--bottom">⌘D</span>
+<span class="ch-tooltip ch-tooltip--right">Скрыть панель</span>
+</div>
+<hr class="ch-panel__sep">
+<div class="row"><span class="ch-tip"><button type="button" class="ch-btn ch-btn--icon" aria-label="Дублировать"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button><span class="ch-tooltip ch-tooltip--top">Дублировать ⌘D</span></span><span style="color:var(--chrome-muted)">← наведите: <code>.ch-tip</code> показывает подсказку без скрипта</span></div>
+</div>
+<p class="note">Стрелка — модификатор стороны, а не отдельный элемент. Слои у всего этого — из шкалы <code>--chrome-z-*</code>: подсказка и тост живут выше попапа, попап выше затемнения.</p>
+</div>
+</body></html>

@@ -1,0 +1,32 @@
+<!-- @dsCard group="Компоненты" name="Поля" subtitle="Строки-поля, залитые контролы, числа с ключом, тумблер, сегменты" viewport="660x760" -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — Поля</title><link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../styles/docs.css"></head>
+<body class="ds"><main class="demo">
+<h1 class="ds__title">Поля</h1>
+<p class="ds__lead">Основная форма — строка: подпись слева, контрол справа в колонке 148px. Контрол залит <code>--chrome-field</code>, рамки нет.</p>
+<div class="demo-head">Строки-поля</div>
+<div class="ch-panel" style="max-width:320px">
+<div class="stack" style="gap:8px">
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="f1">Выравнивание</label><select class="ch-select" id="f1"><option>По левому краю</option><option>По центру</option></select></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label" id="f-w">Ширина</span><div class="ch-seg" role="radiogroup" aria-labelledby="f-w"><button type="button" class="ch-seg__opt is-active" role="radio" aria-checked="true">Узкая</button><button type="button" class="ch-seg__opt" role="radio" aria-checked="false">Полная</button></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Отступы</span><div class="ch-num-group"><span class="ch-num" tabindex="0" role="spinbutton" aria-label="Отступ сверху" aria-valuenow="44"><span class="ch-num__key">T</span>44</span><span class="ch-num" tabindex="0" role="spinbutton" aria-label="Отступ снизу" aria-valuenow="44"><span class="ch-num__key">B</span>44</span></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Фиксировать</span><button type="button" class="ch-toggle is-on" role="switch" aria-checked="true" aria-label="Фиксировать" style="justify-self:end"></button></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Показывать</span><button type="button" class="ch-toggle" role="switch" aria-checked="false" aria-label="Показывать" style="justify-self:end"></button></div>
+</div>
+</div>
+<div class="demo-head">Стопкой — только для длинных значений</div>
+<div class="ch-panel" style="max-width:320px">
+<div class="stack">
+<div class="ch-field"><label class="ch-field__label" for="f2">Заголовок</label><input class="ch-input" id="f2" type="text" value="Дом у реки"></div>
+<div class="ch-field"><label class="ch-field__label" for="f3">Подзаголовок</label><input class="ch-input" id="f3" type="text" placeholder="Необязательно"></div>
+<div class="ch-field"><label class="ch-field__label" for="f4">Отступ сверху — 48px</label><input class="ch-range" id="f4" type="range" min="0" max="120" value="48"></div>
+</div>
+</div>
+<div class="demo-head">Цвет</div>
+<div class="ch-panel" style="max-width:320px">
+<div class="ch-field"><span class="ch-field__label" style="margin-bottom:4px">Фон секции</span><div class="ch-swatches"><button type="button" class="ch-swatch is-selected" style="background:#fffdf8" aria-label="Cream light"></button><button type="button" class="ch-swatch" style="background:#f6f1e7" aria-label="Cream"></button><button type="button" class="ch-swatch" style="background:#e8e2d4" aria-label="Sand"></button><button type="button" class="ch-swatch" style="background:#1f3a5f" aria-label="Ink"></button><button type="button" class="ch-swatch" style="background:#4a4a44" aria-label="Slate"></button><button type="button" class="ch-swatch" style="background:#ffffff" aria-label="White"></button></div></div>
+<hr class="ch-panel__sep">
+<div class="ch-field ch-field--row"><span class="ch-field__label">Точное значение</span><div class="ch-color-field"><span class="ch-color-field__swatch" style="background:#fffdf8"></span><span class="ch-color-field__value" style="margin-left:auto">#FFFDF8</span></div></div>
+</div>
+<p class="note">Поле показывает текущее значение, а не подсказку: пустой <code>placeholder</code> только там, где значения может не быть. Сетка свотчей — основной способ выбрать цвет из темы; <code>.ch-color-field</code> остаётся для точного значения.</p>
+</main></body></html>

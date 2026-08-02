@@ -1,0 +1,104 @@
+<!-- @dsCard group="Основы" name="Цвета" subtitle="Роли поверхностей, текста, акцента и опасного действия" viewport="660x520" -->
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Цвета хрома</title>
+    <link rel="stylesheet" href="../styles.css" />
+</head>
+<body class="ds">
+    <h1 class="ds__title">Цвета хрома редактора</h1>
+    <p class="ds__lead">
+        Токены <code>--chrome-*</code>. Контур инструмента — от темы лендинга
+        не зависит: ни одного <code>--color-*</code> здесь нет. Палитра A «Бумага»:
+        одна тёплая ось H 85–95, равномерная лестница светлот в oklch,
+        <code>border</code> и <code>field-hover</code> — разные значения.
+    </p>
+
+    <div class="sw-grid">
+        <div class="sw">
+            <div class="sw__chip sw__chip--scene"></div>
+            <p class="sw__name">--chrome-scene</p>
+            <p class="sw__value">oklch(.935 .005 95) · #eae9e6 + шум и свет сверху</p>
+            <p class="sw__role">Фон-сцена, глубина под панелями</p>
+        </div>
+
+        <div class="sw">
+            <div class="sw__chip sw__chip--panel"></div>
+            <p class="sw__name">--chrome-panel</p>
+            <p class="sw__value">oklch(.995 .002 95) · #fefdfc</p>
+            <p class="sw__role">Плавающие панели, шапка, попапы</p>
+        </div>
+
+        <div class="sw">
+            <div class="sw__chip sw__chip--hover"></div>
+            <p class="sw__name">--chrome-hover</p>
+            <p class="sw__value">oklch(.968 .004 95) · #f5f4f1</p>
+            <p class="sw__role">Hover карточек и кнопок</p>
+        </div>
+
+        <div class="sw">
+            <div class="sw__chip sw__chip--field"></div>
+            <p class="sw__name">--chrome-field</p>
+            <p class="sw__value">oklch(.955 .005 95) · #f1f0ec</p>
+            <p class="sw__role">Заливка контролов вместо обводки</p>
+        </div>
+
+        <div class="sw">
+            <div class="sw__chip" style="background:var(--chrome-field-hover)"></div>
+            <p class="sw__name">--chrome-field-hover</p>
+            <p class="sw__value">oklch(.930 .006 95) · #e9e8e3</p>
+            <p class="sw__role">Hover залитого контрола</p>
+        </div>
+
+        <div class="sw">
+            <div class="sw__chip sw__chip--border"></div>
+            <p class="sw__name">--chrome-border</p>
+            <p class="sw__value">oklch(.900 .006 95) · #dfdeda</p>
+            <p class="sw__role">Тонкие внутренние разделители</p>
+        </div>
+
+        <div class="sw">
+            <div class="sw__chip sw__chip--text"></div>
+            <p class="sw__name">--chrome-text</p>
+            <p class="sw__value">oklch(.29 .012 85) · #2e2b25</p>
+            <p class="sw__role">Основной текст UI</p>
+        </div>
+
+        <div class="sw">
+            <div class="sw__chip sw__chip--muted"></div>
+            <p class="sw__name">--chrome-muted</p>
+            <p class="sw__value">oklch(.52 .012 85) · #6c6961</p>
+            <p class="sw__role">Вторичный текст, подписи</p>
+        </div>
+
+        <div class="sw">
+            <div class="sw__chip sw__chip--accent"></div>
+            <p class="sw__name">--chrome-accent</p>
+            <p class="sw__value">oklch(.29 .012 85) · #2e2b25</p>
+            <p class="sw__role">Primary, фокус, выделение секции</p>
+        </div>
+
+        <div class="sw">
+            <div class="sw__chip sw__chip--on-accent"></div>
+            <p class="sw__name">--chrome-on-accent</p>
+            <p class="sw__value">oklch(.99 .003 95) · #fcfcf9</p>
+            <p class="sw__role">Текст и иконки на акценте</p>
+        </div>
+
+        <div class="sw">
+            <div class="sw__chip sw__chip--scrim"></div>
+            <p class="sw__name">--chrome-scrim</p>
+            <p class="sw__value">oklch(.29 .012 85 / .4)</p>
+            <p class="sw__role">Затемнение под попапами</p>
+        </div>
+
+        <div class="sw">
+            <div class="sw__chip sw__chip--danger"></div>
+            <p class="sw__name">--chrome-danger</p>
+            <p class="sw__value">oklch(.50 .16 30) · #ac3225</p>
+            <p class="sw__role">Опасные действия; не следует за темой</p>
+        </div>
+    </div>
+</body>
+</html>

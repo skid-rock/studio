@@ -1,0 +1,45 @@
+<!-- @dsCard group="Процесс" name="Журнал решений" subtitle="Шесть разборов, из которых выросли текущие токены — свёрнуто в один список" viewport="660x760" -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — Журнал решений</title><link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../styles/docs.css"><style>.j{display:grid;gap:10px}.j__row{display:grid;grid-template-columns:1fr;gap:2px;padding:12px 0;border-bottom:1px solid var(--chrome-border)}.j__row:last-child{border-bottom:0}.j__t{font-weight:var(--chrome-weight-title)}.j__f{color:var(--chrome-muted)}.j__o{text-wrap:pretty}</style></head>
+<body class="ds">
+<p class="ds__title">Журнал решений</p>
+<p class="ds__lead">Архив, а не рабочий инструмент: разборы и отвергнутые варианты лежат отдельными страницами в репозитории, здесь — только итог каждого. Открывать стоит, когда кто-то спрашивает «а почему так».</p>
+<div class="demo">
+<div class="ch-panel">
+<div class="j">
+
+<div class="j__row">
+<span class="j__t">Разбор референсов</span>
+<span class="j__f"><code>foundations/archive/references.html</code></span>
+<span class="j__o">Десять решений из двух образцов. Взято: плавающие панели с воздухом от краёв, заливка контрола вместо обводки, строка-поле «подпись слева — контрол справа». Отвергнуто: шапка во всю ширину, рамки вместо теней, цветной акцент.</span>
+</div>
+
+<div class="j__row">
+<span class="j__t">Палитра — варианты</span>
+<span class="j__f"><code>foundations/archive/palette-options.html</code>, <code>foundations/archive/palette-options-warm.html</code></span>
+<span class="j__o">Восемь направлений: бумага, графит, бумага + индиго, крем, лён, песок с терракотой, глубокая сцена, графитовый холст. Принята «Бумага» — одна тёплая ось H 85–95 и почти чёрный акцент, равный тексту.</span>
+</div>
+
+<div class="j__row">
+<span class="j__t">Палитра — аудит и коррекция</span>
+<span class="j__f"><code>foundations/archive/palette-audit.html</code></span>
+<span class="j__o">Что не сходилось в первых <code>--chrome-*</code>: неравномерная лестница светлот, <code>border</code> и <code>field-hover</code> одним значением, вторичный текст ниже AA на hover поля. Всё переписано в oklch, <code>muted</code> поднят до 4.9 на самой светлой поверхности.</span>
+</div>
+
+<div class="j__row">
+<span class="j__t">Типографика — аудит</span>
+<span class="j__f"><code>foundations/archive/type-audit.html</code></span>
+<span class="j__o">Прежняя шкала имела четыре размера, из них два отличались на 1px, и прописные в заголовках групп. Осталась одна ступень 13px; иерархию держат вес, цвет и воздух.</span>
+</div>
+
+<div class="j__row">
+<span class="j__t">Типографика — 4 варианта</span>
+<span class="j__f"><code>foundations/archive/type-options.html</code></span>
+<span class="j__o">Один фрагмент панели в четырёх гарнитурах. Принят Golos Text: нарисован под русский интерфейс, кириллица на 13px держится лучше латинских гротесков, цепочка запасных зафиксирована — метрики не плывут между macOS и Windows.</span>
+</div>
+
+</div>
+</div>
+<p class="note">Правило журнала: страница попадает сюда, когда решение принято. Живёт в системе то, что описано в <code>readme.md</code> и показано в группах «Основы» и «Компоненты»; всё остальное — история.</p>
+</div>
+</body></html>

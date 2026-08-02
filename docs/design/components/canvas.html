@@ -1,0 +1,21 @@
+<!-- @dsCard group="Компоненты" name="Холст: секция" subtitle="Обычная, hover, выделенная, drop-индикатор, ghost, пустой холст, страница" viewport="700x900" -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — Холст</title><link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../styles/docs.css"><style>.c-demo{width:100%;max-width:520px;margin:0 auto}.c-sec{padding:26px 28px;background:#fffdf8}.c-sec h3{margin:0 0 8px;font-size:18px;font-weight:400;color:#1f3a5f}.c-sec p{margin:0;font-size:15px;line-height:1.6;color:#4a4a44}.c-wrap{position:relative;margin-bottom:14px}.c-tb{position:absolute;top:-34px;right:0;z-index:2}.c-round{border-radius:var(--chrome-radius-md);overflow:hidden}</style></head>
+<body class="ds"><main class="demo">
+<h1 class="ds__title">Секция на холсте</h1>
+<p class="ds__lead">Состояния секции рисуются только контуром — сама секция принадлежит теме лендинга, хром её не перекрашивает: цвета и кегли внутри примеров взяты из темы, а не из <code>--chrome-*</code>.</p>
+<div class="c-demo">
+<div class="c-wrap c-round"><div class="ch-cv-section c-sec"><h3>Обычная</h3><p>Ничего не наведено, ничего не выбрано.</p></div></div>
+<div class="c-wrap c-round"><div class="ch-cv-section is-hover c-sec"><h3>Наведение</h3><p>Контур 1px, акцент 40%.</p></div></div>
+<div class="c-wrap c-round" style="margin-top:44px;overflow:visible"><div class="ch-cv-toolbar c-tb"><button type="button" class="ch-btn ch-btn--icon" aria-label="Вверх"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></button><button type="button" class="ch-btn ch-btn--icon" aria-label="Дублировать"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button><button type="button" class="ch-btn ch-btn--icon ch-btn--danger" aria-label="Удалить"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button></div><div class="ch-cv-section is-selected c-sec" style="border-radius:var(--chrome-radius-md)"><h3><span class="ch-inline-edit">Выделенная и правка текста</span><span class="ch-inline-caret"></span></h3><p>Контур 2px и мини-тулбар над правым краем.</p></div></div>
+<div class="ch-cv-drop" style="margin:10px 0"></div>
+<div class="c-wrap c-round"><div class="ch-cv-section ch-cv-ghost c-sec"><h3>Ghost при перетаскивании</h3><p>Полупрозрачна, наклон 1.5°, тень попапа.</p></div></div>
+<div class="ch-cv-empty">Пустой документ. Перетащите блок из палитры<br><button type="button" class="ch-btn ch-btn--primary" style="margin-top:16px">Добавить обложку</button></div>
+<div class="demo-head">Страница целиком — <code>.ch-cv-page</code></div>
+<div class="ch-cv-page">
+<section class="ch-cv-section" style="padding:40px 32px 34px;background:#f6f1e7"><p style="margin:0 0 10px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8a7f6d">Загородный дом</p><h1 style="margin:0 0 12px;font-size:32px;line-height:1.1;font-weight:400;color:#1f3a5f">Дом у реки</h1><p style="margin:0;font-size:15px;line-height:1.6;color:#4a4a44;max-width:44ch">Двадцать минут от города, сорок соток леса и собственный выход к воде.</p></section>
+<section class="ch-cv-section c-sec"><h3>Что внутри</h3><p>Три спальни, панорамная гостиная с камином, отдельная гостевая.</p></section>
+</div>
+</div>
+<p class="note">Страница — карточка на сцене: тёплый белый фон, радиус <code>--chrome-radius-lg</code>, тень панели. Секции внутри стыкуются без зазора, поэтому drop-индикатор — линия 2px акцентом, а не рамка вокруг слота: она читается как «встанет сюда» и не спорит с контуром выделения.</p>
+</main></body></html>

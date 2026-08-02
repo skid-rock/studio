@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Новый проект" description="Пустое состояние редактора: холст без блоков, панель свойств без выделения, первый шаг подсказан прямо в холсте" -->
+<helmet><script src="./ds-base.js"></script></helmet>
+<div class="ch-ed" style="width:1440px;height:900px;margin:0 auto">
+
+<aside class="ch-panel ch-ed-palette">
+<div class="ch-ident">
+<span class="ch-tile" style="background:var(--chrome-accent);color:var(--chrome-on-accent)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5"/><path d="m3 12 9 5 9-5"/></svg></span>
+<span class="ch-ident__text"><span class="ch-ident__name">Без названия</span><span class="ch-ident__sub">Черновик · не сохранён</span></span>
+<button type="button" class="ch-btn ch-btn--ghost ch-btn--icon ch-btn--sm" aria-label="Тема" style="margin-left:auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14A8 8 0 0 1 10 4a8 8 0 1 0 10 10Z"/></svg></button>
+</div>
+<hr class="ch-panel__sep" style="margin:12px 0">
+<div class="ch-seg ch-seg--fill" role="tablist"><button type="button" class="ch-seg__opt is-active" role="tab" aria-selected="true">Блоки</button><button type="button" class="ch-seg__opt" role="tab" aria-selected="false">Ассеты</button></div>
+<label class="ch-search" style="margin:10px 0 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input class="ch-search__input" type="search" placeholder="Поиск"></label>
+<div class="ch-block-card ch-block-card--drag" tabindex="0" role="button" draggable="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg></span>Обложка</div>
+<div class="ch-block-card ch-block-card--drag" tabindex="0" role="button" draggable="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg></span>Текст</div>
+<div class="ch-block-card ch-block-card--drag" tabindex="0" role="button" draggable="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>Галерея</div>
+<div class="ch-block-card ch-block-card--drag" tabindex="0" role="button" draggable="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>Преимущества</div>
+<div class="ch-block-card ch-block-card--drag" tabindex="0" role="button" draggable="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2Z"/></svg></span>Отзывы</div>
+<div class="ch-block-card ch-block-card--drag" tabindex="0" role="button" draggable="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 10h10M7 14h5"/></svg></span>Форма</div>
+<div class="ch-block-card ch-block-card--drag" tabindex="0" role="button" draggable="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15h18"/></svg></span>Подвал</div>
+<div class="ch-panel__foot">
+<hr class="ch-panel__sep" style="margin:0 0 6px">
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span>Шаблоны</div>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg></span>Импорт</div>
+</div>
+</aside>
+
+<div class="ch-ed-toolbar ch-ed-toolbar--float">
+<button type="button" class="ch-btn ch-btn--ghost ch-btn--icon" aria-label="Выбор"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m4 3 7 17 2.5-6.5L20 11 4 3Z"/></svg></button>
+<button type="button" class="ch-btn ch-btn--ghost ch-btn--icon" aria-label="Текст"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg></button>
+<button type="button" class="ch-btn ch-btn--ghost ch-btn--icon" aria-label="Изображение"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></button>
+<button type="button" class="ch-btn ch-btn--ghost ch-btn--icon" aria-label="Секция"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg></button>
+<span class="ch-ed-toolbar__sep"></span>
+<button type="button" class="ch-btn ch-btn--ghost" style="gap:4px">100%<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+<button type="button" class="ch-btn ch-btn--primary" disabled="disabled">Экспорт</button>
+</div>
+
+<main class="ch-ed-canvas">
+<div class="ch-cv-page" style="background:transparent;box-shadow:none">
+<div class="ch-cv-empty">
+<p style="margin:0 0 6px;font-weight:600;color:var(--chrome-text)">Пустая страница</p>
+<p style="margin:0 0 16px">Перетащите блок из колонны слева — или начните с обложки.</p>
+<sc-if value="{{ showFirstStep }}" hint-placeholder-val="{{ true }}"><button type="button" class="ch-btn ch-btn--primary">Добавить обложку</button></sc-if>
+</div>
+</div>
+</main>
+
+<div class="ch-ed-dock ch-ed-dock--float"><div class="ch-seg" role="radiogroup" aria-label="Режим окна"><button type="button" class="ch-seg__opt is-active" role="radio" aria-checked="true">Редактор</button><button type="button" class="ch-seg__opt" role="radio" aria-checked="false">Предпросмотр</button></div></div>
+
+<aside class="ch-panel ch-ed-panel">
+<sc-if value="{{ showCollab }}" hint-placeholder-val="{{ true }}">
+<div class="ch-ident">
+<span class="ch-avatars"><span class="ch-avatar ch-avatar--1"></span></span>
+<button type="button" class="ch-btn ch-btn--primary" style="margin-left:auto" disabled="disabled">Поделиться</button>
+</div>
+<hr class="ch-panel__sep" style="margin:12px 0">
+</sc-if>
+<div class="ch-seg ch-seg--fill" role="tablist"><button type="button" class="ch-seg__opt" role="tab" aria-selected="false">Секция</button><button type="button" class="ch-seg__opt is-active" role="tab" aria-selected="true">Страница</button></div>
+<p class="ch-panel__title" style="margin:16px 0 10px">Страница</p>
+<div style="display:grid;gap:8px">
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="np-t">Название</label><input class="ch-input" id="np-t" type="text" placeholder="Без названия"></div>
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="np-u">Адрес</label><input class="ch-input" id="np-u" type="text" placeholder="novyy-proekt"></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label" id="np-w">Ширина</span><div class="ch-seg" role="radiogroup" aria-labelledby="np-w"><button type="button" class="ch-seg__opt is-active" role="radio" aria-checked="true">Узкая</button><button type="button" class="ch-seg__opt" role="radio" aria-checked="false">Полная</button></div></div>
+</div>
+<sc-if value="{{ showTheme }}" hint-placeholder-val="{{ true }}">
+<hr class="ch-panel__sep" style="margin:14px 0 10px">
+<p class="ch-panel__group">Тема лендинга</p>
+<div class="ch-swatches"><button type="button" class="ch-swatch is-selected" style="background:#fffdf8" aria-label="Cream light"></button><button type="button" class="ch-swatch" style="background:#f6f1e7" aria-label="Cream"></button><button type="button" class="ch-swatch" style="background:#e8e2d4" aria-label="Sand"></button><button type="button" class="ch-swatch" style="background:#1f3a5f" aria-label="Ink"></button><button type="button" class="ch-swatch" style="background:#4a4a44" aria-label="Slate"></button><button type="button" class="ch-swatch" style="background:#ffffff" aria-label="White"></button></div>
+</sc-if>
+<div class="ch-panel__foot"><p style="margin:0;font-size:13px;color:var(--chrome-muted);text-wrap:pretty">Свойства секции появятся, когда в холсте будет хоть один блок.</p></div>
+</aside>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showFirstStep&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Пустое состояние&quot;},&quot;showTheme&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Пустое состояние&quot;},&quot;showCollab&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Пустое состояние&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      showFirstStep: this.props.showFirstStep ?? true,
+      showTheme: this.props.showTheme ?? true,
+      showCollab: this.props.showCollab ?? true
+    };
+  }
+}
+</script>
+</body>
+</html>

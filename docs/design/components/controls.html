@@ -1,0 +1,72 @@
+<!-- @dsCard group="Компоненты" name="Контролы: выбор, текст, ошибка" subtitle="Флажок, радио, textarea, ползунок, поиск-поле, ошибка и disabled всего" viewport="660x1240" -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — Контролы</title><link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../styles/docs.css"><style>.req{margin-top:20px;padding:14px 16px;border-radius:var(--chrome-radius-md);background:var(--chrome-hover)}.req__t{margin:0 0 6px;font-size:var(--chrome-size);font-weight:var(--chrome-weight-title)}.req__l{margin:0;padding-left:16px;font-size:var(--chrome-size);color:var(--chrome-muted)}.req__l li{margin-bottom:4px;text-wrap:pretty}</style></head>
+<body class="ds">
+<p class="ds__title">Контролы выбора, текста и ошибки</p>
+<p class="ds__lead">Всё нативное с <code>appearance:none</code> — без обёрток и скрытых инпутов, поэтому клавиатура и скринридер работают сами.</p>
+<div class="demo">
+<div class="ch-panel">
+<p class="demo-head">Флажок и радио</p>
+<div class="stack" style="gap:8px">
+<label class="ch-choice"><input class="ch-check" type="checkbox" checked>Показывать сетку</label>
+<label class="ch-choice"><input class="ch-check" type="checkbox">Прилипать к направляющим</label>
+<label class="ch-choice"><input class="ch-check" type="checkbox" disabled>Автосохранение (недоступно)</label>
+</div>
+<hr class="ch-panel__sep">
+<div class="stack" style="gap:8px">
+<label class="ch-choice"><input class="ch-radio" type="radio" name="w" checked>Узкая колонка</label>
+<label class="ch-choice"><input class="ch-radio" type="radio" name="w">Полная ширина</label>
+<label class="ch-choice"><input class="ch-radio" type="radio" name="w" disabled>Во весь экран (недоступно)</label>
+</div>
+</div>
+
+<p class="demo-head">Многострочное поле</p>
+<div class="ch-panel">
+<div class="ch-field"><label class="ch-field__label" for="c-t">Описание секции</label><textarea class="ch-textarea" id="c-t">Двадцать минут от города, сорок соток леса и собственный выход к воде.</textarea></div>
+</div>
+
+<p class="demo-head">Ползунок</p>
+<div class="ch-panel">
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="c-r">Прозрачность</label><input class="ch-range" id="c-r" type="range" value="70"></div>
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="c-r2">Радиус углов</label><input class="ch-range" id="c-r2" type="range" value="25"></div>
+</div>
+
+<p class="demo-head">Поиск — настоящее поле, а не картинка</p>
+<div class="ch-panel">
+<label class="ch-search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input class="ch-search__input" type="search" placeholder="Поиск блоков"></label>
+</div>
+
+<p class="demo-head">Ошибка</p>
+<div class="ch-panel">
+<div class="stack" style="gap:10px">
+<div class="ch-field is-invalid"><label class="ch-field__label" for="c-e">Адрес страницы</label><input class="ch-input" id="c-e" type="text" value="дом у реки"><span class="ch-field__error">Только латиница, цифры и дефис</span></div>
+<div class="ch-field ch-field--row is-invalid"><label class="ch-field__label" for="c-e2">Ширина</label><input class="ch-input" id="c-e2" type="text" value="1440рх"><span class="ch-field__error">Не число</span></div>
+</div>
+</div>
+
+<p class="demo-head">Disabled — кнопки, поля, переключатели</p>
+<div class="ch-panel">
+<div class="row"><button type="button" class="ch-btn" disabled>Отменить</button><button type="button" class="ch-btn ch-btn--primary" disabled>Опубликовать</button><button type="button" class="ch-btn ch-btn--ghost" disabled>Ещё</button></div>
+<hr class="ch-panel__sep">
+<div class="stack" style="gap:8px">
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="d-1">Заголовок</label><input class="ch-input" id="d-1" type="text" value="Что внутри" disabled></div>
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="d-2">Выравнивание</label><select class="ch-select" id="d-2" disabled><option>По левому краю</option></select></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Ширина</span><div class="ch-seg is-disabled"><button type="button" class="ch-seg__opt is-active" disabled>Узкая</button><button type="button" class="ch-seg__opt" disabled>Полная</button></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Отступы</span><div class="ch-num-group"><span class="ch-num is-disabled" role="spinbutton" aria-label="Отступ сверху" aria-valuenow="44" aria-disabled="true"><span class="ch-num__key">T</span>44</span><span class="ch-num is-disabled" role="spinbutton" aria-label="Отступ снизу" aria-valuenow="44" aria-disabled="true"><span class="ch-num__key">B</span>44</span></div></div>
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="d-3">Прозрачность</label><input class="ch-range" id="d-3" type="range" value="70" disabled></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Полная ширина</span><button type="button" class="ch-toggle" role="switch" aria-checked="false" aria-label="Полная ширина" disabled style="justify-self:end"></button></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Фиксировать</span><button type="button" class="ch-toggle is-on" role="switch" aria-checked="true" aria-label="Фиксировать" disabled style="justify-self:end"></button></div>
+<div class="ch-field"><label class="ch-field__label" for="d-4">Описание</label><textarea class="ch-textarea" id="d-4" disabled>Появится, когда выделена секция.</textarea></div>
+</div>
+</div>
+<p class="note">Так выглядит панель свойств, когда в холсте ничего не выделено. Ни один контрол не прячется — интерфейс не перестраивается, он глохнет.</p>
+
+<p class="demo-head">Скелетон загрузки</p>
+<div class="ch-panel">
+<div class="stack" style="gap:8px"><div class="ch-skel" style="height:14px;width:40%"></div><div class="ch-skel" style="height:14px;width:85%"></div><div class="ch-skel" style="height:14px;width:70%"></div></div>
+</div>
+
+<p class="note">Недоступная кнопка красится токенами (<code>muted</code> на <code>field</code>), а не полупрозрачностью: прозрачный серый на светлой панели уходит ниже AA и перестаёт читаться.</p>
+<div class="req"><p class="req__t">Обязательная разметка</p><ul class="req__l"><li>Выключенное состояние на нативном контроле — атрибут <code>disabled</code>, а не класс: класс красит, но не запрещает нажатие.</li><li>На не-нативных (<code>.ch-seg</code>, <code>.ch-num</code>, <code>.ch-toggle</code>-обёртки) — <code>aria-disabled="true"</code> плюс класс <code>is-disabled</code>, и обработчик обязан выйти сам.</li><li><code>.ch-toggle</code> — <code>role="switch"</code> и <code>aria-checked</code>; <code>.ch-num</code> — <code>role="spinbutton"</code> и <code>aria-valuenow</code>.</li><li>Поле с ошибкой: <code>.is-invalid</code> на <code>.ch-field</code>, <code>aria-invalid="true"</code> на инпуте и <code>aria-describedby</code> на текст ошибки.</li></ul></div>
+</div>
+</body></html>

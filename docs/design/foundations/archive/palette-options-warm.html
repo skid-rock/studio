@@ -1,0 +1,143 @@
+<!-- Архив решений (foundations/archive/). Карточки в витрине нет — итог сведён в foundations/journal.html (группа «Процесс»). -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — Палитра, тёплые варианты</title><link rel="stylesheet" href="../../styles.css"><link rel="stylesheet" href="../../styles/docs.css"><style>
+.demo{max-width:1060px}
+.ds__title,.opt__name{color:oklch(.29 .012 85)}
+.ds__lead{color:oklch(.52 .012 85)}
+.opt{margin:0 0 40px}
+.opt__head{display:flex;align-items:baseline;gap:12px;margin:0 0 4px}
+.opt__name{margin:0;font-size:15px;font-weight:600}
+.opt__tag{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:oklch(.52 .012 85)}
+.opt__lead{margin:0 0 14px;font-size:12px;color:oklch(.52 .012 85);max-width:70ch;text-wrap:pretty}
+.opt__lead b{color:oklch(.29 .012 85);font-weight:500}
+.strip{display:grid;grid-template-columns:repeat(11,1fr);gap:6px;margin:0 0 14px}
+.strip__c{height:44px;border-radius:8px;border:1px solid rgba(0,0,0,.06)}
+.strip__n{margin:5px 0 0;font-size:10px;color:oklch(.52 .012 85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.strip__h{margin:1px 0 0;font-size:10px;color:oklch(.52 .012 85);font-variant-numeric:tabular-nums;opacity:.75}
+.demo>.note{color:oklch(.52 .012 85)}
+.pv{display:grid;grid-template-columns:196px 1fr;gap:var(--chrome-gap);padding:var(--chrome-gap);border-radius:var(--chrome-radius-lg);background-color:var(--chrome-scene);background-image:var(--pv-noise),radial-gradient(700px 420px at 50% 0%,color-mix(in oklab,var(--chrome-scene) 60%,#fff) 0%,var(--chrome-scene) 65%,color-mix(in oklab,var(--chrome-scene) 90%,#000) 100%)}
+.pv .ch-panel{border-radius:var(--chrome-radius-xl)}
+.pv__pal{display:flex;flex-direction:column;gap:2px;padding:12px 10px}
+.pv .note{margin:12px 0 0}
+[data-scope]{--pv-noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")}
+.v-e{--chrome-scene:oklch(.925 .012 85);--chrome-panel:oklch(.985 .006 85);--chrome-hover:oklch(.960 .009 85);--chrome-field:oklch(.945 .011 85);--chrome-field-hover:oklch(.920 .013 85);--chrome-border:oklch(.868 .015 85);--chrome-text:oklch(.28 .018 70);--chrome-muted:oklch(.515 .016 75);--chrome-accent:oklch(.28 .018 70);--chrome-on-accent:oklch(.985 .006 85);--chrome-scrim:oklch(.28 .018 70/.42);--chrome-danger:oklch(.50 .16 30)}
+.v-f{--chrome-scene:oklch(.930 .014 72);--chrome-panel:oklch(.988 .006 72);--chrome-hover:oklch(.962 .010 72);--chrome-field:oklch(.948 .012 72);--chrome-field-hover:oklch(.922 .015 72);--chrome-border:oklch(.870 .018 72);--chrome-text:oklch(.29 .020 60);--chrome-muted:oklch(.52 .018 65);--chrome-accent:oklch(.51 .125 45);--chrome-on-accent:oklch(.990 .008 72);--chrome-scrim:oklch(.29 .020 60/.42);--chrome-danger:oklch(.45 .17 22)}
+.v-g{--chrome-scene:oklch(.895 .016 88);--chrome-panel:oklch(.975 .008 88);--chrome-hover:oklch(.950 .011 88);--chrome-field:oklch(.935 .013 88);--chrome-field-hover:oklch(.908 .016 88);--chrome-border:oklch(.865 .018 88);--chrome-text:oklch(.27 .016 80);--chrome-muted:oklch(.482 .015 80);--chrome-accent:oklch(.27 .016 80);--chrome-on-accent:oklch(.978 .008 88);--chrome-scrim:oklch(.24 .016 80/.45);--chrome-danger:oklch(.49 .16 28)}
+.v-h{--chrome-scene:oklch(.928 .010 110);--chrome-panel:oklch(.988 .005 110);--chrome-hover:oklch(.962 .008 110);--chrome-field:oklch(.948 .009 110);--chrome-field-hover:oklch(.922 .011 110);--chrome-border:oklch(.868 .013 110);--chrome-text:oklch(.28 .014 110);--chrome-muted:oklch(.515 .014 115);--chrome-accent:oklch(.44 .075 135);--chrome-on-accent:oklch(.990 .010 120);--chrome-scrim:oklch(.28 .014 110/.42);--chrome-danger:oklch(.50 .16 30)}
+</style></head>
+<body class="ds"><main class="demo">
+<h1 class="ds__title">Тёплая светлая тема — ещё четыре варианта</h1>
+<p class="ds__lead">Продолжение нумерации карточки «Палитра — варианты» (A–D). Все четыре — светлые и тёплые, но расходятся по трём осям: <b>оттенок нейтрали</b> (72° песок → 110° гриж), <b>насыщенность бумаги</b> (0.005 почти нейтрально → 0.018 явно тонировано) и <b>глубина лестницы</b> — насколько сцена темнее панели. Акцент в E и G остаётся цветом текста (решение №1), в F и H отделён. hex под свотчами вычисляет браузер.</p>
+
+<section class="opt v-e" data-scope>
+<div class="opt__head"><h2 class="opt__name">E — Лён</h2><span class="opt__tag">та же схема, тонировка втрое сильнее</span></div>
+<p class="opt__lead">Вариант A, у которого прибавили хрому: <b>C 0.006–0.014</b> вместо 0.002–0.006 на оси 85°. Бумага перестаёт быть «серой почти-нейтралью» и читается как тёплая, но остаётся спокойной подложкой под цветной контент холста. Текст — тёплый графит с чуть большим уходом в 70°.</p>
+<div class="strip">
+<div><div class="strip__c" style="background:var(--chrome-scene)"></div><p class="strip__n">scene</p><p class="strip__h" data-hex="--chrome-scene"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-panel)"></div><p class="strip__n">panel</p><p class="strip__h" data-hex="--chrome-panel"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-hover)"></div><p class="strip__n">hover</p><p class="strip__h" data-hex="--chrome-hover"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-field)"></div><p class="strip__n">field</p><p class="strip__h" data-hex="--chrome-field"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-field-hover)"></div><p class="strip__n">field-hover</p><p class="strip__h" data-hex="--chrome-field-hover"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-border)"></div><p class="strip__n">border</p><p class="strip__h" data-hex="--chrome-border"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-muted)"></div><p class="strip__n">muted</p><p class="strip__h" data-hex="--chrome-muted"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-text)"></div><p class="strip__n">text</p><p class="strip__h" data-hex="--chrome-text"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-accent)"></div><p class="strip__n">accent</p><p class="strip__h" data-hex="--chrome-accent"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-on-accent)"></div><p class="strip__n">on-accent</p><p class="strip__h" data-hex="--chrome-on-accent"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-danger)"></div><p class="strip__n">danger</p><p class="strip__h" data-hex="--chrome-danger"></p></div>
+</div>
+<div class="pv">
+<div class="ch-panel pv__pal"><p class="ch-panel__group">Блоки</p><div class="ch-block-card"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">H</span>Заголовок</div><div class="ch-block-card is-hover"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">T</span>Текст</div><div class="ch-block-card is-selected"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">G</span>Галерея</div><div class="ch-block-card"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">B</span>Кнопка</div></div>
+<div class="ch-panel"><p class="ch-panel__title">Свойства</p><div class="stack"><div class="ch-field ch-field--row"><span class="ch-field__label">Отступ</span><div class="ch-num-group"><span class="ch-num"><span class="ch-num__key">Y</span>24</span><span class="ch-num"><span class="ch-num__key">X</span>16</span></div></div><div class="ch-field ch-field--row"><span class="ch-field__label">Фон</span><span class="ch-color-field"><span class="ch-color-field__swatch" style="background:#c9c2b6"></span><span class="ch-color-field__value">#C9C2B6</span></span></div><div class="ch-field ch-field--row"><span class="ch-field__label">Показывать</span><span class="ch-toggle is-on"></span></div></div><hr class="ch-panel__sep"><div class="ch-seg"><button class="ch-seg__opt is-active">Десктоп</button><button class="ch-seg__opt">Мобайл</button></div><div class="row" style="margin-top:12px"><button class="ch-btn ch-btn--primary">Сохранить</button><button class="ch-btn">Отмена</button><button class="ch-btn ch-btn--ghost ch-btn--danger">Удалить</button></div><p class="note">Вторичная подпись 12px на панели.</p></div>
+</div>
+</section>
+
+<section class="opt v-f" data-scope>
+<div class="opt__head"><h2 class="opt__name">F — Песок и терракота</h2><span class="opt__tag">акцент отделён, но остался в тёплой семье</span></div>
+<p class="opt__lead">Нейтрали уходят в <b>72°</b> — заметный песок. Акцент отделён от текста, как в варианте C, но вместо холодного индиго — терракота <b>oklch(.51 .125 45)</b>: выделение и primary читаются как действие и при этом не выпадают из тёплой схемы. Danger приходится уводить в тёмный красный (22°), иначе он спорит с акцентом — это плата за цветной акцент рядом с ним.</p>
+<div class="strip">
+<div><div class="strip__c" style="background:var(--chrome-scene)"></div><p class="strip__n">scene</p><p class="strip__h" data-hex="--chrome-scene"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-panel)"></div><p class="strip__n">panel</p><p class="strip__h" data-hex="--chrome-panel"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-hover)"></div><p class="strip__n">hover</p><p class="strip__h" data-hex="--chrome-hover"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-field)"></div><p class="strip__n">field</p><p class="strip__h" data-hex="--chrome-field"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-field-hover)"></div><p class="strip__n">field-hover</p><p class="strip__h" data-hex="--chrome-field-hover"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-border)"></div><p class="strip__n">border</p><p class="strip__h" data-hex="--chrome-border"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-muted)"></div><p class="strip__n">muted</p><p class="strip__h" data-hex="--chrome-muted"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-text)"></div><p class="strip__n">text</p><p class="strip__h" data-hex="--chrome-text"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-accent)"></div><p class="strip__n">accent</p><p class="strip__h" data-hex="--chrome-accent"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-on-accent)"></div><p class="strip__n">on-accent</p><p class="strip__h" data-hex="--chrome-on-accent"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-danger)"></div><p class="strip__n">danger</p><p class="strip__h" data-hex="--chrome-danger"></p></div>
+</div>
+<div class="pv">
+<div class="ch-panel pv__pal"><p class="ch-panel__group">Блоки</p><div class="ch-block-card"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">H</span>Заголовок</div><div class="ch-block-card is-hover"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">T</span>Текст</div><div class="ch-block-card is-selected"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">G</span>Галерея</div><div class="ch-block-card"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">B</span>Кнопка</div></div>
+<div class="ch-panel"><p class="ch-panel__title">Свойства</p><div class="stack"><div class="ch-field ch-field--row"><span class="ch-field__label">Отступ</span><div class="ch-num-group"><span class="ch-num"><span class="ch-num__key">Y</span>24</span><span class="ch-num"><span class="ch-num__key">X</span>16</span></div></div><div class="ch-field ch-field--row"><span class="ch-field__label">Фон</span><span class="ch-color-field"><span class="ch-color-field__swatch" style="background:#c9c2b6"></span><span class="ch-color-field__value">#C9C2B6</span></span></div><div class="ch-field ch-field--row"><span class="ch-field__label">Показывать</span><span class="ch-toggle is-on"></span></div></div><hr class="ch-panel__sep"><div class="ch-seg"><button class="ch-seg__opt is-active">Десктоп</button><button class="ch-seg__opt">Мобайл</button></div><div class="row" style="margin-top:12px"><button class="ch-btn ch-btn--primary">Сохранить</button><button class="ch-btn">Отмена</button><button class="ch-btn ch-btn--ghost ch-btn--danger">Удалить</button></div><p class="note">Вторичная подпись 12px на панели.</p></div>
+</div>
+</section>
+
+<section class="opt v-g" data-scope>
+<div class="opt__head"><h2 class="opt__name">G — Крем, глубокая сцена</h2><span class="opt__tag">та же температура, вдвое больше глубины</span></div>
+<p class="opt__lead">Здесь меняется не оттенок, а лестница: сцена опущена до <b>L 89.5</b> при панели 97.5 — разрыв <b>8 пунктов</b> вместо шести. Панели отделяются от фона сами, без тени, и «плавающий» характер интерфейса читается даже на плохом мониторе. Панель не белая, а кремовая — белым остаётся только страница пользователя на холсте, и она заметно выступает вперёд.</p>
+<div class="strip">
+<div><div class="strip__c" style="background:var(--chrome-scene)"></div><p class="strip__n">scene</p><p class="strip__h" data-hex="--chrome-scene"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-panel)"></div><p class="strip__n">panel</p><p class="strip__h" data-hex="--chrome-panel"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-hover)"></div><p class="strip__n">hover</p><p class="strip__h" data-hex="--chrome-hover"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-field)"></div><p class="strip__n">field</p><p class="strip__h" data-hex="--chrome-field"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-field-hover)"></div><p class="strip__n">field-hover</p><p class="strip__h" data-hex="--chrome-field-hover"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-border)"></div><p class="strip__n">border</p><p class="strip__h" data-hex="--chrome-border"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-muted)"></div><p class="strip__n">muted</p><p class="strip__h" data-hex="--chrome-muted"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-text)"></div><p class="strip__n">text</p><p class="strip__h" data-hex="--chrome-text"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-accent)"></div><p class="strip__n">accent</p><p class="strip__h" data-hex="--chrome-accent"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-on-accent)"></div><p class="strip__n">on-accent</p><p class="strip__h" data-hex="--chrome-on-accent"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-danger)"></div><p class="strip__n">danger</p><p class="strip__h" data-hex="--chrome-danger"></p></div>
+</div>
+<div class="pv">
+<div class="ch-panel pv__pal"><p class="ch-panel__group">Блоки</p><div class="ch-block-card"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">H</span>Заголовок</div><div class="ch-block-card is-hover"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">T</span>Текст</div><div class="ch-block-card is-selected"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">G</span>Галерея</div><div class="ch-block-card"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">B</span>Кнопка</div></div>
+<div class="ch-panel"><p class="ch-panel__title">Свойства</p><div class="stack"><div class="ch-field ch-field--row"><span class="ch-field__label">Отступ</span><div class="ch-num-group"><span class="ch-num"><span class="ch-num__key">Y</span>24</span><span class="ch-num"><span class="ch-num__key">X</span>16</span></div></div><div class="ch-field ch-field--row"><span class="ch-field__label">Фон</span><span class="ch-color-field"><span class="ch-color-field__swatch" style="background:#c9c2b6"></span><span class="ch-color-field__value">#C9C2B6</span></span></div><div class="ch-field ch-field--row"><span class="ch-field__label">Показывать</span><span class="ch-toggle is-on"></span></div></div><hr class="ch-panel__sep"><div class="ch-seg"><button class="ch-seg__opt is-active">Десктоп</button><button class="ch-seg__opt">Мобайл</button></div><div class="row" style="margin-top:12px"><button class="ch-btn ch-btn--primary">Сохранить</button><button class="ch-btn">Отмена</button><button class="ch-btn ch-btn--ghost ch-btn--danger">Удалить</button></div><p class="note">Вторичная подпись 12px на панели.</p></div>
+</div>
+</section>
+
+<section class="opt v-h" data-scope>
+<div class="opt__head"><h2 class="opt__name">H — Гриж и мох</h2><span class="opt__tag">тёплый край нейтрали, приглушённый акцент</span></div>
+<p class="opt__lead">Нейтрали на <b>110°</b> — тёплый серый с зелёным подтоном, самый «тихий» из четырёх: под ним любой контент пользователя выглядит нейтрально, включая бежевый и розовый, на которых песок F начинает конфликтовать. Акцент — мох <b>oklch(.44 .075 135)</b>: цветной, но настолько приглушённый, что выделение секции не спорит с холстом.</p>
+<div class="strip">
+<div><div class="strip__c" style="background:var(--chrome-scene)"></div><p class="strip__n">scene</p><p class="strip__h" data-hex="--chrome-scene"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-panel)"></div><p class="strip__n">panel</p><p class="strip__h" data-hex="--chrome-panel"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-hover)"></div><p class="strip__n">hover</p><p class="strip__h" data-hex="--chrome-hover"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-field)"></div><p class="strip__n">field</p><p class="strip__h" data-hex="--chrome-field"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-field-hover)"></div><p class="strip__n">field-hover</p><p class="strip__h" data-hex="--chrome-field-hover"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-border)"></div><p class="strip__n">border</p><p class="strip__h" data-hex="--chrome-border"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-muted)"></div><p class="strip__n">muted</p><p class="strip__h" data-hex="--chrome-muted"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-text)"></div><p class="strip__n">text</p><p class="strip__h" data-hex="--chrome-text"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-accent)"></div><p class="strip__n">accent</p><p class="strip__h" data-hex="--chrome-accent"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-on-accent)"></div><p class="strip__n">on-accent</p><p class="strip__h" data-hex="--chrome-on-accent"></p></div>
+<div><div class="strip__c" style="background:var(--chrome-danger)"></div><p class="strip__n">danger</p><p class="strip__h" data-hex="--chrome-danger"></p></div>
+</div>
+<div class="pv">
+<div class="ch-panel pv__pal"><p class="ch-panel__group">Блоки</p><div class="ch-block-card"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">H</span>Заголовок</div><div class="ch-block-card is-hover"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">T</span>Текст</div><div class="ch-block-card is-selected"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">G</span>Галерея</div><div class="ch-block-card"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">B</span>Кнопка</div></div>
+<div class="ch-panel"><p class="ch-panel__title">Свойства</p><div class="stack"><div class="ch-field ch-field--row"><span class="ch-field__label">Отступ</span><div class="ch-num-group"><span class="ch-num"><span class="ch-num__key">Y</span>24</span><span class="ch-num"><span class="ch-num__key">X</span>16</span></div></div><div class="ch-field ch-field--row"><span class="ch-field__label">Фон</span><span class="ch-color-field"><span class="ch-color-field__swatch" style="background:#c9c2b6"></span><span class="ch-color-field__value">#C9C2B6</span></span></div><div class="ch-field ch-field--row"><span class="ch-field__label">Показывать</span><span class="ch-toggle is-on"></span></div></div><hr class="ch-panel__sep"><div class="ch-seg"><button class="ch-seg__opt is-active">Десктоп</button><button class="ch-seg__opt">Мобайл</button></div><div class="row" style="margin-top:12px"><button class="ch-btn ch-btn--primary">Сохранить</button><button class="ch-btn">Отмена</button><button class="ch-btn ch-btn--ghost ch-btn--danger">Удалить</button></div><p class="note">Вторичная подпись 12px на панели.</p></div>
+</div>
+</section>
+
+<div class="demo-head">Контраст всех четырёх</div>
+<table style="width:100%;border-collapse:collapse;font-size:12px">
+<thead><tr><th style="text-align:left;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:oklch(.52 .012 85);padding:0 10px 8px 0">Пара</th><th style="text-align:left;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:oklch(.52 .012 85);padding:0 10px 8px 0;width:110px">E лён</th><th style="text-align:left;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:oklch(.52 .012 85);padding:0 10px 8px 0;width:110px">F песок</th><th style="text-align:left;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:oklch(.52 .012 85);padding:0 10px 8px 0;width:110px">G крем</th><th style="text-align:left;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:oklch(.52 .012 85);padding:0 10px 8px 0;width:110px">H гриж</th><th style="text-align:left;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:oklch(.52 .012 85);padding:0 10px 8px 0;width:130px">Норма</th></tr></thead>
+<tbody id="crt"></tbody>
+</table>
+<p class="note">Красным — то, что не добирает до нормы в правой колонке. Все четыре варианта проходят AA для основного и вторичного текста на любой поверхности; разделитель проверяется не на AA, а на различимость 1.4:1 — на кремовой панели он поэтому опущен на два пункта светлоты сильнее, чем в варианте A на белой. Если нужно, сведу выбранный вариант в <code>styles/chrome-tokens.css</code> и обновлю карточку «Цвета».</p>
+</main>
+<script>
+const cx=document.createElement('canvas').getContext('2d',{willReadFrequently:true});
+function toRgb(c){cx.fillStyle='#000';cx.fillStyle=c;cx.fillRect(0,0,1,1);const d=cx.getImageData(0,0,1,1).data;return[d[0],d[1],d[2]]}
+function toHex(c){return'#'+toRgb(c).map(v=>v.toString(16).padStart(2,'0')).join('')}
+function lin(v){v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)}
+function lum(c){const[r,g,b]=toRgb(c);return .2126*lin(r)+.7152*lin(g)+.0722*lin(b)}
+function cr(a,b){const x=lum(a),y=lum(b);return(Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+document.querySelectorAll('[data-hex]').forEach(el=>{const s=el.closest('[data-scope]');const v=getComputedStyle(s).getPropertyValue(el.dataset.hex).trim();el.textContent=v?toHex(v):''});
+const scopes=['v-e','v-f','v-g','v-h'].map(c=>{const d=document.createElement('div');d.className=c;document.body.appendChild(d);return d});
+const gv=(s,n)=>getComputedStyle(s).getPropertyValue(n).trim();
+const pairs=[['--chrome-text','--chrome-panel','основной текст на панели'],['--chrome-muted','--chrome-panel','подпись на панели'],['--chrome-muted','--chrome-field','подпись на поле'],['--chrome-muted','--chrome-scene','подпись на сцене'],['--chrome-on-accent','--chrome-accent','текст на акценте'],['--chrome-danger','--chrome-panel','опасное действие'],['--chrome-border','--chrome-panel','разделитель на панели']];
+document.getElementById('crt').innerHTML=pairs.map(p=>{const lim=p[0]==='--chrome-border'?1.4:4.5;
+const cells=scopes.map(s=>{const x=cr(gv(s,p[0]),gv(s,p[1]));return '<td style="padding:9px 10px 9px 0;border-top:1px solid oklch(.90 .006 85);font-variant-numeric:tabular-nums;'+(x<lim?'color:oklch(.50 .16 30);font-weight:600':'color:oklch(.29 .012 85)')+'">'+x.toFixed(2)+':1</td>'}).join('');
+return '<tr><td style="padding:9px 10px 9px 0;border-top:1px solid oklch(.90 .006 85);color:oklch(.52 .012 85)">'+p[2]+'</td>'+cells+'<td style="padding:9px 10px 9px 0;border-top:1px solid oklch(.90 .006 85);font-size:11px;color:oklch(.52 .012 85)">'+(lim>2?'AA · 4.5:1':'различимость · 1.4:1')+'</td></tr>'}).join('');
+scopes.forEach(s=>s.remove());
+</script>
+</body></html>

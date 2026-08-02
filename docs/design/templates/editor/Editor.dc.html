@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Окно редактора" description="Экран studio целиком: плавающий тулбар над холстом, колонна блоков, панель свойств строками, нижний док режима" -->
+<helmet><script src="./ds-base.js"></script></helmet>
+<div class="ch-ed" style="width:1440px;height:900px;margin:0 auto">
+
+<aside class="ch-panel ch-ed-palette">
+<div class="ch-ident">
+<span class="ch-tile" style="background:var(--chrome-accent);color:var(--chrome-on-accent)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5"/><path d="m3 12 9 5 9-5"/></svg></span>
+<span class="ch-ident__text"><span class="ch-ident__name">Дом у реки</span><span class="ch-ident__sub">Черновик · сохранено</span></span>
+<button type="button" class="ch-btn ch-btn--ghost ch-btn--icon ch-btn--sm" aria-label="Тема" style="margin-left:auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14A8 8 0 0 1 10 4a8 8 0 1 0 10 10Z"/></svg></button>
+</div>
+<hr class="ch-panel__sep" style="margin:12px 0">
+<div class="ch-seg ch-seg--fill" role="tablist"><button type="button" class="ch-seg__opt is-active" role="tab" aria-selected="true">Блоки</button><button type="button" class="ch-seg__opt" role="tab" aria-selected="false">Ассеты</button></div>
+<label class="ch-search" style="margin:10px 0 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input class="ch-search__input" type="search" placeholder="Поиск"></label>
+<div class="ch-block-card ch-block-card--drag" tabindex="0" role="button" draggable="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg></span>Обложка</div>
+<div class="ch-block-card ch-block-card--drag is-selected ch-bleed" tabindex="0" role="button" aria-pressed="true" draggable="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg></span>Текст</div>
+<div class="ch-block-card ch-block-card--drag is-hover" tabindex="0" role="button" draggable="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>Галерея</div>
+<div class="ch-block-card ch-block-card--drag" tabindex="0" role="button" draggable="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>Преимущества</div>
+<div class="ch-block-card ch-block-card--drag" tabindex="0" role="button" draggable="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2Z"/></svg></span>Отзывы</div>
+<div class="ch-block-card ch-block-card--drag" tabindex="0" role="button" draggable="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 10h10M7 14h5"/></svg></span>Форма</div>
+<div class="ch-block-card ch-block-card--drag" tabindex="0" role="button" draggable="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15h18"/></svg></span>Подвал</div>
+<div class="ch-panel__foot">
+<hr class="ch-panel__sep" style="margin:0 0 6px">
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span>Шаблоны</div>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg></span>Импорт</div>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3 2.4V14"/><path d="M12 17.2v.1"/></svg></span>Помощь</div>
+</div>
+</aside>
+
+<div class="ch-ed-toolbar ch-ed-toolbar--float">
+<button type="button" class="ch-btn ch-btn--ghost ch-btn--icon" aria-label="Выбор"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m4 3 7 17 2.5-6.5L20 11 4 3Z"/></svg></button>
+<button type="button" class="ch-btn ch-btn--ghost ch-btn--icon" aria-label="Текст"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg></button>
+<button type="button" class="ch-btn ch-btn--ghost ch-btn--icon" aria-label="Изображение"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></button>
+<button type="button" class="ch-btn ch-btn--ghost ch-btn--icon" aria-label="Секция"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg></button>
+<span class="ch-ed-toolbar__sep"></span>
+<button type="button" class="ch-btn ch-btn--ghost" style="gap:4px">100%<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+<button type="button" class="ch-btn ch-btn--primary">Экспорт</button>
+</div>
+
+<main class="ch-ed-canvas">
+<div class="ch-cv-page">
+<section class="ch-cv-section" style="padding:56px 48px 48px;background:#f6f1e7"><p style="margin:0 0 10px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8a7f6d">Загородный дом</p><h1 style="margin:0 0 14px;font-size:40px;line-height:1.1;font-weight:400;color:#1f3a5f">Дом у реки</h1><p style="margin:0;font-size:15px;line-height:1.6;color:#4a4a44;max-width:46ch">Двадцать минут от города, сорок соток леса и собственный выход к воде. Показы по выходным.</p></section>
+<div style="position:relative"><sc-if value="{{ sectionToolbar }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;top:-36px;right:12px;z-index:2" class="ch-cv-toolbar"><button type="button" class="ch-btn ch-btn--icon" aria-label="Вверх"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></button><button type="button" class="ch-btn ch-btn--icon" aria-label="Вниз"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></button><button type="button" class="ch-btn ch-btn--icon" aria-label="Дублировать"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button><button type="button" class="ch-btn ch-btn--icon ch-btn--danger" aria-label="Удалить"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button></div></sc-if>
+<sc-if value="{{ selected }}" hint-placeholder-val="{{ true }}"><section class="ch-cv-section is-selected" style="padding:44px 48px;background:#fffdf8"><h2 style="margin:0 0 12px;font-size:24px;font-weight:400;color:#1f3a5f"><span class="ch-inline-edit">Что внутри</span><span class="ch-inline-caret"></span></h2><p style="margin:0;font-size:15px;line-height:1.6;color:#4a4a44;max-width:52ch">Три спальни, панорамная гостиная с камином, отдельная гостевая. Отделка дубом и известковой штукатуркой.</p></section></sc-if><sc-if value="{{ nothingSelected }}" hint-placeholder-val="{{ false }}"><section class="ch-cv-section" style="padding:44px 48px;background:#fffdf8"><h2 style="margin:0 0 12px;font-size:24px;font-weight:400;color:#1f3a5f">Что внутри</h2><p style="margin:0;font-size:15px;line-height:1.6;color:#4a4a44;max-width:52ch">Три спальни, панорамная гостиная с камином, отдельная гостевая. Отделка дубом и известковой штукатуркой.</p></section></sc-if></div>
+<div class="ch-cv-drop" style="margin:0 40px"></div>
+<section class="ch-cv-section" style="padding:44px 48px;background:#fffdf8"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px"><div style="aspect-ratio:4/3;background:#e8e2d4;border-radius:4px"></div><div style="aspect-ratio:4/3;background:#ded7c6;border-radius:4px"></div><div style="aspect-ratio:4/3;background:#e8e2d4;border-radius:4px"></div></div></section>
+</div>
+</main>
+
+<div class="ch-ed-dock ch-ed-dock--float"><div class="ch-seg" role="radiogroup" aria-label="Режим окна"><button type="button" class="ch-seg__opt is-active" role="radio" aria-checked="true">Редактор</button><button type="button" class="ch-seg__opt" role="radio" aria-checked="false">Предпросмотр</button></div></div>
+
+<aside class="ch-panel ch-ed-panel">
+<sc-if value="{{ showCollab }}" hint-placeholder-val="{{ true }}">
+<div class="ch-ident">
+<span class="ch-avatars"><span class="ch-avatar ch-avatar--1"></span><span class="ch-avatar ch-avatar--2"></span><span class="ch-avatar ch-avatar--3"></span></span>
+<button type="button" class="ch-btn ch-btn--primary" style="margin-left:auto">Поделиться</button>
+</div>
+<hr class="ch-panel__sep" style="margin:12px 0">
+</sc-if>
+<div class="ch-seg ch-seg--fill" role="tablist"><button type="button" class="ch-seg__opt is-active" role="tab" aria-selected="true">Секция</button><button type="button" class="ch-seg__opt" role="tab" aria-selected="false">Страница</button></div>
+<sc-if value="{{ selected }}" hint-placeholder-val="{{ true }}">
+<p class="ch-panel__title" style="margin:16px 0 10px">Текст</p>
+<div style="display:grid;gap:8px">
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="t-h">Заголовок</label><input class="ch-input" id="t-h" type="text" value="Что внутри"></div>
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="t-a">Выравнивание</label><select class="ch-select" id="t-a"><option>По левому</option><option>По центру</option></select></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label" id="t-w">Ширина</span><div class="ch-seg" role="radiogroup" aria-labelledby="t-w"><button type="button" class="ch-seg__opt" role="radio" aria-checked="false">Узкая</button><button type="button" class="ch-seg__opt is-active" role="radio" aria-checked="true">Полная</button></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Отступы</span><div class="ch-num-group"><span class="ch-num" tabindex="0" role="spinbutton"><span class="ch-num__key">T</span>44</span><span class="ch-num" tabindex="0" role="spinbutton"><span class="ch-num__key">B</span>44</span></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Полная ширина</span><button type="button" class="ch-toggle" role="switch" aria-checked="false" aria-label="Полная ширина" style="justify-self:end"></button></div>
+</div>
+<hr class="ch-panel__sep" style="margin:14px 0 10px">
+<p class="ch-panel__group">Фон секции</p>
+<div class="ch-swatches"><button type="button" class="ch-swatch is-selected" style="background:#fffdf8" aria-label="Cream light"></button><button type="button" class="ch-swatch" style="background:#f6f1e7" aria-label="Cream"></button><button type="button" class="ch-swatch" style="background:#e8e2d4" aria-label="Sand"></button><button type="button" class="ch-swatch" style="background:#1f3a5f" aria-label="Ink"></button><button type="button" class="ch-swatch" style="background:#4a4a44" aria-label="Slate"></button><button type="button" class="ch-swatch" style="background:#ffffff" aria-label="White"></button></div>
+<hr class="ch-panel__sep" style="margin:14px 0 0">
+<button type="button" class="ch-panel__section"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg></span>Типографика<span class="ch-panel__section__chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></button>
+<hr class="ch-panel__sep" style="margin:0">
+<button type="button" class="ch-panel__section"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h10M18 8h2M4 16h4M12 16h8"/><circle cx="16" cy="8" r="2"/><circle cx="10" cy="16" r="2"/></svg></span>Эффекты<span class="ch-panel__section__chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></button>
+<div class="ch-panel__foot"><button type="button" class="ch-btn ch-btn--danger" style="width:100%">Удалить секцию</button></div>
+</sc-if>
+<sc-if value="{{ nothingSelected }}" hint-placeholder-val="{{ false }}">
+<p class="ch-panel__title" style="margin:16px 0 10px">Секция</p>
+<div style="display:grid;gap:8px">
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="n-h">Заголовок</label><input class="ch-input" id="n-h" type="text" value="—" disabled="disabled"></div>
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="n-a">Выравнивание</label><select class="ch-select" id="n-a" disabled="disabled"><option>По левому</option></select></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label" id="n-w">Ширина</span><div class="ch-seg is-disabled" role="radiogroup" aria-labelledby="n-w" aria-disabled="true"><button type="button" class="ch-seg__opt" role="radio" aria-checked="false" disabled="disabled">Узкая</button><button type="button" class="ch-seg__opt is-active" role="radio" aria-checked="true" disabled="disabled">Полная</button></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Отступы</span><div class="ch-num-group"><span class="ch-num is-disabled" aria-disabled="true" role="spinbutton"><span class="ch-num__key">T</span>—</span><span class="ch-num is-disabled" aria-disabled="true" role="spinbutton"><span class="ch-num__key">B</span>—</span></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Полная ширина</span><button type="button" class="ch-toggle" role="switch" aria-checked="false" aria-label="Полная ширина" style="justify-self:end" disabled="disabled"></button></div>
+</div>
+<hr class="ch-panel__sep" style="margin:14px 0 10px">
+<p class="ch-panel__group">Фон секции</p>
+<div class="ch-swatches"><button type="button" class="ch-swatch" style="background:#fffdf8" aria-label="Cream light" disabled="disabled"></button><button type="button" class="ch-swatch" style="background:#f6f1e7" aria-label="Cream" disabled="disabled"></button><button type="button" class="ch-swatch" style="background:#e8e2d4" aria-label="Sand" disabled="disabled"></button><button type="button" class="ch-swatch" style="background:#1f3a5f" aria-label="Ink" disabled="disabled"></button><button type="button" class="ch-swatch" style="background:#4a4a44" aria-label="Slate" disabled="disabled"></button><button type="button" class="ch-swatch" style="background:#ffffff" aria-label="White" disabled="disabled"></button></div>
+<div class="ch-panel__foot">
+<p style="margin:0 0 10px;color:var(--chrome-muted);text-wrap:pretty">Выделите секцию в холсте — панель оживёт. Ничего не спрятано, всё выключено.</p>
+<button type="button" class="ch-btn ch-btn--danger" style="width:100%" disabled="disabled">Удалить секцию</button>
+</div>
+</sc-if>
+</aside>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;selected&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;sectionToolbar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;showCollab&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const selected = this.props.selected ?? true;
+    return {
+      selected,
+      nothingSelected: !selected,
+      sectionToolbar: (this.props.sectionToolbar ?? true) && selected,
+      showCollab: this.props.showCollab ?? true
+    };
+  }
+}
+</script>
+</body>
+</html>

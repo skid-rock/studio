@@ -1,0 +1,167 @@
+{
+  "plugins": [
+    "react",
+    "import"
+  ],
+  "rules": {
+    "react/forbid-elements": [
+      "warn",
+      {
+        "forbid": []
+      }
+    ],
+    "no-restricted-imports": [
+      "warn",
+      {
+        "patterns": []
+      }
+    ],
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "Literal[value=/#[0-9a-fA-F]{3,8}\\b/]",
+        "message": "Raw hex color — use a design-system color token via var()."
+      },
+      {
+        "selector": "Literal[value=/\\b\\d+px\\b/]",
+        "message": "Raw px value — use a design-system spacing token via var()."
+      },
+      {
+        "selector": "Literal[value=/font-family\\s*:\\s*(?!['\\\"]?(?:Golos Text))/i]",
+        "message": "Font not provided by the design system. Available: Golos Text."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/index.js"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ],
+  "x-omelette": {
+    "components": {},
+    "tokens": [
+      "--chrome-accent",
+      "--chrome-avatar-1",
+      "--chrome-avatar-2",
+      "--chrome-avatar-3",
+      "--chrome-avatar-4",
+      "--chrome-border",
+      "--chrome-check-icon",
+      "--chrome-cv-page",
+      "--chrome-danger",
+      "--chrome-ease",
+      "--chrome-field",
+      "--chrome-field-hover",
+      "--chrome-font",
+      "--chrome-font-mono",
+      "--chrome-gap",
+      "--chrome-h",
+      "--chrome-h-lg",
+      "--chrome-h-sm",
+      "--chrome-hover",
+      "--chrome-leading",
+      "--chrome-motion-fast",
+      "--chrome-motion-slow",
+      "--chrome-motion-spin",
+      "--chrome-muted",
+      "--chrome-on-accent",
+      "--chrome-pad",
+      "--chrome-panel",
+      "--chrome-radius-lg",
+      "--chrome-radius-md",
+      "--chrome-radius-pill",
+      "--chrome-radius-sm",
+      "--chrome-radius-xl",
+      "--chrome-radius-xs",
+      "--chrome-row-control",
+      "--chrome-scene",
+      "--chrome-scene-bg",
+      "--chrome-scrim",
+      "--chrome-scroll-thumb",
+      "--chrome-scroll-thumb-hover",
+      "--chrome-scroll-w",
+      "--chrome-shade",
+      "--chrome-shadow-float",
+      "--chrome-shadow-knob",
+      "--chrome-shadow-panel",
+      "--chrome-shadow-pop",
+      "--chrome-size",
+      "--chrome-text",
+      "--chrome-weight-body",
+      "--chrome-weight-strong",
+      "--chrome-weight-title",
+      "--chrome-win-min",
+      "--chrome-z-canvas",
+      "--chrome-z-float",
+      "--chrome-z-pop",
+      "--chrome-z-scrim",
+      "--chrome-z-top"
+    ],
+    "tokenKinds": {
+      "--chrome-scene": "color",
+      "--chrome-panel": "color",
+      "--chrome-hover": "color",
+      "--chrome-field": "color",
+      "--chrome-field-hover": "color",
+      "--chrome-border": "color",
+      "--chrome-text": "font",
+      "--chrome-muted": "color",
+      "--chrome-accent": "color",
+      "--chrome-on-accent": "color",
+      "--chrome-scrim": "color",
+      "--chrome-danger": "color",
+      "--chrome-shade": "color",
+      "--chrome-avatar-1": "color",
+      "--chrome-avatar-2": "color",
+      "--chrome-avatar-3": "color",
+      "--chrome-avatar-4": "color",
+      "--chrome-check-icon": "other",
+      "--chrome-radius-xl": "radius",
+      "--chrome-radius-lg": "radius",
+      "--chrome-radius-md": "radius",
+      "--chrome-radius-sm": "radius",
+      "--chrome-radius-xs": "radius",
+      "--chrome-radius-pill": "radius",
+      "--chrome-gap": "spacing",
+      "--chrome-pad": "spacing",
+      "--chrome-row-control": "spacing",
+      "--chrome-h-lg": "spacing",
+      "--chrome-h": "spacing",
+      "--chrome-h-sm": "spacing",
+      "--chrome-win-min": "spacing",
+      "--chrome-cv-page": "spacing",
+      "--chrome-z-canvas": "other",
+      "--chrome-z-float": "other",
+      "--chrome-z-scrim": "other",
+      "--chrome-z-pop": "other",
+      "--chrome-z-top": "other",
+      "--chrome-motion-fast": "other",
+      "--chrome-motion-slow": "other",
+      "--chrome-motion-spin": "other",
+      "--chrome-ease": "other",
+      "--chrome-shadow-panel": "shadow",
+      "--chrome-shadow-float": "shadow",
+      "--chrome-shadow-pop": "shadow",
+      "--chrome-shadow-knob": "shadow",
+      "--chrome-scroll-thumb": "color",
+      "--chrome-scroll-thumb-hover": "color",
+      "--chrome-scroll-w": "spacing",
+      "--chrome-scene-bg": "color",
+      "--chrome-font": "font",
+      "--chrome-font-mono": "font",
+      "--chrome-size": "spacing",
+      "--chrome-leading": "font",
+      "--chrome-weight-title": "font",
+      "--chrome-weight-strong": "font",
+      "--chrome-weight-body": "font"
+    },
+    "fontFamilies": [
+      "Golos Text"
+    ]
+  }
+}

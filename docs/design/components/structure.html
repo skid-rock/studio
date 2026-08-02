@@ -1,0 +1,38 @@
+<!-- @dsCard group="Компоненты" name="Структура панели" subtitle="Разделы панели сегментом, дерево слоёв, ручка ресайза колонны, пустое состояние" viewport="660x1120" -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — Структура панели</title><link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../styles/docs.css"><style>.res-demo{display:flex;height:120px;background:var(--chrome-scene);border-radius:var(--chrome-radius-md);overflow:hidden}.res-demo>.ch-panel{flex:1;border-radius:0;box-shadow:none}</style></head>
+<body class="ds">
+<p class="ds__title">Структура панели</p>
+<p class="ds__lead">Четыре элемента, которые держат содержимое колонн: переключатель разделов, дерево, ручка ресайза и пустое состояние. Все три высоты и радиусы — те же, что у остального хрома.</p>
+<div class="demo">
+
+<p class="demo-head">Разделы панели — сегмент во всю ширину</p>
+<div class="ch-panel">
+<div class="ch-seg ch-seg--fill" role="tablist"><button type="button" class="ch-seg__opt is-active" role="tab" aria-selected="true">Секция</button><button type="button" class="ch-seg__opt" role="tab" aria-selected="false">Страница</button><button type="button" class="ch-seg__opt" role="tab" aria-selected="false">Сайт</button><button type="button" class="ch-seg__opt" role="tab" aria-selected="false" disabled>Код</button></div>
+<div class="ch-field ch-field--row" style="margin-top:14px"><label class="ch-field__label" for="s1">Заголовок</label><input class="ch-input" id="s1" type="text" value="Что внутри"></div>
+</div>
+<p class="note">Один контрол, две роли — их разводит место, а не вид. Отдельной строкой во всю ширину колонны (<code>.ch-seg--fill</code>) сегмент переключает <em>разделы панели</em>; внутри строки-поля <code>.ch-field--row</code> тот же сегмент — <em>значение свойства</em>. Вкладок с подчёркиванием в системе нет: в колонне 260–320px они дробят и без того узкую шапку.</p>
+
+<p class="demo-head">Дерево слоёв</p>
+<div class="ch-panel">
+<div class="ch-tree">
+<button type="button" class="ch-tree__row is-open"><span class="ch-tree__chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span><span class="ch-tree__name">Обложка</span><span class="ch-tree__act"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span></button>
+<button type="button" class="ch-tree__row" style="--ch-depth:1"><span class="ch-tree__chev"></span><span class="ch-tree__name">Заголовок</span><span class="ch-tree__act"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span></button>
+<button type="button" class="ch-tree__row is-selected" style="--ch-depth:1"><span class="ch-tree__chev"></span><span class="ch-tree__name">Подзаголовок</span><span class="ch-tree__act"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span></button>
+<button type="button" class="ch-tree__row is-hover"><span class="ch-tree__chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span><span class="ch-tree__name">Галерея</span><span class="ch-tree__act"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span></button>
+<button type="button" class="ch-tree__row is-hidden"><span class="ch-tree__chev"></span><span class="ch-tree__name">Форма (скрыта)</span><span class="ch-tree__act"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 18 18M10.6 5.2A9.7 9.7 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3 3.9M6.2 6.3A17 17 0 0 0 2 12s3.5 7 10 7c1.6 0 3-.4 4.3-1"/></svg></span></button>
+</div>
+</div>
+<p class="note">Уровень вложенности — переменная <code>--ch-depth</code> на строке, по 14px на шаг. Выделение красится акцентом, как карточка блока в палитре: это одно и то же состояние «выбрано», просто в другом списке.</p>
+
+<p class="demo-head">Ручка ресайза колонны</p>
+<div class="res-demo"><div class="ch-panel">Палитра</div><button type="button" class="ch-resize" aria-label="Ширина палитры"></button><div class="ch-panel" style="flex:2">Холст</div><button type="button" class="ch-resize is-active" aria-label="Ширина панели свойств"></button><div class="ch-panel">Свойства</div></div>
+<p class="note">Зона захвата 8px, видимая линия 2px и только под курсором — вторая ручка показана в состоянии <code>is-active</code>. В покое ручки не видно: границ между панелями у нас нет.</p>
+
+<p class="demo-head">Пустое состояние</p>
+<div class="ch-panel">
+<label class="ch-search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input class="ch-search__input" type="search" value="галлерея"></label>
+<div class="ch-empty"><span class="ch-empty__title">Ничего не нашлось</span><span>Проверьте написание или посмотрите все блоки</span></div>
+</div>
+</div>
+</body></html>

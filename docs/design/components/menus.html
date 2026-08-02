@@ -1,0 +1,55 @@
+<!-- @dsCard group="Компоненты" name="Меню, тост, модалка" subtitle="Выпадающее и контекстное меню, всплывающее сообщение, диалог с полкой действий" viewport="720x760" -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — Меню и сообщения</title><link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../styles/docs.css"><style>.m-stage{position:relative;height:300px;border-radius:var(--chrome-radius-lg);background:var(--chrome-panel);box-shadow:var(--chrome-shadow-panel);overflow:hidden}</style></head>
+<body class="ds">
+<p class="ds__title">Меню, тост, модалка</p>
+<p class="ds__lead">Верхний слой окна: тень <code>--chrome-shadow-pop</code>, радиус 10px у меню и 16px у диалога, пункт — 28px как в мини-тулбаре.</p>
+<div class="demo" style="max-width:700px">
+
+<p class="demo-head">Выпадающее меню</p>
+<div class="grid-2" style="align-items:start">
+<div class="ch-menu">
+<div class="ch-menu__label">Файл</div>
+<button type="button" class="ch-menu__item">Новый проект<span class="ch-menu__key">⌘N</span></button>
+<button type="button" class="ch-menu__item is-hover">Дублировать<span class="ch-menu__key">⌘D</span></button>
+<button type="button" class="ch-menu__item">Импорт из HTML</button>
+<hr class="ch-menu__sep">
+<button type="button" class="ch-menu__item" disabled>Вернуть версию</button>
+<button type="button" class="ch-menu__item ch-menu__item--danger">Удалить проект<span class="ch-menu__key">⌫</span></button>
+</div>
+<div class="ch-menu">
+<button type="button" class="ch-menu__item"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></span>Поднять</button>
+<button type="button" class="ch-menu__item"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></span>Опустить</button>
+<button type="button" class="ch-menu__item"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></span>Дублировать<span class="ch-menu__key">⌘D</span></button>
+</div>
+</div>
+
+<p class="demo-head">Контекстное меню на секции холста</p>
+<div class="m-stage">
+<div style="position:absolute;inset:0;padding:28px 32px"><h2 style="margin:0 0 10px;font-size:24px;font-weight:400;color:#1f3a5f">Что внутри</h2><p style="margin:0;font-size:15px;line-height:1.6;color:#4a4a44;max-width:44ch">Три спальни, панорамная гостиная с камином, отдельная гостевая.</p></div>
+<div class="ch-cv-section is-selected" style="position:absolute;inset:12px"></div>
+<div class="ch-menu" style="position:absolute;top:96px;left:240px">
+<button type="button" class="ch-menu__item">Копировать<span class="ch-menu__key">⌘C</span></button>
+<button type="button" class="ch-menu__item">Вставить ниже<span class="ch-menu__key">⌘V</span></button>
+<hr class="ch-menu__sep">
+<button type="button" class="ch-menu__item">Сохранить как блок</button>
+<button type="button" class="ch-menu__item ch-menu__item--danger">Удалить секцию</button>
+</div>
+</div>
+
+<p class="demo-head">Тост</p>
+<div class="stack">
+<div class="ch-toast">Секция удалена<button type="button" class="ch-toast__act">Вернуть</button></div>
+<div class="ch-toast ch-toast--danger">Не удалось опубликовать: нет связи<button type="button" class="ch-toast__act">Повторить</button></div>
+</div>
+
+<p class="demo-head">Модалка</p>
+<div class="ch-popup ch-modal">
+<div class="ch-modal__head">Удалить проект «Дом у реки»?</div>
+<div class="ch-modal__body"><p style="margin:0">Проект и все его версии удалятся без возможности вернуть. Опубликованная страница перестанет открываться.</p><label class="ch-choice" style="margin-top:4px"><input class="ch-check" type="checkbox">Скачать HTML перед удалением</label></div>
+<div class="ch-modal__foot"><button type="button" class="ch-btn">Отмена</button><button type="button" class="ch-btn ch-btn--danger">Удалить</button></div>
+</div>
+
+<p class="note">Тост тёмный по той же причине, что и тултип: он всплывает над холстом, а холст может быть любого цвета — светлая карточка на светлом лендинге растворяется.</p>
+</div>
+</body></html>

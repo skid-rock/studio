@@ -1,0 +1,27 @@
+<!-- @dsCard group="Основы" name="Типографика" subtitle="Один шрифт, один размер 13px, иерархия весом и цветом" viewport="640x520" -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — Типографика</title><link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../styles/docs.css"><style>
+.t-row{display:grid;grid-template-columns:150px 1fr;gap:var(--chrome-gap);align-items:baseline;padding:10px 0;border-bottom:1px solid var(--chrome-border)}
+.t-meta{color:var(--chrome-muted)}
+.t-title{font-weight:var(--chrome-weight-title)}
+.t-strong{font-weight:var(--chrome-weight-strong)}
+.t-body{font-weight:var(--chrome-weight-body)}
+.t-label{font-weight:var(--chrome-weight-body);color:var(--chrome-muted)}
+.t-mono{font-family:var(--chrome-font-mono)}
+</style></head>
+<body class="ds"><main class="demo">
+<h1 class="ds__title">Типографика хрома</h1>
+<p class="ds__lead">Шрифт интерфейса — <code>--chrome-font</code>, размер один: <code>--chrome-size</code> 13px. Шрифты лендинга (display, script) в хром не попадают: они принадлежат контенту холста.</p>
+
+<p class="demo-head">Четыре роли — одна ступень</p>
+<div class="t-row"><span class="t-meta">13 / 600</span><span class="t-title">Заголовок панели и группы</span></div>
+<div class="t-row"><span class="t-meta">13 / 500</span><span class="t-strong">Кнопка, активный пункт, ключ числа</span></div>
+<div class="t-row"><span class="t-meta">13 / 400</span><span class="t-body">Текст интерфейса, значение поля</span></div>
+<div class="t-row"><span class="t-meta">13 / 400 · muted</span><span class="t-label">Подпись поля, вторичный текст</span></div>
+<div class="t-row"><span class="t-meta">13 · mono</span><span class="t-mono">Код, путь, токен — 128px</span></div>
+
+<p class="demo-head">Правила</p>
+<p class="note" style="margin-top:0">Размер в хроме не выбирают — он один. Иерархию держат вес (<code>--chrome-weight-title</code> 600, <code>--chrome-weight-strong</code> 500, <code>--chrome-weight-body</code> 400), цвет (<code>--chrome-muted</code> для подписей) и воздух. Прописных в заголовках групп нет: на 13px они добавляли шум и ломали кириллицу.</p>
+<p class="note">Интерлиньяж всегда из <code>--chrome-leading</code> 1.4 — сокращение <code>font:</code> сбрасывает его в <code>normal</code>, поэтому в шкале он задан отдельным токеном. Табличные цифры включены по умолчанию для всех контролов: значения в столбце не дёргаются при вводе.</p>
+<p class="note">Крупный текст принадлежит холсту. Если элементу интерфейса нужен размер больше 13px, чтобы его заметили, — проблема в композиции, а не в размере (принцип 1).</p>
+</main></body></html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Редактор — как есть" description="Окно редактора в объёме реального кода: undo/redo в тулбаре, документ в шапке палитры, 13 блоков реестра, schema-driven панель простого блока, тема и экспорт на вкладке «Страница»" -->
+<helmet><script src="./ds-base.js"></script></helmet>
+<div class="ch-ed" style="width:1440px;height:900px;margin:0 auto">
+
+<aside class="ch-panel ch-ed-palette">
+<div class="ch-ident">
+<span class="ch-tile ch-tile--accent"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5"/><path d="m3 12 9 5 9-5"/></svg></span>
+<span class="ch-ident__text"><span class="ch-ident__name">studio</span><span class="ch-ident__sub">свой редактор</span></span>
+</div>
+<hr class="ch-panel__sep">
+<p class="ch-panel__title">Блоки</p>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg></span>Конверт-заставка</div>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.6-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.4-7 9-7 9Z"/></svg></span>Hero (имена и дата)</div>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><circle cx="12" cy="7" r="2"/><circle cx="12" cy="17" r="2"/></svg></span>Наша история (вехи)</div>
+<div class="ch-block-card is-selected ch-bleed" tabindex="0" role="button" aria-pressed="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></span>Расписание дня</div>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg></span>Обратный отсчёт</div>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>Когда и где (+ карта)</div>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="9" r="1"/><circle cx="15" cy="9" r="1"/><circle cx="9.5" cy="15" r="1"/></svg></span>Дресс-код (палитра)</div>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>Дресс-код (жемчужины + фото)</div>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3 2.4V14"/><path d="M12 17.2v.1"/></svg></span>Детали / FAQ (вопрос-ответ)</div>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16.5v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 1.1 3.7 2 2 0 0 1 3.1 1.5h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L7.1 9.3a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.8 2.2Z"/></svg></span>Контакты (организатор)</div>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M16 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>RSVP-форма</div>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>Closing (подпись)</div>
+<div class="ch-block-card" tabindex="0" role="button"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>Closing (коллаж)</div>
+</aside>
+
+<div class="ch-ed-toolbar ch-ed-toolbar--float">
+<sc-if value="{{ canUndo }}" hint-placeholder-val="{{ true }}"><button type="button" class="ch-btn ch-btn--ghost ch-btn--icon" aria-label="Отменить (Cmd/Ctrl+Z)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-4"/></svg></button></sc-if>
+<sc-if value="{{ noUndo }}" hint-placeholder-val="{{ false }}"><button type="button" class="ch-btn ch-btn--ghost ch-btn--icon" aria-label="Отменить (Cmd/Ctrl+Z)" disabled="disabled"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-4"/></svg></button></sc-if>
+<button type="button" class="ch-btn ch-btn--ghost ch-btn--icon" aria-label="Повторить (Shift+Cmd/Ctrl+Z)" disabled="disabled"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h4"/></svg></button>
+</div>
+
+<main class="ch-ed-canvas">
+<sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+<div class="ch-cv-empty">Документ пуст. Добавьте блок из палитры слева.</div>
+</sc-if>
+<sc-if value="{{ hasDoc }}" hint-placeholder-val="{{ true }}">
+<div class="ch-cv-page" style="background:#fffaf1;color:#275889">
+
+<section class="ch-cv-section" style="padding:64px 48px 56px;text-align:center;background:#fffaf1"><p style="margin:0 0 14px;font:400 13px/1.4 Inter,system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#595b4e">Мы женимся</p><sc-if value="{{ inlineEdit }}" hint-placeholder-val="{{ false }}"><h1 style="margin:0 0 16px;font:400 44px/1.15 'Source Serif Pro',Georgia,serif"><span class="ch-inline-edit">Полина &amp; Илья</span><span class="ch-inline-caret"></span></h1></sc-if><sc-if value="{{ noInlineEdit }}" hint-placeholder-val="{{ true }}"><h1 style="margin:0 0 16px;font:400 44px/1.15 'Source Serif Pro',Georgia,serif">Полина &amp; Илья</h1></sc-if><p style="margin:0;font:400 15px/1.6 Inter,system-ui,sans-serif;color:#595b4e">05.08.2026</p></section>
+
+<sc-if value="{{ storyHover }}" hint-placeholder-val="{{ false }}"><section class="ch-cv-section is-hover" style="padding:48px;background:#fffaf1"><h2 style="margin:0 0 24px;font:400 28px/1.2 'Source Serif Pro',Georgia,serif;text-align:center">Наша история</h2><div style="display:grid;gap:14px;max-width:32rem;margin:0 auto;font:400 15px/1.6 Inter,system-ui,sans-serif"><div style="display:flex;gap:16px"><span style="width:64px;flex:none;color:#a3313a">2019</span>Познакомились</div><div style="display:flex;gap:16px"><span style="width:64px;flex:none;color:#a3313a">2022</span>Начали жить вместе</div><div style="display:flex;gap:16px"><span style="width:64px;flex:none;color:#a3313a">2025</span>Сделал предложение</div></div></section></sc-if>
+<sc-if value="{{ storyPlain }}" hint-placeholder-val="{{ true }}"><section class="ch-cv-section" style="padding:48px;background:#fffaf1"><h2 style="margin:0 0 24px;font:400 28px/1.2 'Source Serif Pro',Georgia,serif;text-align:center">Наша история</h2><div style="display:grid;gap:14px;max-width:32rem;margin:0 auto;font:400 15px/1.6 Inter,system-ui,sans-serif"><div style="display:flex;gap:16px"><span style="width:64px;flex:none;color:#a3313a">2019</span>Познакомились</div><div style="display:flex;gap:16px"><span style="width:64px;flex:none;color:#a3313a">2022</span>Начали жить вместе</div><div style="display:flex;gap:16px"><span style="width:64px;flex:none;color:#a3313a">2025</span>Сделал предложение</div></div></section></sc-if>
+
+<sc-if value="{{ dragging }}" hint-placeholder-val="{{ false }}"><div class="ch-cv-drop"></div></sc-if>
+
+<div class="ch-cv-anchor">
+<sc-if value="{{ selected }}" hint-placeholder-val="{{ true }}"><div class="ch-cv-toolbar ch-cv-toolbar--float"><button type="button" class="ch-btn ch-btn--icon" aria-label="Перетащить секцию"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="6" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="18" r="1"/></svg></button><button type="button" class="ch-btn ch-btn--icon" aria-label="Выше"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></button><button type="button" class="ch-btn ch-btn--icon" aria-label="Ниже"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></button><button type="button" class="ch-btn ch-btn--icon" aria-label="Дублировать секцию"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button><button type="button" class="ch-btn ch-btn--icon ch-btn--danger" aria-label="Удалить секцию"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button></div></sc-if>
+<sc-if value="{{ scheduleDragging }}" hint-placeholder-val="{{ false }}"><section class="ch-cv-section ch-cv-ghost" style="padding:48px;background:#fffaf1"><h2 style="margin:0 0 24px;font:400 28px/1.2 'Source Serif Pro',Georgia,serif;text-align:center;letter-spacing:.08em">ПРОГРАММА ДНЯ</h2><div style="display:grid;gap:14px;max-width:32rem;margin:0 auto;font:400 15px/1.6 Inter,system-ui,sans-serif"><div>16:00 Сбор гостей</div><div>17:00 Церемония</div><div>18:00 Банкет</div><div>21:00 Фейерверк</div></div></section></sc-if>
+<sc-if value="{{ scheduleSelected }}" hint-placeholder-val="{{ true }}"><section class="ch-cv-section is-selected" style="padding:48px;background:#fffaf1"><h2 style="margin:0 0 24px;font:400 28px/1.2 'Source Serif Pro',Georgia,serif;text-align:center;letter-spacing:.08em">ПРОГРАММА ДНЯ</h2><div style="display:grid;gap:14px;max-width:32rem;margin:0 auto;font:400 15px/1.6 Inter,system-ui,sans-serif"><div>16:00 Сбор гостей</div><div>17:00 Церемония</div><div>18:00 Банкет</div><div>21:00 Фейерверк</div></div></section></sc-if>
+<sc-if value="{{ schedulePlain }}" hint-placeholder-val="{{ false }}"><section class="ch-cv-section" style="padding:48px;background:#fffaf1"><h2 style="margin:0 0 24px;font:400 28px/1.2 'Source Serif Pro',Georgia,serif;text-align:center;letter-spacing:.08em">ПРОГРАММА ДНЯ</h2><div style="display:grid;gap:14px;max-width:32rem;margin:0 auto;font:400 15px/1.6 Inter,system-ui,sans-serif"><div>16:00 Сбор гостей</div><div>17:00 Церемония</div><div>18:00 Банкет</div><div>21:00 Фейерверк</div></div></section></sc-if>
+</div>
+
+<sc-if value="{{ unknown }}" hint-placeholder-val="{{ false }}"><section class="ch-cv-section" style="padding:32px 48px;background:#fffaf1"><p style="margin:0;font:400 13px/1.4 var(--chrome-font-mono);color:#595b4e">Неизвестный тип секции: gallery</p></section></sc-if>
+
+</div>
+</sc-if>
+</main>
+
+<sc-if value="{{ toastExport }}" hint-placeholder-val="{{ false }}"><div class="ch-toast ch-toast--float">Экспортирован index.html — 84 КБ, в бюджете<button type="button" class="ch-toast__act">Скрыть</button></div></sc-if>
+<sc-if value="{{ toastOversize }}" hint-placeholder-val="{{ false }}"><div class="ch-toast ch-toast--danger ch-toast--float">Экспортирован index.html — 214 КБ, ПРЕВЫШЕН бюджет<button type="button" class="ch-toast__act">Скрыть</button></div></sc-if>
+<sc-if value="{{ toastLoadError }}" hint-placeholder-val="{{ false }}"><div class="ch-toast ch-toast--danger ch-toast--float">Не удалось загрузить документ: неверный JSON<button type="button" class="ch-toast__act">Ещё раз</button></div></sc-if>
+
+<aside class="ch-panel ch-ed-panel">
+<sc-if value="{{ tabSection }}" hint-placeholder-val="{{ true }}"><div class="ch-seg ch-seg--fill" role="tablist"><button type="button" class="ch-seg__opt is-active" role="tab" aria-selected="true">Секция</button><button type="button" class="ch-seg__opt" role="tab" aria-selected="false">Страница</button></div></sc-if><sc-if value="{{ tabPage }}" hint-placeholder-val="{{ false }}"><div class="ch-seg ch-seg--fill" role="tablist"><button type="button" class="ch-seg__opt" role="tab" aria-selected="false">Секция</button><button type="button" class="ch-seg__opt is-active" role="tab" aria-selected="true">Страница</button></div></sc-if>
+
+<sc-if value="{{ sectionLive }}" hint-placeholder-val="{{ true }}">
+<p class="ch-panel__title">Расписание дня</p>
+<p class="ch-panel__group">Расписание</p>
+<div class="ch-panel__stack ch-panel__stack--lg">
+<label class="ch-field"><span class="ch-field__label">Заголовок</span><textarea class="ch-textarea" rows="2">ПРОГРАММА ДНЯ</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 1</span><textarea class="ch-textarea" rows="2">16:00 Сбор гостей</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 2</span><textarea class="ch-textarea" rows="2">17:00 Церемония</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 3</span><textarea class="ch-textarea" rows="2">18:00 Банкет</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 4</span><textarea class="ch-textarea" rows="2">21:00 Фейерверк</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 5</span><textarea class="ch-textarea" rows="2" placeholder="Пустой слот не рендерится"></textarea></label>
+</div>
+</sc-if>
+
+<sc-if value="{{ sectionDead }}" hint-placeholder-val="{{ false }}">
+<p class="ch-panel__title">Секция</p>
+<p class="ch-panel__group">Расписание</p>
+<div class="ch-panel__stack ch-panel__stack--lg">
+<label class="ch-field"><span class="ch-field__label">Заголовок</span><textarea class="ch-textarea" rows="2" disabled="disabled">—</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 1</span><textarea class="ch-textarea" rows="2" disabled="disabled">—</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 2</span><textarea class="ch-textarea" rows="2" disabled="disabled">—</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 3</span><textarea class="ch-textarea" rows="2" disabled="disabled">—</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 4</span><textarea class="ch-textarea" rows="2" disabled="disabled">—</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 5</span><textarea class="ch-textarea" rows="2" disabled="disabled">—</textarea></label>
+</div>
+<div class="ch-panel__foot"><p class="ch-panel__hint">Выберите секцию на холсте — панель оживёт. Ничего не спрятано, всё выключено.</p></div>
+</sc-if>
+
+<sc-if value="{{ tabPage }}" hint-placeholder-val="{{ false }}">
+<p class="ch-panel__title">Страница</p>
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="p-theme">Тема</label><select class="ch-select" id="p-theme"><option>Cream &amp; Navy</option><option>Forest &amp; Blush</option><option>Charcoal &amp; Gold</option><option>Pearl &amp; Beige</option></select></div>
+<p class="ch-panel__hint">Оверрайды пишутся в документ и уезжают в экспорт.</p>
+<hr class="ch-panel__sep ch-panel__sep--flush">
+<button type="button" class="ch-panel__section" aria-expanded="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="9" r="1"/><circle cx="15" cy="9" r="1"/><circle cx="9.5" cy="15" r="1"/></svg></span>Палитра и шрифты<span class="ch-panel__section__chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
+<div class="ch-panel__section-body">
+<div class="ch-field ch-field--row"><span class="ch-field__label">Основной</span><button type="button" class="ch-color-field"><span class="ch-color-field__swatch" style="background:#275889"></span><span class="ch-color-field__value">#275889</span></button></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Акцент</span><div class="ch-field__pair"><button type="button" class="ch-color-field"><span class="ch-color-field__swatch" style="background:#8a4b2f"></span><span class="ch-color-field__value">#8a4b2f</span></button><button type="button" class="ch-btn ch-btn--ghost ch-btn--sm">Сброс</button></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Фон</span><button type="button" class="ch-color-field"><span class="ch-color-field__swatch" style="background:#fffaf1"></span><span class="ch-color-field__value">#fffaf1</span></button></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Текст</span><button type="button" class="ch-color-field"><span class="ch-color-field__swatch" style="background:#275889"></span><span class="ch-color-field__value">#275889</span></button></div>
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="f-d">Заголовки</label><input class="ch-input" id="f-d" type="text" placeholder="Source Serif Pro, Georgia, serif"></div>
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="f-b">Текст</label><input class="ch-input" id="f-b" type="text" placeholder="Inter, system-ui, sans-serif"></div>
+</div>
+<hr class="ch-panel__sep ch-panel__sep--flush">
+<div class="ch-panel__foot">
+<p class="ch-panel__group">Документ</p>
+<div class="ch-panel__actions"><button type="button" class="ch-btn ch-btn--ghost ch-btn--sm">Сохранить</button><button type="button" class="ch-btn ch-btn--ghost ch-btn--sm">Загрузить</button></div>
+<p class="ch-panel__hint">Самостоятельный index.html: картинки и шрифты — ссылками. Вес и бюджет придут тостом.</p>
+<button type="button" class="ch-btn ch-btn--primary ch-btn--block">Экспорт HTML</button>
+</div>
+</sc-if>
+
+</aside>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;selected&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;panelTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Секция&quot;,&quot;Страница&quot;],&quot;default&quot;:&quot;Секция&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;emptyDoc&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;dragging&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;hoverSection&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;inlineEdit&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;unknownSection&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;canUndo&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;toast&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Нет&quot;,&quot;Экспорт — в бюджете&quot;,&quot;Экспорт — превышен&quot;,&quot;Ошибка загрузки&quot;],&quot;default&quot;:&quot;Нет&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Состояние окна&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const empty = this.props.emptyDoc ?? false;
+    const selected = (this.props.selected ?? true) && !empty;
+    const tabSection = (this.props.panelTab ?? 'Секция') === 'Секция';
+    const dragging = (this.props.dragging ?? false) && !empty;
+    const inlineEdit = (this.props.inlineEdit ?? false) && !empty;
+    const canUndo = this.props.canUndo ?? true;
+    const storyHover = (this.props.hoverSection ?? false) && !empty;
+    const toast = this.props.toast ?? 'Нет';
+    return {
+      storyHover, storyPlain: !storyHover,
+      toastExport: toast === 'Экспорт — в бюджете',
+      toastOversize: toast === 'Экспорт — превышен',
+      toastLoadError: toast === 'Ошибка загрузки',
+      empty, hasDoc: !empty,
+      selected: selected && !dragging, noSelection: !selected,
+      tabSection, tabPage: !tabSection,
+      sectionLive: tabSection && selected,
+      sectionDead: tabSection && !selected,
+      dragging,
+      scheduleDragging: dragging,
+      scheduleSelected: !dragging && selected,
+      schedulePlain: !dragging && !selected,
+      inlineEdit, noInlineEdit: !inlineEdit,
+      unknown: (this.props.unknownSection ?? false) && !empty,
+      canUndo, noUndo: !canUndo
+    };
+  }
+}
+</script>
+</body>
+</html>

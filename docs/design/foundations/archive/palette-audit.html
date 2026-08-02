@@ -1,0 +1,133 @@
+<!-- Архив решений (foundations/archive/). Карточки в витрине нет — итог сведён в foundations/journal.html (группа «Процесс»). -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — Палитра, аудит</title><link rel="stylesheet" href="../../styles.css"><link rel="stylesheet" href="../../styles/docs.css"><style>
+.demo{max-width:1060px}
+.iss{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start;padding:16px 0;border-top:1px solid var(--chrome-border)}
+.iss__n{margin:0 0 4px;font-size:13px;font-weight:600}
+.iss__t{margin:0;font-size:12px;color:var(--chrome-muted);text-wrap:pretty}
+.iss__t b{color:var(--chrome-text);font-weight:500}
+.mini{display:flex;gap:8px}
+.mini__c{flex:1;height:52px;border-radius:8px;border:1px solid rgba(0,0,0,.06);position:relative}
+.mini__lab{margin:5px 0 0;font-size:10px;color:var(--chrome-muted);font-variant-numeric:tabular-nums;line-height:1.35}
+.bars{display:grid;gap:5px}
+.bar{display:grid;grid-template-columns:88px 1fr 42px;align-items:center;gap:8px;font-size:10px;color:var(--chrome-muted);font-variant-numeric:tabular-nums}
+.bar__t{height:12px;border-radius:3px;background:var(--chrome-border)}
+.bar__t i{display:block;height:100%;border-radius:3px;background:var(--chrome-muted)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--chrome-muted);padding:0 10px 8px 0}
+td{padding:9px 10px 9px 0;border-top:1px solid var(--chrome-border);vertical-align:middle;color:var(--chrome-text)}
+td code{color:var(--chrome-text)}
+.cell{display:flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums;font-size:11px;color:var(--chrome-muted)}
+.cell__c{width:22px;height:22px;border-radius:6px;border:1px solid rgba(0,0,0,.08);flex:none}
+.why{font-size:11px;color:var(--chrome-muted);text-wrap:pretty}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cmp__h{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--chrome-muted);margin:0 0 8px}
+.pv{display:grid;gap:var(--chrome-gap);padding:var(--chrome-gap);border-radius:var(--chrome-radius-lg);background-color:var(--chrome-scene);background-image:var(--pv-noise),radial-gradient(560px 340px at 50% 0%,color-mix(in oklab,var(--chrome-scene) 60%,#fff) 0%,var(--chrome-scene) 65%,color-mix(in oklab,var(--chrome-scene) 90%,#000) 100%)}
+.pv .ch-panel{border-radius:var(--chrome-radius-xl)}
+.pv__pal{display:flex;flex-direction:column;gap:2px;padding:12px 10px}
+.pv .note{margin:12px 0 0}
+.cr{font-variant-numeric:tabular-nums}
+.cr.bad{color:var(--chrome-danger);font-weight:600}
+[data-scope]{--pv-noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")}
+.v-now{--chrome-scene:#ececea;--chrome-panel:#ffffff;--chrome-hover:#f4f4f2;--chrome-field:#f2f2f0;--chrome-field-hover:#eaeae7;--chrome-border:#eaeae7;--chrome-text:#1f2937;--chrome-muted:#6b7280;--chrome-accent:#1f2937;--chrome-on-accent:#ffffff;--chrome-scrim:rgba(31,41,55,.4);--chrome-danger:#b3261e}
+.v-fix{--chrome-scene:oklch(.935 .005 95);--chrome-panel:oklch(.995 .002 95);--chrome-hover:oklch(.968 .004 95);--chrome-field:oklch(.955 .005 95);--chrome-field-hover:oklch(.930 .006 95);--chrome-border:oklch(.900 .006 95);--chrome-text:oklch(.29 .012 85);--chrome-muted:oklch(.52 .012 85);--chrome-accent:oklch(.29 .012 85);--chrome-on-accent:oklch(.99 .003 95);--chrome-scrim:oklch(.29 .012 85/.4);--chrome-danger:oklch(.50 .16 30)}
+</style></head>
+<body class="ds"><main class="demo v-now" data-scope>
+<h1 class="ds__title">Аудит палитры хрома</h1>
+<p class="ds__lead">Одиннадцать цветовых токенов проверены по трём вещам: одна ли у них температура, различимы ли соседние ступени светлоты, хватает ли контраста подписям. Все числа на этой странице считает браузер из реальных значений токенов — hex, oklch и коэффициент контраста.</p>
+
+<div class="demo-head">Что не сходится</div>
+
+<section class="iss v-now" data-scope>
+<div><p class="iss__n">1. Две температуры в одной палитре</p><p class="iss__t">Поверхности тёплые — <b>H≈105°</b> при хроме 0.003, почти нейтральная бумага. Текст, muted, акцент и скрим — холодные, <b>H≈260°</b> при хроме <b>0.023–0.030</b>, то есть в восемь-десять раз насыщеннее фона. Серый текст на тёплом фоне читается синим, а сцена под попапом уходит в синеву. Это не «оттенок» — это два разных серых в одном окне.</p></div>
+<div class="mini"><div><div class="mini__c" style="background:var(--chrome-scene)"></div><p class="mini__lab" data-lch="--chrome-scene"></p></div><div><div class="mini__c" style="background:var(--chrome-text)"></div><p class="mini__lab" data-lch="--chrome-text"></p></div><div><div class="mini__c" style="background:var(--chrome-muted)"></div><p class="mini__lab" data-lch="--chrome-muted"></p></div></div>
+</section>
+
+<section class="iss v-now" data-scope>
+<div><p class="iss__n">2. Один цвет на две роли</p><p class="iss__t"><code>--chrome-field-hover</code> и <code>--chrome-border</code> — это <b>один и тот же #eaeae7</b>. Наведение на поле и разделитель панели неразличимы, а главное — токены нельзя менять по отдельности: осветлишь разделитель, потеряешь hover.</p></div>
+<div class="mini"><div><div class="mini__c" style="background:var(--chrome-field-hover)"></div><p class="mini__lab">field-hover<br><span data-hex="--chrome-field-hover"></span></p></div><div><div class="mini__c" style="background:var(--chrome-border)"></div><p class="mini__lab">border<br><span data-hex="--chrome-border"></span></p></div></div>
+</section>
+
+<section class="iss v-now" data-scope>
+<div><p class="iss__n">3. Лестница поверхностей слиплась сверху и провалилась снизу</p><p class="iss__t">hover и field отличаются на <b>0.6% светлоты</b> — наведённая карточка и заливка поля практически один тон. Разделитель при этом темнее сцены всего на 0.7%: внутри панели он есть, на границе со сценой исчезает. Внизу шкалы места не осталось вообще.</p></div>
+<div class="bars" id="bars-now"></div>
+</section>
+
+<section class="iss v-now" data-scope>
+<div><p class="iss__n">4. Вторичный текст на грани</p><p class="iss__t"><code>--chrome-muted</code> проходит по AA на белой панели, но подписи живут не только там: на залитом поле и на сцене он <b>падает ниже 4.5:1</b>, а кегль подписей — 11–12px. Запас нужен там, где текста меньше всего.</p></div>
+<div class="mini"><div style="flex:1"><div class="mini__c" style="background:var(--chrome-panel);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--chrome-muted)">подпись</div><p class="mini__lab">на panel · <span class="cr" data-fg="--chrome-muted" data-bg="--chrome-panel"></span></p></div><div style="flex:1"><div class="mini__c" style="background:var(--chrome-field-hover);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--chrome-muted)">подпись</div><p class="mini__lab">на field-hover · <span class="cr" data-fg="--chrome-muted" data-bg="--chrome-field-hover"></span></p></div><div style="flex:1"><div class="mini__c" style="background:var(--chrome-scene);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--chrome-muted)">подпись</div><p class="mini__lab">на scene · <span class="cr" data-fg="--chrome-muted" data-bg="--chrome-scene"></span></p></div></div>
+</section>
+
+<section class="iss v-now" data-scope>
+<div><p class="iss__n">5. Danger не в тон бумаге</p><p class="iss__t">#b3261e — холодноватый кирпич (H≈29°, C 0.181) рядом с тёплыми поверхностями. На hover кнопка удаления смешивает его с тёплым фоном на 8% и даёт грязный розово-серый. Красный оставляем, но подводим по светлоте к muted и чуть снимаем хрому, чтобы он не спорил с контентом холста.</p></div>
+<div class="mini"><div><div class="mini__c" style="background:var(--chrome-danger)"></div><p class="mini__lab" data-lch="--chrome-danger"></p></div><div><div class="mini__c" style="background:color-mix(in srgb,var(--chrome-danger) 8%,var(--chrome-hover))"></div><p class="mini__lab">hover-подложка 8%</p></div></div>
+</section>
+
+<section class="iss v-now" data-scope>
+<div><p class="iss__n">6. Скрим красит сцену в синий</p><p class="iss__t"><code>rgba(31,41,55,.4)</code> — тот же холодный серо-синий. Поверх тёплой сцены под попапом он даёт заметный сдвиг температуры: половина окна тёплая, затемнённая половина — холодная.</p></div>
+<div class="mini"><div class="mini__c" style="background-color:var(--chrome-scene)"></div><div class="mini__c" style="background-color:var(--chrome-scene);box-shadow:inset 0 0 0 999px var(--chrome-scrim)"></div></div>
+</section>
+
+<div class="demo-head">Коррекция — токен за токеном</div>
+<p class="iss__t" style="margin:0 0 14px">Одна тёплая ось для всего (H 85–95), равномерная лестница светлот в oklch, разведённые роли <code>border</code> и <code>field-hover</code>. Набор токенов не меняется — только значения, компоненты трогать не нужно.</p>
+<table>
+<thead><tr><th>Токен</th><th style="width:150px">Было</th><th style="width:150px">Стало</th><th>Что решает</th></tr></thead>
+<tbody id="tbl"></tbody>
+</table>
+
+<div class="demo-head">Сравнение</div>
+<div class="cmp">
+<div class="v-now" data-scope><p class="cmp__h">Было</p><div class="pv"><div class="ch-panel pv__pal"><div class="ch-block-card"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">H</span>Заголовок</div><div class="ch-block-card is-hover"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">T</span>Текст</div><div class="ch-block-card is-selected"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">G</span>Галерея</div></div><div class="ch-panel"><p class="ch-panel__title">Свойства</p><div class="stack"><div class="ch-field ch-field--row"><span class="ch-field__label">Отступ</span><div class="ch-num-group"><span class="ch-num"><span class="ch-num__key">Y</span>24</span><span class="ch-num"><span class="ch-num__key">X</span>16</span></div></div><div class="ch-field ch-field--row"><span class="ch-field__label">Фон</span><span class="ch-color-field"><span class="ch-color-field__swatch" style="background:#c9c2b6"></span><span class="ch-color-field__value">#C9C2B6</span></span></div><div class="ch-field ch-field--row"><span class="ch-field__label">Показывать</span><span class="ch-toggle is-on"></span></div></div><hr class="ch-panel__sep"><div class="row"><button class="ch-btn ch-btn--primary">Сохранить</button><button class="ch-btn">Отмена</button><button class="ch-btn ch-btn--ghost ch-btn--danger">Удалить</button></div><p class="note">Вторичная подпись 12px.</p></div></div></div>
+<div class="v-fix" data-scope><p class="cmp__h">Стало</p><div class="pv"><div class="ch-panel pv__pal"><div class="ch-block-card"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">H</span>Заголовок</div><div class="ch-block-card is-hover"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">T</span>Текст</div><div class="ch-block-card is-selected"><span class="ch-block-card__handle">⠿</span><span class="ch-tile">G</span>Галерея</div></div><div class="ch-panel"><p class="ch-panel__title">Свойства</p><div class="stack"><div class="ch-field ch-field--row"><span class="ch-field__label">Отступ</span><div class="ch-num-group"><span class="ch-num"><span class="ch-num__key">Y</span>24</span><span class="ch-num"><span class="ch-num__key">X</span>16</span></div></div><div class="ch-field ch-field--row"><span class="ch-field__label">Фон</span><span class="ch-color-field"><span class="ch-color-field__swatch" style="background:#c9c2b6"></span><span class="ch-color-field__value">#C9C2B6</span></span></div><div class="ch-field ch-field--row"><span class="ch-field__label">Показывать</span><span class="ch-toggle is-on"></span></div></div><hr class="ch-panel__sep"><div class="row"><button class="ch-btn ch-btn--primary">Сохранить</button><button class="ch-btn">Отмена</button><button class="ch-btn ch-btn--ghost ch-btn--danger">Удалить</button></div><p class="note">Вторичная подпись 12px.</p></div></div></div>
+</div>
+
+<div class="demo-head">Контраст, до и после</div>
+<table>
+<thead><tr><th>Пара</th><th style="width:120px">Было</th><th style="width:120px">Стало</th><th style="width:110px">Норма</th></tr></thead>
+<tbody id="crt"></tbody>
+</table>
+
+<div class="demo-head">Лестница светлот</div>
+<div class="cmp">
+<div class="v-now" data-scope><p class="cmp__h">Было</p><div class="bars" id="bars-now2"></div></div>
+<div class="v-fix" data-scope><p class="cmp__h">Стало</p><div class="bars" id="bars-fix"></div></div>
+</div>
+
+<p class="note">Значения ещё не записаны в <code>styles/chrome-tokens.css</code> — это предложение. Если вариант A подходит, коррекция вносится заменой одиннадцати строк в <code>:root</code> и правкой градиента сцены; разметка и карточки остаются как есть.</p>
+</main>
+<script>
+const cx=document.createElement('canvas').getContext('2d',{willReadFrequently:true});
+function toRgb(c){cx.fillStyle='#000';cx.fillStyle=c;cx.fillRect(0,0,1,1);const d=cx.getImageData(0,0,1,1).data;return[d[0],d[1],d[2]]}
+function toHex(c){return'#'+toRgb(c).map(v=>v.toString(16).padStart(2,'0')).join('')}
+function lin(v){v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)}
+function lum(c){const[r,g,b]=toRgb(c);return .2126*lin(r)+.7152*lin(g)+.0722*lin(b)}
+function cr(a,b){const x=lum(a),y=lum(b);return((Math.max(x,y)+.05)/(Math.min(x,y)+.05))}
+function oklch(c){const[R,G,B]=toRgb(c).map(lin);
+const l=Math.cbrt(.4122214708*R+.5363325363*G+.0514459929*B),m=Math.cbrt(.2119034982*R+.6806995451*G+.1073969566*B),s=Math.cbrt(.0883024619*R+.2817188376*G+.6299787005*B);
+const L=.2104542553*l+.7936177850*m-.0040720468*s,a=1.9779984951*l-2.4285922050*m+.4505937099*s,bb=.0259040371*l+.7827717662*m-.8086757660*s;
+let h=Math.atan2(bb,a)*180/Math.PI;if(h<0)h+=360;return{L:L,C:Math.hypot(a,bb),H:h}}
+function v(el,name){return getComputedStyle(el.closest('[data-scope]')).getPropertyValue(name).trim()}
+const label={'--chrome-scene':'scene','--chrome-panel':'panel','--chrome-hover':'hover','--chrome-field':'field','--chrome-field-hover':'field-hover','--chrome-border':'border','--chrome-text':'text','--chrome-muted':'muted','--chrome-accent':'accent','--chrome-on-accent':'on-accent','--chrome-scrim':'scrim','--chrome-danger':'danger'};
+const why={'--chrome-scene':'Тёплая ось H 95, светлота выровнена по шкале oklch','--chrome-panel':'Не чистый белый, а тёплый — панель перестаёт «сиять» на бумаге','--chrome-hover':'Разведён с field: hover карточки заметен, но не тяжелее поля','--chrome-field':'Ступень между hover и field-hover, ровный шаг 2.5%','--chrome-field-hover':'Собственное значение вместо общего с border','--chrome-border':'Темнее на 9.5% от панели — разделитель наконец виден','--chrome-text':'Тёплый почти-чёрный, хрома 0.012 вместо холодных 0.030','--chrome-muted':'Светлота вниз до .52 — AA на всех поверхностях, включая сцену','--chrome-accent':'Остаётся равным text (решение №1), но в той же температуре','--chrome-on-accent':'Тёплый белый — на акценте не даёт голубой каймы','--chrome-scrim':'Затемнение больше не красит сцену в синий','--chrome-danger':'Светлота подведена к muted, хрома снижена — тише на холсте'};
+const order=['--chrome-scene','--chrome-panel','--chrome-hover','--chrome-field','--chrome-field-hover','--chrome-border','--chrome-text','--chrome-muted','--chrome-accent','--chrome-on-accent','--chrome-scrim','--chrome-danger'];
+const now=document.createElement('div');now.className='v-now';document.body.appendChild(now);
+const fix=document.createElement('div');fix.className='v-fix';document.body.appendChild(fix);
+const gv=(sc,n)=>getComputedStyle(sc).getPropertyValue(n).trim();
+document.getElementById('tbl').innerHTML=order.map(n=>{const a=gv(now,n),b=gv(fix,n);
+return '<tr><td><code>'+n.replace('--chrome-','')+'</code></td>'+
+'<td><span class="cell"><span class="cell__c" style="background:'+a+'"></span>'+(n==='--chrome-scrim'?'40%':toHex(a))+'</span></td>'+
+'<td><span class="cell"><span class="cell__c" style="background:'+b+'"></span>'+(n==='--chrome-scrim'?'40%':toHex(b))+'</span></td>'+
+'<td class="why">'+why[n]+'</td></tr>'}).join('');
+const pairs=[['--chrome-text','--chrome-panel','основной текст на панели','4.5'],['--chrome-muted','--chrome-panel','подпись на панели','4.5'],['--chrome-muted','--chrome-field','подпись на поле','4.5'],['--chrome-muted','--chrome-scene','подпись на сцене','4.5'],['--chrome-on-accent','--chrome-accent','текст на акценте','4.5'],['--chrome-danger','--chrome-panel','опасное действие','4.5'],['--chrome-border','--chrome-panel','разделитель на панели','1.4']];
+document.getElementById('crt').innerHTML=pairs.map(p=>{const a=cr(gv(now,p[0]),gv(now,p[1])),b=cr(gv(fix,p[0]),gv(fix,p[1])),lim=parseFloat(p[3]);
+const f=(x)=>'<span class="cr'+(x<lim?' bad':'')+'">'+x.toFixed(2)+':1</span>';
+return '<tr><td>'+p[2]+'</td><td>'+f(a)+'</td><td>'+f(b)+'</td><td class="why">'+(lim>2?'AA · 4.5:1':'различимость · 1.4:1')+'</td></tr>'}).join('');
+const surf=['--chrome-panel','--chrome-hover','--chrome-field','--chrome-field-hover','--chrome-border','--chrome-scene'];
+function bars(el,sc){el.innerHTML=surf.map(n=>{const L=oklch(gv(sc,n)).L;return '<div class="bar"><span>'+label[n]+'</span><span class="bar__t"><i style="width:'+(L*100).toFixed(1)+'%"></i></span><span>'+(L*100).toFixed(1)+'</span></div>'}).join('')}
+bars(document.getElementById('bars-now'),now);bars(document.getElementById('bars-now2'),now);bars(document.getElementById('bars-fix'),fix);
+document.querySelectorAll('[data-hex]').forEach(el=>{el.textContent=toHex(v(el,el.dataset.hex))});
+document.querySelectorAll('[data-lch]').forEach(el=>{const c=oklch(v(el,el.dataset.lch));el.innerHTML=label[el.dataset.lch]+'<br>L '+(c.L*100).toFixed(1)+' · C '+c.C.toFixed(3)+' · H '+c.H.toFixed(0)+'°'});
+document.querySelectorAll('[data-fg]').forEach(el=>{const x=cr(v(el,el.dataset.fg),v(el,el.dataset.bg));el.textContent=x.toFixed(2)+':1';if(x<4.5)el.classList.add('bad')});
+now.remove();fix.remove();
+</script>
+</body></html>

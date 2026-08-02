@@ -1,0 +1,111 @@
+<!-- Архив решений (foundations/archive/). Карточки в витрине нет — итог сведён в foundations/journal.html (группа «Процесс»). -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — Разбор референсов</title><link rel="stylesheet" href="../../styles.css"><link rel="stylesheet" href="../../styles/docs.css"><style>
+.rf{display:grid;gap:var(--chrome-gap);margin:0 0 20px}
+.rf__head{display:flex;align-items:baseline;gap:10px}
+.rf__n{font-size:var(--chrome-size);font-weight:var(--chrome-weight-strong);color:var(--chrome-muted)}
+.rf__t{margin:0;font-size:var(--chrome-size);font-weight:var(--chrome-weight-title)}
+.rf__src{margin:0;font-size:var(--chrome-size);color:var(--chrome-muted);max-width:64ch;text-wrap:pretty}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:var(--chrome-gap);align-items:stretch}
+.cmp__col{display:grid;gap:8px;align-content:start;padding:var(--chrome-pad);background:var(--chrome-panel);border-radius:var(--chrome-radius-lg);box-shadow:var(--chrome-shadow-panel)}
+.cmp__tag{font-size:var(--chrome-size);font-weight:var(--chrome-weight-strong);color:var(--chrome-muted)}
+.cmp__col--new .cmp__tag{color:var(--chrome-accent)}
+.old-input{height:32px;padding:0 10px;border:1px solid var(--chrome-border);border-radius:var(--chrome-radius-md);background:var(--chrome-panel);font:400 var(--chrome-size)/var(--chrome-leading) var(--chrome-font);color:var(--chrome-text);box-sizing:border-box;width:100%;display:flex;align-items:center}
+.old-label{font-size:var(--chrome-size);color:var(--chrome-muted)}
+.mini{background:var(--chrome-scene);background-image:var(--chrome-scene-bg);border-radius:var(--chrome-radius-md);padding:10px;position:relative;overflow:hidden;height:120px;box-sizing:border-box}
+.mini__panel{background:var(--chrome-panel);border-radius:6px;box-shadow:var(--chrome-shadow-panel)}
+</style></head>
+<body class="ds"><main class="demo" style="max-width:700px">
+<h1 class="ds__title">Разбор референсов</h1>
+<p class="ds__lead">Два образца: светлый редактор с плавающими панелями и тёмный 3D-редактор со сценой в цвете. Ниже — что из них взято дословно, что переведено на наши токены и что отвергнуто.</p>
+
+<div class="rf">
+<div class="rf__head"><span class="rf__n">01</span><p class="rf__t">Шапки во всю ширину нет</p></div>
+<p class="rf__src">В обоих референсах инструменты собраны в плавающую карточку по центру над холстом. Полоса на всю ширину съедала бы высоту и делала хром рамой вокруг контента — а он должен быть фоном под ним.</p>
+<div class="cmp">
+<div class="cmp__col"><span class="cmp__tag">Было</span><div class="mini"><div class="mini__panel" style="height:26px;margin-bottom:8px"></div><div style="display:flex;gap:8px;height:66px"><div class="mini__panel" style="width:36px"></div><div style="flex:1"></div><div class="mini__panel" style="width:46px"></div></div></div></div>
+<div class="cmp__col cmp__col--new"><span class="cmp__tag">Стало</span><div class="mini"><div style="display:flex;gap:8px;height:100px"><div class="mini__panel" style="width:36px"></div><div style="flex:1;position:relative"><div class="mini__panel" style="width:64px;height:22px;margin:0 auto"></div></div><div class="mini__panel" style="width:46px"></div></div></div></div>
+</div>
+<p class="note" style="margin-top:0"><code>.ed-toolbar</code> + <code>.ed-toolbar--float</code>. Колонны панелей идут во всю высоту окна, холст между ними — чистая сцена.</p>
+</div>
+
+<div class="rf">
+<div class="rf__head"><span class="rf__n">02</span><p class="rf__t">Идентичность уезжает в панели</p></div>
+<p class="rf__src">Раз шапки нет, её содержимое расходится по краям: имя проекта и переключатель темы — в верх левой колонны, аватары и «Поделиться» — в верх правой. Ровно так в первом референсе.</p>
+</div>
+
+<div class="rf">
+<div class="rf__head"><span class="rf__n">03</span><p class="rf__t">Поле — это строка, а не стопка</p></div>
+<p class="rf__src">Оба референса ставят подпись слева, контрол справа в узкой фиксированной колонке. Панель свойств получает вертикальный ритм и читается сканированием по левому краю; стопка «подпись сверху» осталась только для длинных текстовых значений.</p>
+<div class="cmp">
+<div class="cmp__col"><span class="cmp__tag">Было</span><div style="display:grid;gap:6px"><span class="old-label">Ширина контейнера</span><div class="old-input">Обычная</div></div><div style="display:grid;gap:6px"><span class="old-label">Отступ сверху</span><div class="old-input">44</div></div></div>
+<div class="cmp__col cmp__col--new"><span class="cmp__tag">Стало</span><div class="ch-field ch-field--row"><span class="ch-field__label">Ширина</span><select class="ch-select"><option>Обычная</option></select></div><div class="ch-field ch-field--row"><span class="ch-field__label">Отступ</span><div class="ch-num-group"><span class="ch-num"><span class="ch-num__key">T</span>44</span><span class="ch-num"><span class="ch-num__key">B</span>44</span></div></div></div>
+</div>
+<p class="note" style="margin-top:0"><code>.field--row</code> — колонка контрола <code>--chrome-row-control</code> (148px), высота контрола 28px. Пара числовых значений — <code>.num-group</code> с буквенным ключом <code>.num__key</code>, как X/Y/Z во втором референсе.</p>
+</div>
+
+<div class="rf">
+<div class="rf__head"><span class="rf__n">04</span><p class="rf__t">Контрол залит, а не обведён</p></div>
+<p class="rf__src">Ни одно поле в референсах не имеет рамки: они читаются как углубления в панели — заливка на полтона темнее белого. Это ровно наш принцип «глубина вместо границ», доведённый до контролов.</p>
+<div class="cmp">
+<div class="cmp__col"><span class="cmp__tag">Было</span><div class="old-input">Дом у реки</div><div class="old-input">По левому краю</div></div>
+<div class="cmp__col cmp__col--new"><span class="cmp__tag">Стало</span><input class="ch-input" type="text" value="Дом у реки"><select class="ch-select"><option>По левому краю</option></select></div>
+</div>
+<p class="note" style="margin-top:0">Новый токен <code>--chrome-field</code> #f1f0ec и <code>--chrome-field-hover</code> #e9e8e3. Рамка у поля теперь прозрачная — она держит место под фокус, но не рисуется.</p>
+</div>
+
+<div class="rf">
+<div class="rf__head"><span class="rf__n">05</span><p class="rf__t">У иконки есть тайл</p></div>
+<p class="rf__src">В строках списка и в заголовках групп иконка сидит в скруглённом квадрате 28px с той же заливкой, что у полей. Он выравнивает разнокалиберные иконки по одной сетке и даёт строке визуальный якорь слева.</p>
+<div class="cmp">
+<div class="cmp__col"><span class="cmp__tag">Было</span><div class="ch-block-card"><span class="ch-block-card__handle">⠿</span>Галерея</div><div class="ch-block-card"><span class="ch-block-card__handle">⠿</span>Отзывы</div></div>
+<div class="cmp__col cmp__col--new"><span class="cmp__tag">Стало</span><div class="ch-block-card"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>Галерея</div><div class="ch-block-card"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg></span>Отзывы</div></div>
+</div>
+</div>
+
+<div class="rf">
+<div class="rf__head"><span class="rf__n">06</span><p class="rf__t">Группа свойств — раскрывающаяся строка</p></div>
+<p class="rf__src">Вместо мелкой uppercase-подписи референсы дают полноценную строку 13/600 с тайлом слева и шевроном справа: группу видно, её можно свернуть, и панель не растёт бесконечно вниз.</p>
+<div class="cmp">
+<div class="cmp__col"><span class="cmp__tag">Было</span><p class="ch-panel__group" style="margin:6px 0">Оформление</p><hr class="ch-panel__sep"><p class="ch-panel__group" style="margin:6px 0">Отступы</p></div>
+<div class="cmp__col cmp__col--new"><span class="cmp__tag">Стало</span><button type="button" class="ch-panel__section"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h10M18 8h2M4 16h4M12 16h8"/><circle cx="16" cy="8" r="2"/><circle cx="10" cy="16" r="2"/></svg></span>Оформление<span class="ch-panel__section__chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></button><hr class="ch-panel__sep" style="margin:0"><button type="button" class="ch-panel__section"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span>Отступы<span class="ch-panel__section__chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></button></div>
+</div>
+</div>
+
+<div class="rf">
+<div class="rf__head"><span class="rf__n">07</span><p class="rf__t">Цвет выбирают сеткой, а не полем</p></div>
+<p class="rf__src">Первый референс показывает фон сцены сеткой крупных свотчей 3×N со скруглением 10 и кольцом на выбранном. Для набора из темы это точнее, чем строка с шестнадцатеричным кодом: пользователь выбирает из палитры, а не вводит значение.</p>
+<div class="cmp">
+<div class="cmp__col"><span class="cmp__tag">Было</span><div class="ch-color-field"><span class="ch-color-field__swatch" style="background:#f6f1e7"></span>Cream<span class="ch-color-field__value" style="margin-left:auto">#F6F1E7</span></div></div>
+<div class="cmp__col cmp__col--new"><span class="cmp__tag">Стало</span><div class="ch-swatches"><button type="button" class="ch-swatch is-selected" style="background:#fffdf8" aria-label="Cream light"></button><button type="button" class="ch-swatch" style="background:#f6f1e7" aria-label="Cream"></button><button type="button" class="ch-swatch" style="background:#e8e2d4" aria-label="Sand"></button><button type="button" class="ch-swatch" style="background:#1f3a5f" aria-label="Ink"></button><button type="button" class="ch-swatch" style="background:#4a4a44" aria-label="Slate"></button><button type="button" class="ch-swatch" style="background:#ffffff" aria-label="White"></button></div></div>
+</div>
+<p class="note" style="margin-top:0">Единственное место, где токены темы лендинга легально видны в хроме — сам свотч показывает тему. Граница контуров не нарушена.</p>
+</div>
+
+<div class="rf">
+<div class="rf__head"><span class="rf__n">08</span><p class="rf__t">Выделение — плашка во всю ширину панели</p></div>
+<p class="rf__src">Во втором референсе выбранная строка дерева залита акцентом от края до края колонны, без скругления и без внутреннего отступа. Выделение видно периферийным зрением; наш акцент — почти чёрный, а не синий.</p>
+<div class="cmp">
+<div class="cmp__col"><span class="cmp__tag">Было</span><div class="ch-block-card is-hover"><span class="ch-block-card__handle">⠿</span>Текст</div></div>
+<div class="cmp__col cmp__col--new" style="overflow:hidden"><span class="cmp__tag">Стало</span><div class="ch-block-card is-selected ch-bleed"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg></span>Текст</div></div>
+</div>
+</div>
+
+<div class="rf">
+<div class="rf__head"><span class="rf__n">09</span><p class="rf__t">Внизу по центру — док режима</p></div>
+<p class="rf__src">Оба референса держат один глобальный переключатель у нижнего края холста: «Orthographic / Perspective» и промпт-строка. Он не в панелях — он относится к холсту, и место у него симметрично тулбару сверху.</p>
+<div class="cmp__col cmp__col--new" style="align-items:center;justify-items:center"><span class="cmp__tag">Стало</span><div class="ch-ed-dock"><div class="ch-seg"><button type="button" class="ch-seg__opt is-active">Редактор</button><button type="button" class="ch-seg__opt">Предпросмотр</button></div></div></div>
+</div>
+
+<div class="rf">
+<div class="rf__head"><span class="rf__n">10</span><p class="rf__t">Тень мягче, колонны круглее</p></div>
+<p class="rf__src">Панели в референсах отделяются от сцены почти незаметно: большой радиус размытия при низкой непрозрачности. Радиус у колонн во всю высоту крупнее, чем у обычной карточки, — 20 против 16.</p>
+<div class="cmp">
+<div class="cmp__col"><span class="cmp__tag">Было</span><div style="height:64px;background:var(--chrome-panel);border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.06)"></div><span class="old-label">radius 16 · blur 24 / .06</span></div>
+<div class="cmp__col cmp__col--new"><span class="cmp__tag">Стало</span><div style="height:64px;background:var(--chrome-panel);border-radius:var(--chrome-radius-xl);box-shadow:var(--chrome-shadow-panel)"></div><span class="old-label">radius 20 · blur 30 / .06 + float 40 / .09</span></div>
+</div>
+</div>
+
+<div class="demo-head">Чего не берём</div>
+<p class="note" style="margin-top:0">Синий акцент второго референса — нет: у нас один акцент, почти чёрный, и он существует ровно чтобы хром не соревновался с лендингом в холсте. Тёмную панель и цветную сцену — тоже нет: сцена держит контент, а не настроение. Из второго референса взяты только структура (строки-поля, ключи осей, плашка выделения, нижний док), переведённая на светлые токены.</p>
+</main></body></html>

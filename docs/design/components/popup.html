@@ -1,0 +1,23 @@
+<!-- @dsCard group="Компоненты" name="Попап и тултип" subtitle="Верхний слой: оверрайды темы, подсказки, затемнение над сценой" viewport="660x560" -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — Попап</title><link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../styles/docs.css"><style>.stage{position:relative;height:400px;border-radius:var(--chrome-radius-lg);overflow:hidden;background-color:var(--chrome-scene);background-image:var(--chrome-scene-bg)}.stage__ed{position:absolute;inset:0;display:grid;grid-template-columns:120px 1fr 150px;gap:var(--chrome-gap);padding:var(--chrome-gap)}.stage__col{background:var(--chrome-panel);border-radius:var(--chrome-radius-xl);box-shadow:var(--chrome-shadow-panel)}.stage__page{align-self:center;height:200px;background:#fffdf8;border-radius:var(--chrome-radius-lg);box-shadow:var(--chrome-shadow-panel)}.stage__scrim{position:absolute;inset:0}.stage__pop{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:330px}</style></head>
+<body class="ds"><main class="demo">
+<h1 class="ds__title">Попап</h1>
+<p class="ds__lead">Верхний слой над всем окном: тень <code>--chrome-shadow-pop</code> и затемнение <code>--chrome-scrim</code> под ним. Внутри — те же строки-поля, что в панели свойств: попап не заводит собственную вёрстку.</p>
+<div class="stage">
+<div class="stage__ed"><div class="stage__col"></div><div class="stage__page"></div><div class="stage__col"></div></div>
+<div class="stage__scrim ch-scrim"></div>
+<div class="ch-popup stage__pop">
+<p class="ch-panel__title">Оверрайды темы</p>
+<div class="stack" style="gap:8px">
+<div class="ch-field ch-field--row"><span class="ch-field__label">Основной цвет</span><div class="ch-color-field"><span class="ch-color-field__swatch" style="background:#1f3a5f"></span><span class="ch-color-field__value" style="margin-left:auto">#1F3A5F</span></div></div>
+<div class="ch-field ch-field--row"><label class="ch-field__label" for="pp">Радиус</label><div class="ch-num-group"><span class="ch-num"><span class="ch-num__key">R</span>8</span></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Тени</span><button type="button" class="ch-toggle is-on" role="switch" aria-checked="true" aria-label="Тени" style="justify-self:end"></button></div>
+</div>
+<hr class="ch-panel__sep"><div class="row" style="justify-content:flex-end;gap:8px"><button type="button" class="ch-btn ch-btn--ghost">Сбросить</button><button type="button" class="ch-btn ch-btn--primary">Применить</button></div>
+</div>
+</div>
+<div class="demo-head">Тултип</div>
+<div class="row"><span class="ch-tooltip">Enter — сохранить, Esc — отменить</span></div>
+<p class="note">Попап всегда со скримом: он говорит «остальное сейчас недоступно», и панели за ним видно, но они не работают. Тултип — тёмная плашка на <code>--chrome-text</code>, без стрелки и без тени.</p>
+</main></body></html>

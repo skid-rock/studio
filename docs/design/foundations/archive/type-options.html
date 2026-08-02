@@ -1,0 +1,159 @@
+<!-- Архив решений (foundations/archive/). Карточки в витрине нет — итог сведён в foundations/journal.html (группа «Процесс»). -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — варианты типографики</title>
+<link rel="stylesheet" href="../../styles.css"><link rel="stylesheet" href="../../styles/docs.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+body.ds{padding:28px}
+.wrap{max-width:1280px;margin:0 auto}
+.head{max-width:74ch;margin:0 0 24px}
+.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:start}
+.col{display:grid;gap:10px;min-width:0}
+.col__no{font-size:var(--chrome-size);font-weight:500;color:var(--chrome-muted)}
+.col__name{font-size:var(--chrome-size);font-weight:600;margin:0}
+.col__why{font-size:var(--chrome-size);color:var(--chrome-muted);line-height:1.45;margin:0;text-wrap:pretty}
+.vp{line-height:1.4}
+.vp .ch-field--row{grid-template-columns:1fr 118px}
+.hint{font-size:var(--chrome-size);color:var(--chrome-muted);line-height:1.45;margin:0 0 12px;text-wrap:pretty}
+.spec{margin:0;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10.5px;line-height:1.6;color:var(--chrome-muted);background:var(--chrome-panel);border-radius:var(--chrome-radius-md);padding:10px 12px;box-shadow:var(--chrome-shadow-panel);white-space:pre-wrap;word-break:break-word}
+.spec b{color:var(--chrome-text);font-weight:500}
+.pro,.con{font-size:var(--chrome-size);line-height:1.45;margin:0;display:grid;grid-template-columns:14px 1fr;gap:6px;text-wrap:pretty}
+.pro{color:var(--chrome-text)}.con{color:var(--chrome-muted)}
+.pro span:first-child,.con span:first-child{font-weight:500;text-align:center}
+.con span:first-child{color:var(--chrome-danger)}
+.btnrow{display:flex;gap:8px;margin-top:12px}
+
+/* ── Вариант 1: точная система ─────────────────────────────────────────── */
+.v1{--chrome-font:-apple-system,'Segoe UI','Noto Sans',Roboto,Arial,sans-serif}
+.v1 .ch-panel__title{font-weight:600}
+
+/* ── Вариант 2: свой голос ─────────────────────────────────────────────── */
+.v2{--chrome-font:'IBM Plex Sans',-apple-system,'Segoe UI',sans-serif}
+.v2 .ch-panel__title{font-weight:600}
+.v2 .ch-panel__group{letter-spacing:.06em}
+.v2 .ch-field__label,.v2 .hint{font-size:12.5px}
+
+/* ── Вариант 3: приборная панель ───────────────────────────────────────── */
+.v3 .ch-panel__group,.v3 .ch-field__label,.v3 .ch-num,.v3 .ch-color-field__value,.v3 .ch-seg__opt{font-family:'JetBrains Mono',ui-monospace,monospace}
+.v3 .ch-panel__group{font-size:11px;letter-spacing:.04em;font-weight:500}
+.v3 .ch-field__label{font-size:11.5px;letter-spacing:-.01em}
+.v3 .ch-num,.v3 .ch-color-field__value{font-size:11.5px}
+.v3 .ch-seg__opt{font-size:11px}
+.v3 .ch-panel__title{font-weight:600}
+
+/* ── Вариант 4: одна ступень ───────────────────────────────────────────── */
+.v4{--chrome-font:'Golos Text',-apple-system,'Segoe UI',sans-serif}
+.v4 .ch-panel__title{font-size:13px;font-weight:600}
+.v4 .ch-panel__group{font-size:13px;font-weight:500;letter-spacing:0;text-transform:none}
+.v4 .ch-field__label,.v4 .hint{font-size:13px}
+.v4 .ch-field--row .ch-input,.v4 .ch-field--row .ch-color-field,.v4 .ch-num,.v4 .ch-seg__opt{font-size:13px}
+.v4 .ch-color-field__value{font-size:13px}
+.v4 .ch-btn{font-size:13px}
+</style></head>
+<body class="ds"><div class="wrap">
+<h1 class="ds__title">Четыре варианта типографики хрома</h1>
+<p class="ds__lead head">Один и тот же фрагмент панели свойств в четырёх системах. Во всех четырёх: явный интерлиньяж, табличные цифры по умолчанию, потолок 14px и нижняя граница 11px сохранены, палитра не меняется.</p>
+
+<div class="cols">
+
+<div class="col">
+  <span class="col__no">Вариант 1</span>
+  <h2 class="col__name">Точная система</h2>
+  <p class="col__why">Тот же нейтральный гротеск, но цепочка зафиксирована и кириллический запасной задан явно. Шкала не меняется — добавляются интерлиньяж, вес 600 у заголовка панели и токен моношрифта. Ничего не загружаем.</p>
+  <div class="ch-panel v1 vp">
+    <p class="ch-panel__group">Секция</p>
+    <p class="ch-panel__title">Заголовок панели</p>
+    <p class="hint">Настройки применяются к выделенной секции холста и сохраняются в документе.</p>
+    <div class="ch-field ch-field--row"><label class="ch-field__label">Отступы</label><div class="ch-num-group"><span class="ch-num"><span class="ch-num__key">В</span>64</span><span class="ch-num"><span class="ch-num__key">Н</span>48</span></div></div>
+    <div class="ch-field ch-field--row"><label class="ch-field__label">Фон секции</label><span class="ch-color-field"><span class="ch-color-field__swatch" style="background:#eae9e6"></span><span class="ch-color-field__value">#eae9e6</span></span></div>
+    <div class="ch-field ch-field--row"><label class="ch-field__label">Выравнивание</label><span class="ch-seg"><button class="ch-seg__opt is-active">Лево</button><button class="ch-seg__opt">Центр</button></span></div>
+    <div class="btnrow"><button class="ch-btn ch-btn--primary">Применить</button><button class="ch-btn ch-btn--ghost">Сбросить</button></div>
+  </div>
+  <pre class="spec"><b>--chrome-font</b>
+-apple-system, 'Segoe UI',
+'Noto Sans', Roboto, Arial
+<b>--chrome-font-mono</b>
+ui-monospace, 'SF Mono', Menlo
+<b>--chrome-leading</b> 1.4
+14/600 · 13/500 · 13/400
+12/400 · 11/500 .08em</pre>
+  <p class="pro"><span>+</span><span>Нулевая цена: ни байта загрузки, ни риска FOUT в интерфейсе.</span></p>
+  <p class="con"><span>−</span><span>С холстом по-прежнему один жанр: граница «инструмент / контент» не появляется.</span></p>
+</div>
+
+<div class="col">
+  <span class="col__no">Вариант 2</span>
+  <h2 class="col__name">Свой голос</h2>
+  <p class="col__why">IBM Plex Sans: чуть более механичный рисунок и открытые формы — рядом с Inter на холсте читается как другой материал. Кириллица полноценная и рисовалась вместе с латиницей, поэтому трекинг прописных снижен до 0.06em.</p>
+  <div class="ch-panel v2 vp">
+    <p class="ch-panel__group">Секция</p>
+    <p class="ch-panel__title">Заголовок панели</p>
+    <p class="hint">Настройки применяются к выделенной секции холста и сохраняются в документе.</p>
+    <div class="ch-field ch-field--row"><label class="ch-field__label">Отступы</label><div class="ch-num-group"><span class="ch-num"><span class="ch-num__key">В</span>64</span><span class="ch-num"><span class="ch-num__key">Н</span>48</span></div></div>
+    <div class="ch-field ch-field--row"><label class="ch-field__label">Фон секции</label><span class="ch-color-field"><span class="ch-color-field__swatch" style="background:#eae9e6"></span><span class="ch-color-field__value">#eae9e6</span></span></div>
+    <div class="ch-field ch-field--row"><label class="ch-field__label">Выравнивание</label><span class="ch-seg"><button class="ch-seg__opt is-active">Лево</button><button class="ch-seg__opt">Центр</button></span></div>
+    <div class="btnrow"><button class="ch-btn ch-btn--primary">Применить</button><button class="ch-btn ch-btn--ghost">Сбросить</button></div>
+  </div>
+  <pre class="spec"><b>--chrome-font</b>
+'IBM Plex Sans', -apple-system,
+'Segoe UI', sans-serif
+<b>--chrome-leading</b> 1.4
+14/600 · 13/500 · 13/400
+12.5/400 · 11/500 .06em
+вес 400/500/600, кириллица</pre>
+  <p class="pro"><span>+</span><span>Хром получает опознаваемый характер и перестаёт сливаться с контентом холста.</span></p>
+  <p class="con"><span>−</span><span>Два веса шрифта в загрузке (~60 КБ) и обязательный <b>font-display:swap</b> в интерфейсе.</span></p>
+</div>
+
+<div class="col">
+  <span class="col__no">Вариант 3</span>
+  <h2 class="col__name">Приборная панель</h2>
+  <p class="col__why">Текст и кнопки остаются гротеском, а всё служебное — подписи, заголовки групп, числа, сегменты — уходит в моно. Инструмент выглядит как прибор, лендинг в холсте — как документ; спутать невозможно. Хорошо ложится на бумажную палитру.</p>
+  <div class="ch-panel v3 vp">
+    <p class="ch-panel__group">Секция</p>
+    <p class="ch-panel__title">Заголовок панели</p>
+    <p class="hint">Настройки применяются к выделенной секции холста и сохраняются в документе.</p>
+    <div class="ch-field ch-field--row"><label class="ch-field__label">Отступы</label><div class="ch-num-group"><span class="ch-num"><span class="ch-num__key">В</span>64</span><span class="ch-num"><span class="ch-num__key">Н</span>48</span></div></div>
+    <div class="ch-field ch-field--row"><label class="ch-field__label">Фон секции</label><span class="ch-color-field"><span class="ch-color-field__swatch" style="background:#eae9e6"></span><span class="ch-color-field__value">#eae9e6</span></span></div>
+    <div class="ch-field ch-field--row"><label class="ch-field__label">Выравнивание</label><span class="ch-seg"><button class="ch-seg__opt is-active">Лево</button><button class="ch-seg__opt">Центр</button></span></div>
+    <div class="btnrow"><button class="ch-btn ch-btn--primary">Применить</button><button class="ch-btn ch-btn--ghost">Сбросить</button></div>
+  </div>
+  <pre class="spec"><b>--chrome-font</b> system-ui, sans-serif
+<b>--chrome-font-mono</b>
+'JetBrains Mono', ui-monospace
+роли на моно: подпись 11.5,
+группа 11/500 .04em, число 11.5
+роли на гротеске: 14/600, 13/500</pre>
+  <p class="pro"><span>+</span><span>Числа выравниваются сами, а служебный слой отделён от контента жанром, не цветом.</span></p>
+  <p class="con"><span>−</span><span>Моно шире: длинные русские подписи в колонке 128px придётся резать или переносить.</span></p>
+</div>
+
+<div class="col">
+  <span class="col__no">Вариант 4</span>
+  <h2 class="col__name">Одна ступень</h2>
+  <p class="col__why">Радикальное упрощение: единственный размер 13px, иерархия только весом, цветом и воздухом. Заголовки групп теряют прописные. Golos Text нарисован под русский интерфейс — на 13px кириллица держится лучше латинских гротесков.</p>
+  <div class="ch-panel v4 vp">
+    <p class="ch-panel__group">Секция</p>
+    <p class="ch-panel__title">Заголовок панели</p>
+    <p class="hint">Настройки применяются к выделенной секции холста и сохраняются в документе.</p>
+    <div class="ch-field ch-field--row"><label class="ch-field__label">Отступы</label><div class="ch-num-group"><span class="ch-num"><span class="ch-num__key">В</span>64</span><span class="ch-num"><span class="ch-num__key">Н</span>48</span></div></div>
+    <div class="ch-field ch-field--row"><label class="ch-field__label">Фон секции</label><span class="ch-color-field"><span class="ch-color-field__swatch" style="background:#eae9e6"></span><span class="ch-color-field__value">#eae9e6</span></span></div>
+    <div class="ch-field ch-field--row"><label class="ch-field__label">Выравнивание</label><span class="ch-seg"><button class="ch-seg__opt is-active">Лево</button><button class="ch-seg__opt">Центр</button></span></div>
+    <div class="btnrow"><button class="ch-btn ch-btn--primary">Применить</button><button class="ch-btn ch-btn--ghost">Сбросить</button></div>
+  </div>
+  <pre class="spec"><b>--chrome-font</b>
+'Golos Text', -apple-system,
+'Segoe UI', sans-serif
+<b>--chrome-leading</b> 1.4
+один размер 13px
+600 заголовок · 500 акцент
+400 текст · 400 + muted подпись</pre>
+  <p class="pro"><span>+</span><span>Шкалу невозможно нарушить: новых размеров просто нет, восемь сочетаний сжимаются до четырёх.</span></p>
+  <p class="con"><span>−</span><span>Панель становится плотнее и «ровнее»: без прописных заголовки групп хуже сканируются.</span></p>
+</div>
+
+</div>
+
+<p class="note" style="max-width:74ch"><strong>Принят вариант 4</strong> — он внедрён в токены и во все материалы системы вместе с исправлениями из варианта 1 (фиксированная цепочка шрифтов, явный интерлиньяж, табличные цифры по умолчанию, <code>--chrome-muted</code> затемнён до oklch(0.5 0.012 85)). Карточка остаётся как запись разбора: варианты 1–3 показаны на прежней шкале, вариант 4 — на действующей.</p>
+</div></body></html>

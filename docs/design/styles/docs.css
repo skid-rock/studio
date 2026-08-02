@@ -1,0 +1,110 @@
+/*
+ * studio — каркас страниц-витрин этой системы. НЕ подключается продуктом:
+ * здесь только то, на чём свёрстаны карточки. Значения — через var(--chrome-*).
+ * Подключать после styles.css.
+ */
+
+body.ds {
+    margin: 0;
+    padding: 24px;
+    background-color: var(--chrome-scene);
+    background-image: var(--chrome-scene-bg);
+    font-family: var(--chrome-font);
+    font-size: var(--chrome-size);
+    line-height: var(--chrome-leading);
+    font-variant-numeric: tabular-nums;
+    color: var(--chrome-text);
+}
+
+.ds__title {
+    margin: 0 0 4px;
+    font-size: var(--chrome-size);
+    font-weight: var(--chrome-weight-title);
+}
+
+.ds__lead {
+    margin: 0 0 20px;
+    font-size: var(--chrome-size);
+    color: var(--chrome-muted);
+}
+
+/* ── Сетка свотчей ───────────────────────────────────────────────────────── */
+
+.sw-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--chrome-gap);
+}
+
+.sw {
+    padding: var(--chrome-pad);
+    background: var(--chrome-panel);
+    border-radius: var(--chrome-radius-lg);
+    box-shadow: var(--chrome-shadow-panel);
+}
+
+.sw__chip {
+    height: 56px;
+    border-radius: var(--chrome-radius-md);
+    border: 1px solid var(--chrome-border);
+}
+
+.sw__name {
+    margin: 10px 0 2px;
+    font-size: var(--chrome-size);
+    font-weight: var(--chrome-weight-strong);
+}
+
+.sw__value {
+    margin: 0 0 2px;
+    font-size: var(--chrome-size);
+    color: var(--chrome-muted);
+}
+
+.sw__role {
+    margin: 0;
+    font-size: var(--chrome-size);
+    color: var(--chrome-muted);
+}
+
+/* Свотчи по ролям — значения только через var(), хардкода здесь нет. */
+.sw__chip--scene {
+    background-color: var(--chrome-scene);
+    background-image: var(--chrome-scene-bg);
+}
+.sw__chip--panel { background: var(--chrome-panel); }
+.sw__chip--hover { background: var(--chrome-hover); }
+.sw__chip--field { background: var(--chrome-field); }
+.sw__chip--border { background: var(--chrome-border); }
+.sw__chip--text { background: var(--chrome-text); }
+.sw__chip--muted { background: var(--chrome-muted); }
+.sw__chip--accent { background: var(--chrome-accent); }
+.sw__chip--on-accent { background: var(--chrome-on-accent); }
+.sw__chip--danger { background: var(--chrome-danger); }
+
+/* scrim полупрозрачный: кладём его на светлую/тёмную подложку, иначе не читается */
+.sw__chip--scrim {
+    position: relative;
+    overflow: hidden;
+    background-image: linear-gradient(
+        90deg,
+        var(--chrome-panel) 50%,
+        var(--chrome-text) 50%
+    );
+}
+
+.sw__chip--scrim::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 25%;
+    background: var(--chrome-scrim);
+}
+
+.demo{max-width:660px;margin:0 auto}
+.demo-head{font-size:var(--chrome-size);font-weight:500;color:var(--chrome-muted);margin:24px 0 10px}
+.demo-head:first-child{margin-top:0}
+.row{display:flex;align-items:center;gap:var(--chrome-gap);flex-wrap:wrap}
+.stack{display:grid;gap:var(--chrome-gap)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--chrome-gap)}
+.note{font-size:var(--chrome-size);color:var(--chrome-muted);max-width:62ch;margin:16px 0 0;text-wrap:pretty}
+code{font-family:var(--chrome-font-mono);font-size:.92em}

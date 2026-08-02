@@ -1,0 +1,52 @@
+<!-- Архив решений (foundations/archive/). Карточки в витрине нет — итог сведён в foundations/journal.html (группа «Процесс»). -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — аудит типографики</title><link rel="stylesheet" href="../../styles.css"><link rel="stylesheet" href="../../styles/docs.css"><style>
+.au{display:grid;gap:10px;margin:0 0 24px}
+.au-item{background:var(--chrome-panel);border-radius:var(--chrome-radius-md);padding:12px 14px;box-shadow:var(--chrome-shadow-panel);display:grid;grid-template-columns:auto 1fr;gap:4px 10px}
+.au-sev{grid-row:span 3;align-self:start;width:22px;height:22px;border-radius:var(--chrome-radius-pill);display:grid;place-items:center;font-weight:var(--chrome-weight-strong);background:var(--chrome-field);color:var(--chrome-muted)}
+.au-t{font-weight:var(--chrome-weight-title);margin:0}
+.au-b{color:var(--chrome-muted);margin:0;text-wrap:pretty}
+.au-fix{margin:0;color:var(--chrome-text);display:grid;grid-template-columns:auto 1fr;gap:6px;align-items:baseline;text-wrap:pretty}
+.au-fix b{font-weight:var(--chrome-weight-strong)}
+.tbl{width:100%;border-collapse:collapse;margin:0 0 4px}
+.tbl th{text-align:left;font-weight:var(--chrome-weight-strong);color:var(--chrome-muted);padding:0 0 6px;border-bottom:1px solid var(--chrome-border)}
+.tbl td{padding:6px 0;border-bottom:1px solid var(--chrome-border);vertical-align:top}
+.tbl td:first-child{color:var(--chrome-muted)}
+.was{color:var(--chrome-danger)}
+.now{font-weight:var(--chrome-weight-strong)}
+.verdict{background:var(--chrome-panel);border-radius:var(--chrome-radius-lg);padding:var(--chrome-pad);box-shadow:var(--chrome-shadow-panel);margin:0 0 24px}
+.verdict p{margin:0;text-wrap:pretty}
+.verdict p+p{margin-top:8px;color:var(--chrome-muted)}
+</style></head>
+<body class="ds"><main class="demo">
+<h1 class="ds__title">Типографика хрома — аудит</h1>
+<p class="ds__lead">Проверялось: конфликт шрифтов внутри хрома и с холстом, читаемость на всех поверхностях палитры, соответствие кода документации. Все находки закрыты вариантом 4 «одна ступень» — карточка сохранена как запись разбора.</p>
+
+<div class="verdict">
+<p>Шрифты <strong>не конфликтовали</strong> — в хроме он был один. Проблема была обратная: он <strong>слишком походил на шрифт холста</strong>, и граница «инструмент / контент» держалась только цветом. Читаемость упиралась в две вещи: вторичный текст на <code>--chrome-field-hover</code> не добирал AA, а 11px как нижняя граница для прописной кириллицы жёстче, чем для латиницы. Плюс шкала в документации (5 ролей) расходилась с кодом (8 сочетаний размер/вес).</p>
+<p>Решение: единственный размер 13px, иерархия весом и цветом, Golos Text с фиксированной цепочкой, интерлиньяж и табличные цифры в токенах, <code>--chrome-muted</code> затемнён на одну ступень светлоты.</p>
+</div>
+
+<p class="demo-head">Находки и что сделано</p>
+<div class="au">
+  <div class="au-item"><span class="au-sev">1</span><p class="au-t">Вторичный текст на hover поля не проходил AA</p><p class="au-b"><code>--chrome-muted</code> #6c6961 на <code>--chrome-field-hover</code> #e9e8e3 давал 4.48:1 при норме 4.5:1. Именно там жили подписи в <code>.num</code> и <code>.color-field__value</code> — самый мелкий текст на самом тёмном фоне. Readme при этом утверждал «AA на любой поверхности».</p><p class="au-fix"><b>Исправлено</b><span><code>--chrome-muted</code> → oklch(0.5 0.012 85) #676459: 4.9:1 на hover поля, 5.9:1 на панели. Палитра осталась такой же тихой.</span></p></div>
+  <div class="au-item"><span class="au-sev">2</span><p class="au-t">Не было ни одного значения межстрочного расстояния</p><p class="au-b">Шкала задавала размер и вес, но не интерлиньяж, а сокращение <code>font:</code> сбрасывало <code>line-height</code> в <code>normal</code>. Подписи и любой текст в две строки получали браузерный дефолт.</p><p class="au-fix"><b>Исправлено</b><span>Токен <code>--chrome-leading</code> 1.4, применён на все контролы и поверхности хрома одним правилом.</span></p></div>
+  <div class="au-item"><span class="au-sev">3</span><p class="au-t">Пять ролей в документации — восемь в коде</p><p class="au-b">Кроме заявленных пяти <code>styles.css</code> вёз <code>.seg__opt</code> 12/500, <code>.tooltip</code> 11/400 и <code>.cv-empty</code> 14/400. Шкала перестала быть шкалой.</p><p class="au-fix"><b>Исправлено</b><span>Размеров больше нет — есть один. Восемь сочетаний сжались до четырёх ролей по весу и цвету; нарушить шкалу теперь нечем.</span></p></div>
+  <div class="au-item"><span class="au-sev">4</span><p class="au-t"><code>system-ui</code> — метрически нестабильная база</p><p class="au-b">SF Pro, Segoe UI и Cantarell при одинаковых 13px давали разную высоту строчных и разную ширину: строка-поле в колонке 128px, выверенная на macOS, на Windows ехала. Кириллица в конце цепочки (<code>sans-serif</code>) — что угодно.</p><p class="au-fix"><b>Исправлено</b><span>Golos Text с явной цепочкой <code>-apple-system, 'Segoe UI', 'Noto Sans'</code>; шрифт рисовался под русский интерфейс.</span></p></div>
+  <div class="au-item"><span class="au-sev">5</span><p class="au-t">14/500 против 13/500 — иерархии почти не было</p><p class="au-b">Заголовок панели отличался от кнопки на 1px при том же весе: в плотной панели он не читался как заголовок и работал только за счёт положения.</p><p class="au-fix"><b>Исправлено</b><span>Заголовок — вес 600 при том же размере. Разница видна, потолок 14px соблюдён с запасом.</span></p></div>
+  <div class="au-item"><span class="au-sev">6</span><p class="au-t">Табличные цифры — не роль, а привычка</p><p class="au-b"><code>tabular-nums</code> был расставлен вручную по трём классам; любое новое числовое поле его бы забыло, и значения в столбце начали бы дёргаться при вводе.</p><p class="au-fix"><b>Исправлено</b><span>Свойство поднято в шкалу: включено на <code>body.ds</code> и на всех контролах хрома по умолчанию.</span></p></div>
+  <div class="au-item"><span class="au-sev">7</span><p class="au-t">Мелочи, ломавшие собственные правила</p><p class="au-b"><code>.btn--icon</code> ставил 15px при заявленном потолке 14px, моношрифт для <code>code</code> был прописан значением мимо токенов (принцип 6), в строке-поле подпись и значение были оба 12px, подзаголовок карточки говорил «четыре роли» при пяти.</p><p class="au-fix"><b>Исправлено</b><span>Иконка — <code>line-height:1</code> без своего размера, моно вынесен в <code>--chrome-font-mono</code>, подпись отличается цветом, подзаголовки выправлены.</span></p></div>
+</div>
+
+<p class="demo-head">Контраст вторичного текста</p>
+<table class="tbl"><thead><tr><th>Поверхность</th><th>Было (12px)</th><th>Стало (13px)</th></tr></thead><tbody>
+<tr><td>--chrome-panel #fefdfc</td><td>5.39:1</td><td class="now">5.87:1</td></tr>
+<tr><td>--chrome-field #f1f0ec</td><td>4.81:1</td><td class="now">5.21:1</td></tr>
+<tr><td>--chrome-scene #eae9e6</td><td>4.53:1</td><td class="now">4.90:1</td></tr>
+<tr><td>--chrome-field-hover #e9e8e3</td><td class="was">4.48:1 — AA не проходил</td><td class="now">4.85:1</td></tr>
+</tbody></table>
+<p class="note">Норма AA для обычного текста — 4.5:1. Теперь запас есть на всех четырёх поверхностях, и мелкого текста, которому этот запас критичен, в системе больше нет.</p>
+
+<p class="demo-head">Конфликт с холстом</p>
+<p class="note">Холст берёт Inter для текста и Source Serif Pro / Florisel для заголовков. Хром брал <code>system-ui</code>, то есть на macOS SF Pro — нейтральный гротеск рядом с нейтральным гротеском. Пересекались они в самых чувствительных местах: правка текста по месту, плейсхолдер пустого документа, значения полей, повторяющие контент. Принцип 1 требует, чтобы хром не спорил с холстом, — он и не спорил, но и не отличался. Golos Text решает это рисунком, а не цветом: другой характер кириллицы, заметно другая ритмика на 13px, при этом хром остаётся тише контента.</p>
+</main></body></html>

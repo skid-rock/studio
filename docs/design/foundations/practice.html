@@ -1,0 +1,72 @@
+<!-- @dsCard group="Основы" name="Так и не так" subtitle="Восемь пар: правильное применение рядом с похожим на него" viewport="900x2180" -->
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>studio — Так и не так</title><link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../styles/docs.css"><style>
+.pr{display:grid;gap:22px}
+.pr__row{display:grid;gap:6px}
+.pr__q{margin:0;font-size:var(--chrome-size);font-weight:var(--chrome-weight-title)}
+.pr__pair{display:grid;grid-template-columns:1fr 1fr;gap:var(--chrome-gap);align-items:stretch}
+.pr__cell{display:grid;grid-template-rows:auto 1fr auto;gap:10px;padding:14px;border-radius:var(--chrome-radius-lg);background:var(--chrome-panel);box-shadow:var(--chrome-shadow-panel)}
+.pr__tag{display:inline-flex;align-items:center;gap:6px;font-size:var(--chrome-size);font-weight:var(--chrome-weight-strong)}
+.pr__tag--yes{color:var(--chrome-accent)}
+.pr__tag--no{color:var(--chrome-danger)}
+.pr__demo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px;border-radius:var(--chrome-radius-md);background:var(--chrome-scene);background-image:var(--chrome-scene-bg)}
+.pr__why{margin:0;font-size:var(--chrome-size);color:var(--chrome-muted);text-wrap:pretty}
+.bad-border{border:1px solid #d9d3c6;box-shadow:none}
+.bad-fade{opacity:.4}
+.bad-caps{text-transform:uppercase;letter-spacing:.06em;font-size:11px}
+.bad-size{font-size:15px}
+.bad-radius{border-radius:7px}
+.bad-color{background:#3b6ea5;border-color:#3b6ea5;color:#fff}
+.pr__mini{display:grid;gap:8px;width:100%}
+</style></head>
+<body class="ds"><main class="demo" style="max-width:840px">
+<h1 class="ds__title">Так и не так</h1>
+<p class="ds__lead">Каждая пара — одно и то же место интерфейса в правильном и в правдоподобно-неправильном виде. Слева то, что система разрешает; справа то, что чаще всего появляется само.</p>
+
+<div class="pr">
+
+<div class="pr__row"><p class="pr__q">Отделение панели от фона</p><div class="pr__pair">
+<div class="pr__cell"><span class="pr__tag pr__tag--yes">Так — тенью</span><div class="pr__demo"><div class="ch-panel" style="width:100%"><p class="ch-panel__title">Свойства</p><p class="ch-panel__group">Отступы</p></div></div><p class="pr__why">Глубина отделяет панель от сцены. Единственная линия в системе — <code>.ch-panel__sep</code> внутри панели.</p></div>
+<div class="pr__cell"><span class="pr__tag pr__tag--no">Не так — рамкой</span><div class="pr__demo"><div class="ch-panel bad-border" style="width:100%"><p class="ch-panel__title">Свойства</p><p class="ch-panel__group">Отступы</p></div></div><p class="pr__why">Контур добавляет ещё одну линию к каждому краю: десять панелей — десять решёток поверх макета.</p></div>
+</div></div>
+
+<div class="pr__row"><p class="pr__q">Выключенный контрол</p><div class="pr__pair">
+<div class="pr__cell"><span class="pr__tag pr__tag--yes">Так — токенами</span><div class="pr__demo"><button type="button" class="ch-btn" disabled>Отменить</button><button type="button" class="ch-btn ch-btn--primary" disabled>Опубликовать</button></div><p class="pr__why"><code>muted</code> на <code>field</code>: контраст держит AA, состояние читается.</p></div>
+<div class="pr__cell"><span class="pr__tag pr__tag--no">Не так — прозрачностью</span><div class="pr__demo"><button type="button" class="ch-btn bad-fade">Отменить</button><button type="button" class="ch-btn ch-btn--primary bad-fade">Опубликовать</button></div><p class="pr__why"><code>opacity:.4</code> уводит текст ниже AA и по-разному врёт на панели и на сцене.</p></div>
+</div></div>
+
+<div class="pr__row"><p class="pr__q">Заголовок группы в панели</p><div class="pr__pair">
+<div class="pr__cell"><span class="pr__tag pr__tag--yes">Так — вес и цвет</span><div class="pr__demo"><div class="ch-panel" style="width:100%"><p class="ch-panel__group">Фон секции</p><div class="ch-swatches"><button type="button" class="ch-swatch is-selected" style="background:#fffdf8" aria-label="Cream light"></button><button type="button" class="ch-swatch" style="background:#e8e2d4" aria-label="Sand"></button><button type="button" class="ch-swatch" style="background:#1f3a5f" aria-label="Ink"></button></div></div></div><p class="pr__why">Иерархия — весом и <code>muted</code>, на одном размере со всем остальным.</p></div>
+<div class="pr__cell"><span class="pr__tag pr__tag--no">Не так — прописные 11px</span><div class="pr__demo"><div class="ch-panel" style="width:100%"><p class="ch-panel__group bad-caps">Фон секции</p><div class="ch-swatches"><button type="button" class="ch-swatch is-selected" style="background:#fffdf8" aria-label="Cream light"></button><button type="button" class="ch-swatch" style="background:#e8e2d4" aria-label="Sand"></button><button type="button" class="ch-swatch" style="background:#1f3a5f" aria-label="Ink"></button></div></div></div><p class="pr__why">Кириллица в прописных теряет рисунок слова, а 11px — вторая ступень шкалы, которой нет.</p></div>
+</div></div>
+
+<div class="pr__row"><p class="pr__q">Размер текста в хроме</p><div class="pr__pair">
+<div class="pr__cell"><span class="pr__tag pr__tag--yes">Так — одна ступень</span><div class="pr__demo"><div class="ch-panel" style="width:100%"><p class="ch-panel__title">Текст</p><div class="ch-field ch-field--row"><label class="ch-field__label" for="y1">Заголовок</label><input class="ch-input" id="y1" type="text" value="Что внутри"></div></div></div><p class="pr__why">Один размер на весь инструмент: подпись, значение и заголовок различаются весом.</p></div>
+<div class="pr__cell"><span class="pr__tag pr__tag--no">Не так — «чуть крупнее»</span><div class="pr__demo"><div class="ch-panel" style="width:100%"><p class="ch-panel__title bad-size">Текст</p><div class="ch-field ch-field--row"><label class="ch-field__label" for="n1">Заголовок</label><input class="ch-input" id="n1" type="text" value="Что внутри"></div></div></div><p class="pr__why">15px против 13px — разница, которую видно как сбой, а не как иерархию.</p></div>
+</div></div>
+
+<div class="pr__row"><p class="pr__q">Нечего редактировать</p><div class="pr__pair">
+<div class="pr__cell"><span class="pr__tag pr__tag--yes">Так — панель глохнет</span><div class="pr__demo"><div class="ch-panel pr__mini"><div class="ch-field ch-field--row"><label class="ch-field__label" for="y2">Заголовок</label><input class="ch-input" id="y2" type="text" value="Что внутри" disabled></div><div class="ch-field ch-field--row"><span class="ch-field__label">Полная ширина</span><button type="button" class="ch-toggle" role="switch" aria-checked="false" aria-label="Полная ширина" disabled style="justify-self:end"></button></div></div></div><p class="pr__why">Состав панели постоянен: видно, что появится, когда выделишь секцию.</p></div>
+<div class="pr__cell"><span class="pr__tag pr__tag--no">Не так — контролы прячутся</span><div class="pr__demo"><div class="ch-panel pr__mini" style="min-height:76px;align-content:center"><p class="ch-panel__group" style="margin:0;text-align:center">Ничего не выбрано</p></div></div><p class="pr__why">Интерфейс перестраивается на каждом клике, и место контрола приходится запоминать заново.</p></div>
+</div></div>
+
+<div class="pr__row"><p class="pr__q">Переключение разделов панели</p><div class="pr__pair">
+<div class="pr__cell"><span class="pr__tag pr__tag--yes">Так — сегмент во всю ширину</span><div class="pr__demo"><div class="ch-panel" style="width:100%"><div class="ch-seg ch-seg--fill" role="tablist"><button type="button" class="ch-seg__opt is-active">Секция</button><button type="button" class="ch-seg__opt">Страница</button><button type="button" class="ch-seg__opt">SEO</button></div></div></div><p class="pr__why">Разделы — отдельная строка во всю ширину колонны: видно все и видно, где ты.</p></div>
+<div class="pr__cell"><span class="pr__tag pr__tag--no">Не так — сегмент по содержимому</span><div class="pr__demo"><div class="ch-panel" style="width:100%"><div class="ch-seg"><button type="button" class="ch-seg__opt is-active">Секция</button><button type="button" class="ch-seg__opt">Страница</button><button type="button" class="ch-seg__opt">SEO</button></div></div></div><p class="pr__why">Прижатый влево сегмент читается как значение свойства, у которого потеряли подпись.</p></div>
+</div></div></div><p class="pr__why">Вкладка меняет <em>содержимое</em> — подчёркивание, а не таблетка.</p></div>
+<div class="pr__cell"><span class="pr__tag pr__tag--no">Не так — сегмент</span><div class="pr__demo"><div class="ch-panel" style="width:100%"><div class="ch-seg"><button type="button" class="ch-seg__opt is-active">Секция</button><button type="button" class="ch-seg__opt">Страница</button><button type="button" class="ch-seg__opt">SEO</button></div></div></div><p class="pr__why">Сегмент — это <em>значение</em> свойства. Использованный как навигация, он обещает выбор, а не переход.</p></div>
+</div></div>
+
+<div class="pr__row"><p class="pr__q">Цвет акцента</p><div class="pr__pair">
+<div class="pr__cell"><span class="pr__tag pr__tag--yes">Так — из токена</span><div class="pr__demo"><button type="button" class="ch-btn ch-btn--primary">Экспорт</button><span class="ch-badge ch-badge--accent">3</span><span class="ch-progress" style="width:120px"><span class="ch-progress__bar" style="width:60%"></span></span></div><p class="pr__why">Один <code>--chrome-accent</code> держит кнопку, бейдж, полосу и фокус в согласии.</p></div>
+<div class="pr__cell"><span class="pr__tag pr__tag--no">Не так — свой синий</span><div class="pr__demo"><button type="button" class="ch-btn bad-color">Экспорт</button><span class="ch-badge ch-badge--accent">3</span><span class="ch-progress" style="width:120px"><span class="ch-progress__bar" style="width:60%"></span></span></div><p class="pr__why">Хардкод рядом с токеном сразу виден как две разные системы в одном ряду.</p></div>
+</div></div>
+
+<div class="pr__row"><p class="pr__q">Радиус</p><div class="pr__pair">
+<div class="pr__cell"><span class="pr__tag pr__tag--yes">Так — со шкалы</span><div class="pr__demo"><button type="button" class="ch-btn">Кнопка</button><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span class="ch-badge">12</span></div><p class="pr__why">Четыре ступени радиуса на всю систему; вложенное всегда меньше внешнего.</p></div>
+<div class="pr__cell"><span class="pr__tag pr__tag--no">Не так — на глаз</span><div class="pr__demo"><button type="button" class="ch-btn bad-radius">Кнопка</button><span class="ch-tile bad-radius"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span class="ch-badge bad-radius">12</span></div><p class="pr__why">7px не совпадает ни с одной ступенью: углы перестают рифмоваться, хотя разницу трудно назвать.</p></div>
+</div></div>
+
+</div>
+<p class="note">Правая колонка — не выдумка: каждый случай встречался в макетах этого редактора. Если сомневаетесь, к какой колонке относится ваш вариант, он в правой.</p>
+</main></body></html>
