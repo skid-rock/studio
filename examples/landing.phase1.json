@@ -38,17 +38,12 @@
       "type": "schedule",
       "order": "a2",
       "props": {
-        "title": "Расписание дня",
-        "t1": "15:00",
-        "e1": "Сбор гостей",
-        "t2": "16:00",
-        "e2": "Церемония",
-        "t3": "17:00",
-        "e3": "Банкет",
-        "t4": "21:00",
-        "e4": "Торт",
-        "t5": "23:00",
-        "e5": "Завершение"
+        "title": "ПРОГРАММА ДНЯ",
+        "item1": "16:00 Сбор гостей",
+        "item2": "17:00 Церемония",
+        "item3": "18:00 Банкет",
+        "item4": "21:00 Фейерверк",
+        "item5": ""
       }
     },
     {
@@ -108,12 +103,35 @@
       }
     },
     {
+      "id": "contacts-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "type": "contacts",
+      "order": "a7",
+      "props": {
+        "text": "Если у вас возникнут вопросы, или вы готовите нам творческий подарок, обращайтесь к нашему организатору Татьяне",
+        "ctaLabel": "написать Татьяне",
+        "ctaUrl": "https://t.me/",
+        "decorImg": "/img/contacts/rings.png"
+      }
+    },
+    {
       "id": "closing-557ecf51-23ab-4ca6-b9ea-0150848281ce",
       "type": "closing",
-      "order": "a7",
+      "order": "a8",
       "props": {
         "signature": "С любовью, Алексей & Ольга",
         "ps": "Будем рады видеть вас!"
+      }
+    },
+    {
+      "id": "closing-collage-9f3e2a1b-4c5d-6e7f-8a9b-0c1d2e3f4a5b",
+      "type": "closing-collage",
+      "order": "a9",
+      "props": {
+        "photoLeft": "/img/closing-collage/photo-left.png",
+        "photoRight": "/img/closing-collage/photo-right.png",
+        "letterLeft": "Д",
+        "amp": "&",
+        "letterRight": "М"
       }
     }
   ]

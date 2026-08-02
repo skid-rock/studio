@@ -41,8 +41,10 @@ const SECTION_TYPES = [
     'dress-code',
     'dress-code-pearls',
     'details-faq',
+    'contacts',
     'rsvp',
     'closing',
+    'closing-collage',
 ] as const;
 
 export interface Options {
@@ -162,9 +164,13 @@ function isContainer(node: TreeNode): boolean {
 }
 
 /**
- * Декор — слой с префиксом `deco/`. Единственная категория, которой разрешено
- * лежать вне потока и свисать за границу секции: в вёрстке такой слой
- * позиционируется абсолютно, а секция его клипает (`overflow: hidden`).
+ * Декор — слой с префиксом `deco/`. Ему разрешено лежать вне потока и свисать
+ * за границу секции: в вёрстке такой слой позиционируется абсолютно, а секция
+ * его клипает (`overflow: hidden`).
+ *
+ * Дополнительно ABSOLUTE разрешён внутри холста `stage` (коллаж с редактируемыми
+ * фото/текстом — closing-collage): иначе контентные слои пришлось бы маскировать
+ * под `deco/*`.
  */
 function isDecoName(name: string): boolean {
     return name.startsWith(DECO_PREFIX);
@@ -172,6 +178,10 @@ function isDecoName(name: string): boolean {
 
 function isDeco(node: TreeNode): boolean {
     return isDecoName(node.name);
+}
+
+function allowsAbsolute(node: TreeNode, path: string[]): boolean {
+    return isDeco(node) || path.includes('stage');
 }
 
 /**
@@ -200,13 +210,17 @@ export function checkStructure(root: TreeNode, width: number): Finding[] {
             });
         }
 
-        if (!isRoot && node.layoutPositioning === 'ABSOLUTE' && !isDeco(node)) {
+        if (
+            !isRoot &&
+            node.layoutPositioning === 'ABSOLUTE' &&
+            !allowsAbsolute(node, path)
+        ) {
             findings.push({
                 rule: 'absolute-only-deco',
                 severity: 'error',
                 nodeId: node.id,
                 path: at,
-                message: `absolute-позиционирование разрешено только слоям «${DECO_PREFIX}*»`,
+                message: `absolute-позиционирование разрешено слоям «${DECO_PREFIX}*» или потомкам «stage»`,
             });
         }
 
@@ -374,15 +388,28 @@ function byId(boxes: Box[]): Map<string, Box> {
 }
 
 /**
+ * Контент коллажа внутри `stage` (фото, монограмма): при сужении абсолютные
+ * слои вылезают так же штатно, как `deco/*` — секция клипает overflow.
+ */
+function isCollageContentName(name: string): boolean {
+    return /^(photoLeft|photoRight|monogram|letterLeft|letterRight|amp)$/.test(
+        name,
+    );
+}
+
+function softOverflow(name: string): boolean {
+    return isDecoName(name) || isCollageContentName(name);
+}
+
+/**
  * Дефекты сужения: вылет за границы секции и новые наложения.
  *
  * Наложения считаем только между TEXT-узлами и только НОВЫЕ: декор изначально
  * лежит поверх фото — это замысел, а не поломка. Рост высоты текста при
  * переносе строк дефектом не считается вовсе.
  *
- * Вылет за границу у слоёв `deco/*` — warning, а не error: свисающий за край
- * декор в вёрстке штатный приём (секция клипает его `overflow: hidden`), и
- * ронять на нём вердикт нельзя. Для содержания вылет остаётся ошибкой.
+ * Вылет за границу у `deco/*` и контента коллажа (`stage`) — warning: секция
+ * клипает `overflow: hidden`. Для обычного содержания вылет — ошибка.
  */
 export function checkStress(snapshot: StressSnapshot): Finding[] {
     const findings: Finding[] = [];
@@ -409,15 +436,15 @@ export function checkStress(snapshot: StressSnapshot): Finding[] {
 
         if (overflowLeft > TOLERANCE || overflowRight > TOLERANCE) {
             const over = Math.round(Math.max(overflowLeft, overflowRight));
-            const deco = isDecoName(box.name);
+            const soft = softOverflow(box.name);
 
             findings.push({
                 rule: 'stress-overflow',
-                severity: deco ? 'warning' : 'error',
+                severity: soft ? 'warning' : 'error',
                 nodeId: box.id,
                 path: box.name,
-                message: deco
-                    ? `декор свисает за границу секции на ${over}px — проверь, что секция клипает содержимое`
+                message: soft
+                    ? `слой коллажа/декора свисает за границу на ${over}px — секция должна клипать`
                     : `при сужении вылезает за границу секции на ${over}px`,
             });
         }

@@ -1,0 +1,10 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`contacts > стабилен по снапшоту на дефолтах 1`] = `
+"
+    <section class="s-contacts">
+      <p class="s-contacts__text" data-prop="text">Если у вас возникнут вопросы, или вы готовите нам творческий подарок, обращайтесь к нашему организатору Татьяне</p>
+      <a class="s-contacts__cta" href="https://t.me/" target="_blank" rel="noopener" data-prop="ctaLabel">написать Татьяне</a>
+      <img class="s-contacts__decor" src="/img/contacts/rings.png" alt="" aria-hidden="true" loading="lazy" />
+    </section>"
+`;

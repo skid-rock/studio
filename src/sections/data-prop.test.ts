@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import type { StudioDocument } from '../render-core/document';
 import { heroModule } from './hero';
 import { closingModule } from './closing';
+import { closingCollageModule } from './closing-collage';
+import { contactsModule } from './contacts';
 import { dressCodeModule } from './dress-code';
 import { faqModule } from './details-faq';
 import { storyModule } from './our-story';
@@ -55,12 +57,13 @@ describe('data-prop якоря (STUDIO-014)', () => {
         expect(html).not.toContain('data-prop="d4"');
     });
 
-    it('schedule — title и все 5 пар t/e', () => {
+    it('schedule — title и заполненные item*', () => {
         const html = scheduleModule.render(scheduleModule.defaults, stubCtx);
 
         expect(html).toContain('data-prop="title"');
-        expect(html).toContain('data-prop="t1"');
-        expect(html).toContain('data-prop="e5"');
+        expect(html).toContain('data-prop="item1"');
+        expect(html).toContain('data-prop="item4"');
+        expect(html).not.toContain('data-prop="item5"');
     });
 
     it('dress-code — title и text (без data-prop на c*)', () => {
@@ -92,5 +95,27 @@ describe('data-prop якоря (STUDIO-014)', () => {
             'data-countdown-target="2026-08-05T15:00:00+03:00"',
         );
         expect(html).not.toContain('data-prop="target"');
+    });
+
+    it('contacts — text и ctaLabel (без data-prop на ctaUrl/decorImg)', () => {
+        const html = contactsModule.render(contactsModule.defaults, stubCtx);
+
+        expect(html).toContain('data-prop="text"');
+        expect(html).toContain('data-prop="ctaLabel"');
+        expect(html).not.toContain('data-prop="ctaUrl"');
+        expect(html).not.toContain('data-prop="decorImg"');
+    });
+
+    it('closing-collage — буквы монограммы (без data-prop на путях фото)', () => {
+        const html = closingCollageModule.render(
+            closingCollageModule.defaults,
+            stubCtx,
+        );
+
+        expect(html).toContain('data-prop="letterLeft"');
+        expect(html).toContain('data-prop="amp"');
+        expect(html).toContain('data-prop="letterRight"');
+        expect(html).not.toContain('data-prop="photoLeft"');
+        expect(html).not.toContain('data-prop="photoRight"');
     });
 });

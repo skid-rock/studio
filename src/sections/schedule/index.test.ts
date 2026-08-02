@@ -19,28 +19,27 @@ describe('schedule', () => {
         expect(html).toMatchSnapshot();
     });
 
-    it('якоря data-prop на заголовке и всех 5 пунктах', () => {
+    it('якоря data-prop на заголовке и заполненных пунктах', () => {
         expect(html).toContain('data-prop="title"');
-        for (let n = 1; n <= 5; n++) {
-            expect(html).toContain(`data-prop="t${n}"`);
-            expect(html).toContain(`data-prop="e${n}"`);
+        for (let n = 1; n <= 4; n++) {
+            expect(html).toContain(`data-prop="item${n}"`);
         }
+        expect(html).not.toContain('data-prop="item5"');
     });
 
-    it('рендерит 5 пунктов таймлайна', () => {
-        const items = html.match(/<li class="s-schedule__item">/g) ?? [];
-        expect(items).toHaveLength(5);
+    it('рендерит 4 пункта таймлайна (item5 пуст по умолчанию)', () => {
+        const items = html.match(/<li class="s-schedule__item"/g) ?? [];
+        expect(items).toHaveLength(4);
     });
 
     it('пустой слот не рендерит <li>', () => {
         const htmlEmpty = scheduleModule.render(
-            { ...scheduleModule.defaults, t5: '', e5: '' },
+            { ...scheduleModule.defaults, item4: '' },
             stubCtx,
         );
-        const items = htmlEmpty.match(/<li class="s-schedule__item">/g) ?? [];
-        expect(items).toHaveLength(4);
-        expect(htmlEmpty).not.toContain('data-prop="t5"');
-        expect(htmlEmpty).not.toContain('data-prop="e5"');
+        const items = htmlEmpty.match(/<li class="s-schedule__item"/g) ?? [];
+        expect(items).toHaveLength(3);
+        expect(htmlEmpty).not.toContain('data-prop="item4"');
     });
 
     it('не содержит следов React / обращений к DOM', () => {
