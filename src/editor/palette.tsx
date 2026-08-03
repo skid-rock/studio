@@ -5,6 +5,7 @@ import type { EditorStore } from '../editor-core';
 import { sortedSections } from '../render-core/document';
 import type { StudioDocument } from '../render-core/document';
 import type { BlockRegistry } from '../render-core/registry';
+import { BLOCK_ICON, Icon } from './icons';
 
 export interface PaletteProps {
     store: EditorStore;
@@ -20,10 +21,6 @@ export function Palette({
     doc,
     selectedId,
 }: PaletteProps): ReactElement {
-    const selectedType = selectedId
-        ? sortedSections(doc).find((section) => section.id === selectedId)?.type
-        : undefined;
-
     const insert = (type: string): void => {
         // Позиция вставки: после выделенной секции, иначе — в конец документа.
         let index: number | undefined;
@@ -44,18 +41,39 @@ export function Palette({
     };
 
     return (
-        <aside className="own-palette">
-            <h2 className="own-palette__title">Блоки</h2>
+        <aside className="ch-panel ch-ed-palette">
+            <div className="ch-ident">
+                <span className="ch-tile ch-tile--accent">
+                    <Icon name="logo" />
+                </span>
+                <span className="ch-ident__text">
+                    <span className="ch-ident__name">studio</span>
+                    <span className="ch-ident__sub">свой редактор</span>
+                </span>
+            </div>
+            <hr className="ch-panel__sep" />
+            <p className="ch-panel__title">Блоки</p>
             {registry.list().map((mod) => (
-                <button
-                    type="button"
-                    className="own-block-card"
+                <div
                     key={mod.type}
+                    className="ch-block-card"
+                    role="button"
+                    tabIndex={0}
                     onClick={() => insert(mod.type)}
-                    aria-pressed={selectedType === mod.type}
+                    // div, а не button: .ch-block-card не сбрасывает рамку и фон,
+                    // которые браузер рисует кнопке. Клавиатуру добираем вручную.
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            insert(mod.type);
+                        }
+                    }}
                 >
+                    <span className="ch-tile">
+                        <Icon name={BLOCK_ICON[mod.type] ?? 'grid'} />
+                    </span>
                     {mod.label}
-                </button>
+                </div>
             ))}
         </aside>
     );

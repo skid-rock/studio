@@ -87,7 +87,7 @@ export function Canvas({ store, doc, selectedId }: CanvasProps): ReactElement {
                     }
                 }}
             >
-                <div className="own-page" ref={pageRef}>
+                <div className="own-page ch-cv-page" ref={pageRef}>
                     {sections.length === 0 && (
                         <p className="own-empty">
                             Документ пуст. Добавьте блок из палитры слева.

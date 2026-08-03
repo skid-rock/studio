@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import type { EditorStore } from '../editor-core';
 import type { StudioDocument } from '../render-core/document';
@@ -10,6 +10,8 @@ export interface PropertiesPanelProps {
     registry: BlockRegistry;
     doc: StudioDocument;
     selectedId: string | null;
+    /** Временный слот под управление страницей (STUDIO-047 → вкладка в 048). */
+    children?: ReactNode;
 }
 
 /** Панель свойств (STUDIO-033): форма из ParamSchema блока выделенной секции. */
@@ -18,6 +20,7 @@ export function PropertiesPanel({
     registry,
     doc,
     selectedId,
+    children,
 }: PropertiesPanelProps): ReactElement {
     const section = selectedId
         ? doc.sections.find((s) => s.id === selectedId)
@@ -26,14 +29,15 @@ export function PropertiesPanel({
 
     if (!section || !mod) {
         return (
-            <aside className="own-panel">
+            <aside className="ch-panel ch-ed-panel">
                 <p className="own-panel__empty">Выберите секцию на холсте</p>
+                {children}
             </aside>
         );
     }
 
     return (
-        <aside className="own-panel">
+        <aside className="ch-panel ch-ed-panel">
             <div className="own-panel__header">{mod.label}</div>
             {/* key=id: смена выделения пересоздаёт форму под новую секцию; пока
                 выделена одна и та же секция, ключ стабилен — фокус не слетает. */}
@@ -45,6 +49,7 @@ export function PropertiesPanel({
                     store.updateProps(section.id, { [key]: value })
                 }
             />
+            {children}
         </aside>
     );
 }

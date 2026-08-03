@@ -8,14 +8,14 @@ import { defaultRegistry } from '../sections/registry.default';
 import { resolveThemeCss } from './theme-assets';
 import { Canvas } from './canvas';
 import { CANVAS_CSS, FRAME_BASE_CSS, MODULES_CSS } from './frame-css';
+import { Icon } from './icons';
+import { PageControls } from './page-controls';
 import { Palette } from './palette';
 import { PropertiesPanel } from './properties-panel';
 import { runModuleJs } from './section-scripts';
-import { Topbar } from './topbar';
 
 // Таблица ДС (ch-*, --chrome-*): Vite инлайнит @import и переписывает пути шрифтов.
 import './ds/styles.css';
-import chromeCss from './chrome.css?raw';
 
 // Стор — источник правды редактора; создаётся один раз на модуль (entrypoint один).
 const store = createEditorStore(parseDocument(landingSample), defaultRegistry);
@@ -68,14 +68,13 @@ export function EditorOwn(): ReactElement {
     }, [state.document]);
 
     return (
-        <div className="own-root">
+        // Высота — inline: .ch-ed это grid без своей высоты, в эталоне она тоже
+        // задана инлайном. Своего .css в src/editor/ быть не должно (STUDIO-051).
+        <div className="ch-ed" style={{ height: '100dvh' }}>
             <style>{FRAME_BASE_CSS}</style>
             <style>{themeCss}</style>
             <style>{MODULES_CSS}</style>
             <style>{CANVAS_CSS}</style>
-            <style>{chromeCss}</style>
-
-            <Topbar store={store} doc={state.document} />
 
             <Palette
                 store={store}
@@ -84,18 +83,45 @@ export function EditorOwn(): ReactElement {
                 selectedId={state.selectedId}
             />
 
-            <Canvas
-                store={store}
-                doc={state.document}
-                selectedId={state.selectedId}
-            />
+            <div className="ch-ed-toolbar ch-ed-toolbar--float">
+                <button
+                    type="button"
+                    className="ch-btn ch-btn--ghost ch-btn--icon"
+                    disabled={!store.canUndo()}
+                    onClick={() => store.undo()}
+                    title="Отменить (Cmd/Ctrl+Z)"
+                    aria-label="Отменить (Cmd/Ctrl+Z)"
+                >
+                    <Icon name="undo" />
+                </button>
+                <button
+                    type="button"
+                    className="ch-btn ch-btn--ghost ch-btn--icon"
+                    disabled={!store.canRedo()}
+                    onClick={() => store.redo()}
+                    title="Повторить (Shift+Cmd/Ctrl+Z)"
+                    aria-label="Повторить (Shift+Cmd/Ctrl+Z)"
+                >
+                    <Icon name="redo" />
+                </button>
+            </div>
+
+            <main className="ch-ed-canvas">
+                <Canvas
+                    store={store}
+                    doc={state.document}
+                    selectedId={state.selectedId}
+                />
+            </main>
 
             <PropertiesPanel
                 store={store}
                 registry={defaultRegistry}
                 doc={state.document}
                 selectedId={state.selectedId}
-            />
+            >
+                <PageControls store={store} doc={state.document} />
+            </PropertiesPanel>
         </div>
     );
 }
