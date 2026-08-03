@@ -15,19 +15,19 @@ test.beforeEach(async ({ page }) => {
 
 test('загрузка сэмпла: hero на холсте, панель пустая до выделения', async ({ page }) => {
     await expect(page.locator('[data-block="hero"]')).toBeVisible();
-    await expect(page.locator('.own-panel__empty')).toBeVisible();
+    await expect(page.getByText('Выберите секцию на холсте')).toBeVisible();
 });
 
 test('панель свойств: несколько символов подряд без потери фокуса', async ({ page }) => {
-    // Выделить hero кликом по обёртке секции на холсте
-    await page
-        .locator('.own-section', { has: page.locator('[data-block="hero"]') })
-        .click();
-    await expect(page.locator('.own-panel__header')).toHaveText('Hero (имена и дата)');
-
-    const names = page
-        .locator('.own-panel .own-field', { hasText: 'Имена' })
-        .locator('textarea');
+    // Клик по содержимому всплывает в обёртку секции и выделяет её.
+    await page.locator('[data-block="hero"]').click();
+    const names = page.getByRole('textbox', { name: 'Имена' });
+    await expect(
+        page
+            .getByRole('complementary')
+            .filter({ has: names })
+            .getByText('Hero (имена и дата)', { exact: true }),
+    ).toBeVisible();
     await names.click();
     // Регресс класса фокус-багов (docs/improvements/bugs.md): если фокус слетает
     // после символа, часть последовательности не попадёт в поле
@@ -42,10 +42,8 @@ test('inline-правка на холсте + undo/redo (кнопки и хот�
     // Сначала выделить секцию: клик по date внутри невыделенной секции
     // всплывает в store.select → re-render BlockPreview сбрасывает фокус
     // contentEditable до набора (dangerouslySetInnerHTML).
-    await page
-        .locator('.own-section', { has: page.locator('[data-block="hero"]') })
-        .click();
-    await expect(page.locator('.own-panel__header')).toHaveText('Hero (имена и дата)');
+    await page.locator('[data-block="hero"]').click();
+    await expect(page.getByRole('textbox', { name: 'Имена' })).toBeVisible();
 
     const date = page.locator('[data-block="hero"] [data-prop="date"]');
     const before = (await date.textContent()) ?? '';
@@ -58,9 +56,11 @@ test('inline-правка на холсте + undo/redo (кнопки и хот�
     await page.keyboard.press('Enter');
     await expect(date).toHaveText('01.01.2030');
 
-    await page.getByTitle('Отменить (Cmd/Ctrl+Z)').click();
+    await page.getByRole('button', { name: 'Отменить (Cmd/Ctrl+Z)' }).click();
     await expect(date).toHaveText(before);
-    await page.getByTitle('Повторить (Shift+Cmd/Ctrl+Z)').click();
+    await page
+        .getByRole('button', { name: 'Повторить (Shift+Cmd/Ctrl+Z)' })
+        .click();
     await expect(date).toHaveText('01.01.2030');
     // Хоткей: фокус вне contentEditable, слушатель на window сработает
     await page.keyboard.press('ControlOrMeta+z');

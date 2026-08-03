@@ -15,8 +15,9 @@ describe('runModuleJs', () => {
 
     it('навешивает тикающий countdown на разметку модуля', () => {
         vi.useFakeTimers();
+        // Корень — любой connected-элемент; класс хрома (own-page) не нужен.
         document.body.innerHTML = `
-            <div class="own-page">
+            <div>
               <div class="s-countdown__grid"
                    data-countdown-root
                    data-countdown-target="2099-01-01T00:00:00Z">
@@ -28,7 +29,7 @@ describe('runModuleJs', () => {
             </div>
         `;
 
-        const root = document.querySelector('.own-page')!;
+        const root = document.body.firstElementChild!;
         const seconds = root.querySelector<HTMLElement>(
             '[data-countdown="seconds"]',
         )!;
@@ -47,8 +48,8 @@ describe('runModuleJs', () => {
     });
 
     it('no-op при пустом корне без разметки countdown', () => {
-        document.body.innerHTML = '<div class="own-page"></div>';
-        const root = document.querySelector('.own-page')!;
+        document.body.innerHTML = '<div></div>';
+        const root = document.body.firstElementChild!;
 
         expect(() => runModuleJs(root)).not.toThrow();
     });

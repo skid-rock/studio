@@ -83,7 +83,7 @@ describe('SchemaFields', () => {
 
         mount(schema, { lineWidth: 1.5 });
 
-        expect(container.querySelector('.own-field__label')?.textContent).toBe(
+        expect(container.querySelector('label')?.firstElementChild?.textContent).toBe(
             'Толщина линии, px',
         );
         const range = container.querySelector(
@@ -121,7 +121,7 @@ describe('SchemaFields', () => {
 
         mount(schema, {});
 
-        expect(container.querySelector('.own-field__label')?.textContent).toBe(
+        expect(container.querySelector('label')?.firstElementChild?.textContent).toBe(
             'Длина дуги',
         );
     });
@@ -138,12 +138,10 @@ describe('SchemaFields', () => {
 
         mount(schema, { names: 'А & Б' });
 
-        const ta = container.querySelector(
-            'textarea.own-field__textarea',
-        ) as HTMLTextAreaElement;
+        const ta = container.querySelector('textarea') as HTMLTextAreaElement;
         expect(ta).toBeTruthy();
         expect(ta.value).toBe('А & Б');
-        expect(container.querySelector('.own-field__label')?.textContent).toBe(
+        expect(container.querySelector('label')?.firstElementChild?.textContent).toBe(
             'Имена',
         );
     });
@@ -170,9 +168,7 @@ describe('SchemaFields', () => {
 
         mount(schema, { align: 'left' });
 
-        const sel = container.querySelector(
-            'select.own-field__select',
-        ) as HTMLSelectElement;
+        const sel = container.querySelector('select') as HTMLSelectElement;
         expect(sel.value).toBe('left');
         expect([...sel.options].map((o) => o.value)).toEqual([
             'left',
@@ -200,12 +196,12 @@ describe('SchemaFields', () => {
         const swatch = container.querySelector(
             'input[type="color"]',
         ) as HTMLInputElement;
-        const hex = container.querySelector(
-            '.own-field__color input[type="text"]',
+        const hex = swatch.parentElement?.querySelector(
+            'input[type="text"]',
         ) as HTMLInputElement;
         expect(swatch.value).toBe('#aabbcc');
         expect(hex.value).toBe('#aabbcc');
-        expect(container.querySelector('.own-field__label')?.textContent).toBe(
+        expect(container.querySelector('label')?.firstElementChild?.textContent).toBe(
             'Цвет линии',
         );
     });
@@ -236,11 +232,11 @@ describe('SchemaFields', () => {
         mount(schema, { a: 'x', b: 0.5, c: '#000000' });
 
         const titles = [
-            ...container.querySelectorAll('.own-field-group__title'),
+            ...container.querySelectorAll('h3'),
         ].map((el) => el.textContent);
         expect(titles).toEqual(['A', 'B']);
-        const labels = [...container.querySelectorAll('.own-field__label')].map(
-            (el) => el.textContent,
+        const labels = [...container.querySelectorAll('label')].map(
+            (label) => label.firstElementChild?.textContent,
         );
         expect(labels).toEqual(['A', 'B', 'C']);
     });

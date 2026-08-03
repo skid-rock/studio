@@ -69,6 +69,7 @@ export function Topbar({ store, doc }: TopbarProps): ReactElement {
                     disabled={!store.canUndo()}
                     onClick={() => store.undo()}
                     title="Отменить (Cmd/Ctrl+Z)"
+                    aria-label="Отменить (Cmd/Ctrl+Z)"
                 >
                     ↩︎
                 </button>
@@ -78,6 +79,7 @@ export function Topbar({ store, doc }: TopbarProps): ReactElement {
                     disabled={!store.canRedo()}
                     onClick={() => store.redo()}
                     title="Повторить (Shift+Cmd/Ctrl+Z)"
+                    aria-label="Повторить (Shift+Cmd/Ctrl+Z)"
                 >
                     ↪︎
                 </button>

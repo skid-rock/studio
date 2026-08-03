@@ -131,6 +131,13 @@ function SectionShell({
         index,
     });
 
+    // Секция на холсте — контейнер, не кнопка: role="button" схлопнул бы
+    // внутренности (контент + мини-тулбар) в одну надпись. Фокус и клавиатура
+    // остаются через tabIndex + aria-label; выделение — визуально (класс).
+    const sectionLabel = mod
+        ? `Секция: ${mod.label}`
+        : `Секция: ${node.type}`;
+
     return (
         <div
             ref={ref}
@@ -141,9 +148,23 @@ function SectionShell({
             ]
                 .filter(Boolean)
                 .join(' ')}
+            tabIndex={0}
+            aria-label={sectionLabel}
             onClick={(e) => {
                 e.stopPropagation();
                 store.select(node.id);
+            }}
+            onKeyDown={(e) => {
+                if (e.currentTarget !== e.target) {
+                    return;
+                }
+
+                if (e.key === 'Enter' || e.key === ' ') {
+                    if (e.key === ' ') {
+                        e.preventDefault();
+                    }
+                    store.select(node.id);
+                }
             }}
         >
             <div className="own-toolbar" onClick={(e) => e.stopPropagation()}>
@@ -161,6 +182,7 @@ function SectionShell({
                     className="own-tool"
                     onClick={() => store.duplicateSection(node.id)}
                     title="Дублировать секцию"
+                    aria-label="Дублировать секцию"
                 >
                     ⧉
                 </button>
@@ -169,6 +191,7 @@ function SectionShell({
                     className="own-tool own-tool--danger"
                     onClick={() => store.removeSection(node.id)}
                     title="Удалить секцию"
+                    aria-label="Удалить секцию"
                 >
                     ✕
                 </button>

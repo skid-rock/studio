@@ -20,6 +20,10 @@ export function Palette({
     doc,
     selectedId,
 }: PaletteProps): ReactElement {
+    const selectedType = selectedId
+        ? sortedSections(doc).find((section) => section.id === selectedId)?.type
+        : undefined;
+
     const insert = (type: string): void => {
         // Позиция вставки: после выделенной секции, иначе — в конец документа.
         let index: number | undefined;
@@ -48,6 +52,7 @@ export function Palette({
                     className="own-block-card"
                     key={mod.type}
                     onClick={() => insert(mod.type)}
+                    aria-pressed={selectedType === mod.type}
                 >
                     {mod.label}
                 </button>
