@@ -1,0 +1,331 @@
+/*
+ * studio — единственная таблица стилей дизайн-системы.
+ * Слой 1: токены — @import styles/chrome-tokens.css (единственное место со значениями).
+ * Слой 2: компоненты хрома — свёрстаны строго на var(--chrome-*).
+ * Все классы хрома несут префикс ch- : хром живёт на одной странице с контентом
+ * холста, и .btn / .input / .row лендинга не должны его задевать.
+ * Граница контуров: токены темы лендинга (--color-*, --font-*) в хром не протекают.
+ */
+@import url('styles/chrome-fonts.css');
+@import url('styles/chrome-tokens.css');
+
+/* Одна ступень: интерлиньяж и табличные цифры — свойство шкалы, не компонента. */
+.ch-panel,.ch-popup,.ch-ed,.ch-block-card,.ch-cv-empty,.ch-tooltip,.ch-btn,.ch-input,.ch-select,.ch-color-field,.ch-num,.ch-seg__opt,.ch-tree__row,.ch-empty{font-size:var(--chrome-size);line-height:var(--chrome-leading);font-variant-numeric:tabular-nums}
+
+/* ── Компоненты: Панель ──────────────────────────────────────────────────── */
+.ch-panel{font-family:var(--chrome-font);color:var(--chrome-text);background:var(--chrome-panel);border-radius:var(--chrome-radius-lg);box-shadow:var(--chrome-shadow-panel);padding:var(--chrome-pad);box-sizing:border-box}
+.ch-panel__title{margin:0 0 12px;font-size:var(--chrome-size);font-weight:var(--chrome-weight-title);color:var(--chrome-text)}
+.ch-panel__group{margin:0 0 10px;font-size:var(--chrome-size);font-weight:var(--chrome-weight-strong);color:var(--chrome-muted)}
+.ch-panel__sep{height:1px;background:var(--chrome-border);margin:14px 0;border:0}
+.ch-panel__sep--flush{margin:0}
+.ch-panel__foot>.ch-panel__sep:first-child{margin:0 0 6px}
+/* Ритм внутри панели — правило системы, а не margin в разметке: инлайновая
+   отбивка на классе хрома уезжает в код литералом мимо токенов. */
+.ch-seg+.ch-panel__title{margin-top:16px}
+.ch-panel__stack{display:grid;gap:8px}
+.ch-panel__stack--lg{gap:10px}
+.ch-panel__section-body{display:grid;gap:8px;padding-bottom:12px}
+.ch-panel__actions{display:flex;gap:6px;margin:0 0 12px}
+.ch-panel__actions>.ch-btn{flex:1}
+.ch-panel__hint{margin:0 0 12px;color:var(--chrome-muted);text-wrap:pretty}
+.ch-field+.ch-panel__hint{margin-top:10px}
+.ch-panel__hint:last-child{margin-bottom:0}
+
+/* ── Компоненты: Кнопка ──────────────────────────────────────────────────── */
+.ch-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:var(--chrome-h);padding:0 12px;border:1px solid var(--chrome-border);border-radius:var(--chrome-radius-md);background:var(--chrome-panel);font:var(--chrome-weight-strong) var(--chrome-size)/var(--chrome-leading) var(--chrome-font);color:var(--chrome-text);white-space:nowrap;cursor:pointer}
+.ch-btn:hover{background:var(--chrome-hover)}
+.ch-btn:active{background:var(--chrome-border)}
+.ch-btn:focus-visible{outline:2px solid var(--chrome-accent);outline-offset:2px}
+.ch-btn--icon{width:var(--chrome-h);padding:0;line-height:1}
+.ch-btn--sm{height:var(--chrome-h-sm)}
+.ch-btn--icon.ch-btn--sm{width:var(--chrome-h-sm)}
+.ch-btn--block{width:100%}
+.ch-btn--primary{background:var(--chrome-accent);border-color:var(--chrome-accent);color:var(--chrome-on-accent)}
+.ch-btn--primary:hover{background:color-mix(in srgb,var(--chrome-accent) 88%,var(--chrome-on-accent))}
+.ch-btn--primary:active{background:color-mix(in srgb,var(--chrome-accent) 80%,var(--chrome-shade))}
+.ch-btn--ghost{border-color:transparent;background:transparent}
+.ch-btn--ghost:hover{background:var(--chrome-hover)}
+.ch-btn--danger{color:var(--chrome-danger)}
+.ch-btn--danger:hover{background:color-mix(in srgb,var(--chrome-danger) 8%,transparent)}
+/* Disabled — не прозрачностью, а токенами: muted на field даёт AA, а opacity .4 — нет. */
+.ch-btn[disabled],.ch-btn.is-disabled{cursor:default;color:var(--chrome-muted);background:var(--chrome-field);border-color:transparent}
+.ch-btn[disabled]:hover,.ch-btn.is-disabled:hover{background:var(--chrome-field)}
+
+/* ── Компоненты: Поля (виджеты ParamSchema) ──────────────────────────────── */
+.ch-field{display:grid;gap:6px}
+.ch-field__label{font-size:var(--chrome-size);color:var(--chrome-muted)}
+.ch-input,.ch-select{height:var(--chrome-h);padding:0 10px;border:1px solid transparent;border-radius:var(--chrome-radius-md);background:var(--chrome-field);font:var(--chrome-weight-body) var(--chrome-size)/var(--chrome-leading) var(--chrome-font);color:var(--chrome-text);box-sizing:border-box;width:100%}
+.ch-input:hover,.ch-select:hover{background:var(--chrome-field-hover)}
+.ch-input:focus,.ch-select:focus{outline:2px solid var(--chrome-accent);outline-offset:0;border-color:transparent}
+.ch-input::placeholder{color:var(--chrome-muted)}
+/* Выключенное поле: та же логика, что у кнопки — muted на field, без hover и без рамки. */
+.ch-input[disabled],.ch-select[disabled],.ch-textarea[disabled],.ch-input[readonly],.ch-textarea[readonly]{color:var(--chrome-muted);background:var(--chrome-field);border-color:transparent;cursor:default}
+.ch-input[disabled]:hover,.ch-select[disabled]:hover,.ch-textarea[disabled]:hover,.ch-input[readonly]:hover,.ch-textarea[readonly]:hover{background:var(--chrome-field)}
+.ch-select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--chrome-muted) 50%),linear-gradient(135deg,var(--chrome-muted) 50%,transparent 50%);background-position:calc(100% - 15px) 14px,calc(100% - 10px) 14px;background-size:5px 5px;background-repeat:no-repeat;padding-right:30px}
+.ch-color-field{display:flex;align-items:center;gap:8px;height:var(--chrome-h);padding:0 10px;border:1px solid transparent;border-radius:var(--chrome-radius-md);background:var(--chrome-field);font-size:var(--chrome-size);box-sizing:border-box}
+.ch-color-field__swatch{width:18px;height:18px;border-radius:var(--chrome-radius-pill);border:1px solid var(--chrome-border);flex:none}
+.ch-color-field__value{color:var(--chrome-muted);font-size:var(--chrome-size)}
+/* Ползунок тематизован целиком: бегунок — тот же knob, что у тумблера и сегмента. */
+.ch-range{appearance:none;-webkit-appearance:none;width:100%;height:var(--chrome-h-sm);background:none;cursor:pointer}
+.ch-range::-webkit-slider-runnable-track{height:4px;border-radius:var(--chrome-radius-pill);background:var(--chrome-field)}
+.ch-range::-moz-range-track{height:4px;border-radius:var(--chrome-radius-pill);background:var(--chrome-field)}
+.ch-range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:16px;height:16px;margin-top:-6px;border:1px solid var(--chrome-border);border-radius:var(--chrome-radius-pill);background:var(--chrome-panel);box-shadow:var(--chrome-shadow-knob)}
+.ch-range::-moz-range-thumb{width:16px;height:16px;border:1px solid var(--chrome-border);border-radius:var(--chrome-radius-pill);background:var(--chrome-panel);box-shadow:var(--chrome-shadow-knob)}
+.ch-range:hover::-webkit-slider-runnable-track{background:var(--chrome-field-hover)}
+.ch-range:hover::-moz-range-track{background:var(--chrome-field-hover)}
+.ch-range:focus-visible{outline:2px solid var(--chrome-accent);outline-offset:2px;border-radius:var(--chrome-radius-pill)}
+.ch-range[disabled]{cursor:default}
+.ch-range[disabled]::-webkit-slider-thumb{background:var(--chrome-hover);border-color:transparent;box-shadow:none}
+.ch-range[disabled]::-moz-range-thumb{background:var(--chrome-hover);border-color:transparent;box-shadow:none}
+.ch-range[disabled]:hover::-webkit-slider-runnable-track{background:var(--chrome-field)}
+.ch-range[disabled]:hover::-moz-range-track{background:var(--chrome-field)}
+
+/* Многострочное поле — тот же залитый контрол, только высота свободная. */
+.ch-textarea{display:block;width:100%;min-height:76px;padding:8px 10px;border:1px solid transparent;border-radius:var(--chrome-radius-md);background:var(--chrome-field);font:var(--chrome-weight-body) var(--chrome-size)/var(--chrome-leading) var(--chrome-font);color:var(--chrome-text);box-sizing:border-box;resize:vertical}
+.ch-textarea:hover{background:var(--chrome-field-hover)}
+.ch-textarea:focus{outline:2px solid var(--chrome-accent);outline-offset:0}
+.ch-textarea::placeholder{color:var(--chrome-muted)}
+
+/* Флажок и радио — нативный input с appearance:none, без обёрток. */
+.ch-check,.ch-radio{appearance:none;-webkit-appearance:none;flex:none;width:18px;height:18px;margin:0;border:1px solid var(--chrome-border);background:var(--chrome-field);box-sizing:border-box;cursor:pointer}
+.ch-check{border-radius:var(--chrome-radius-xs)}
+.ch-radio{border-radius:var(--chrome-radius-pill)}
+.ch-check:hover,.ch-radio:hover{background:var(--chrome-field-hover)}
+.ch-check:checked{background:var(--chrome-accent) var(--chrome-check-icon) center/13px no-repeat;border-color:var(--chrome-accent)}
+.ch-radio:checked{background:var(--chrome-accent);border-color:var(--chrome-accent);box-shadow:inset 0 0 0 4px var(--chrome-field)}
+/* Недоступный контрол не обводится вовсе — граница есть у того, что можно нажать. */
+.ch-check[disabled],.ch-radio[disabled]{background:var(--chrome-hover);border-color:transparent;box-shadow:none;cursor:default}
+.ch-choice{display:flex;align-items:center;gap:8px;font-size:var(--chrome-size);line-height:var(--chrome-leading);color:var(--chrome-text);cursor:pointer}
+.ch-seg{display:inline-flex;padding:2px;gap:2px;background:var(--chrome-hover);border-radius:var(--chrome-radius-pill)}
+.ch-seg__opt{border:0;background:transparent;border-radius:var(--chrome-radius-pill);height:var(--chrome-h-sm);padding:0 12px;font:var(--chrome-weight-strong) var(--chrome-size)/var(--chrome-leading) var(--chrome-font);color:var(--chrome-muted);cursor:pointer}
+.ch-seg__opt.is-active{background:var(--chrome-panel);color:var(--chrome-text);box-shadow:var(--chrome-shadow-knob)}
+.ch-seg__opt[disabled]{color:var(--chrome-muted);cursor:default}
+.ch-seg__opt[disabled].is-active{background:var(--chrome-field);box-shadow:none}
+.ch-seg[aria-disabled='true'],.ch-seg.is-disabled{background:var(--chrome-field)}
+.ch-seg[aria-disabled='true'] .ch-seg__opt,.ch-seg.is-disabled .ch-seg__opt{color:var(--chrome-muted);cursor:default}
+/* Разделы панели — тот же сегмент, но во всю ширину колонны и отдельной
+   строкой. Раскладка на модификаторе, а не инлайном в разметке. */
+.ch-seg--fill{display:flex}
+.ch-seg--fill .ch-seg__opt{flex:1;min-width:0}
+
+/* ── Компоненты: Строка-поле — подпись слева, контрол справа (реф. 1, 2) ── */
+.ch-field--row{grid-template-columns:1fr var(--chrome-row-control);align-items:center;gap:10px}
+.ch-field--row .ch-input,.ch-field--row .ch-select,.ch-field--row .ch-color-field{height:var(--chrome-h-sm);border-radius:var(--chrome-radius-sm)}
+.ch-field--row .ch-seg{min-width:0;justify-self:stretch}
+.ch-field--row .ch-seg__opt{height:24px;flex:1;min-width:0;padding:0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ch-field--row .ch-select{background-position:calc(100% - 14px) 12px,calc(100% - 9px) 12px}
+.ch-num-group{display:flex;gap:6px;min-width:0}
+/* Пара «контрол + мелкая кнопка» в правой колонке строки-поля. */
+.ch-field__pair{display:flex;gap:6px;min-width:0}
+.ch-field__pair>.ch-color-field,.ch-field__pair>.ch-input,.ch-field__pair>.ch-select{flex:1;min-width:0}
+.ch-field__pair>.ch-btn{flex:none}
+.ch-num{display:flex;align-items:center;gap:6px;flex:1;min-width:0;height:var(--chrome-h-sm);padding:0 9px;border-radius:var(--chrome-radius-sm);background:var(--chrome-field);font:var(--chrome-weight-body) var(--chrome-size)/var(--chrome-leading) var(--chrome-font);color:var(--chrome-text);box-sizing:border-box}
+.ch-num:hover{background:var(--chrome-field-hover)}
+.ch-num__key{color:var(--chrome-muted);font-weight:var(--chrome-weight-strong)}
+/* .ch-num — значение, которое тянут мышью: в разметке ему нужны tabindex="0" и role="spinbutton". */
+.ch-num[aria-disabled='true'],.ch-num.is-disabled{color:var(--chrome-muted);cursor:default}
+.ch-num[aria-disabled='true']:hover,.ch-num.is-disabled:hover{background:var(--chrome-field)}
+
+/* ── Компоненты: Переключатель-тумблер ───────────────────────────────────── */
+.ch-toggle{display:inline-flex;align-items:center;width:40px;height:22px;padding:2px;border:0;border-radius:var(--chrome-radius-pill);background:var(--chrome-field);cursor:pointer;box-sizing:border-box}
+.ch-toggle::after{content:'';width:18px;height:18px;border-radius:var(--chrome-radius-pill);background:var(--chrome-panel);box-shadow:var(--chrome-shadow-knob);transition:transform var(--chrome-motion-fast) var(--chrome-ease)}
+.ch-toggle.is-on{background:var(--chrome-accent)}
+.ch-toggle.is-on::after{transform:translateX(18px)}
+.ch-toggle:focus-visible{outline:2px solid var(--chrome-accent);outline-offset:2px}
+.ch-toggle[disabled]{cursor:default;background:var(--chrome-field)}
+.ch-toggle[disabled]::after{background:var(--chrome-hover);box-shadow:none}
+.ch-toggle[disabled].is-on{background:var(--chrome-muted)}
+
+/* ── Компоненты: Тайл иконки, строка-секция, сетка свотчей ───────────────── */
+.ch-tile{display:inline-flex;align-items:center;justify-content:center;flex:none;width:var(--chrome-h-sm);height:var(--chrome-h-sm);border-radius:var(--chrome-radius-sm);background:var(--chrome-field);color:var(--chrome-text)}
+.ch-tile--accent{background:var(--chrome-accent);color:var(--chrome-on-accent)}
+.ch-panel__section{display:flex;align-items:center;gap:10px;width:100%;padding:10px 0;border:0;background:none;font:var(--chrome-weight-title) var(--chrome-size)/var(--chrome-leading) var(--chrome-font);color:var(--chrome-text);text-align:left;cursor:pointer}
+.ch-panel__section__chev{margin-left:auto;display:inline-flex;color:var(--chrome-muted)}
+.ch-panel__foot{margin-top:auto;padding-top:10px}
+.ch-bleed{margin-inline:calc(var(--chrome-pad) * -1)}
+.ch-block-card.ch-bleed{padding-inline:calc(var(--chrome-pad) + 10px)}
+.ch-swatches{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ch-swatch{aspect-ratio:1;padding:0;border:1px solid var(--chrome-border);border-radius:var(--chrome-radius-md);cursor:pointer}
+.ch-swatch.is-selected{outline:2px solid var(--chrome-accent);outline-offset:2px}
+/* Свотч — исключение из «недоступное не обводится»: у него граница не украшение,
+   а единственное, чем светлый цвет отличается от панели. Гасим её, но не убираем. */
+.ch-swatch[disabled]{cursor:default;border-color:var(--chrome-field-hover)}
+
+/* ── Компоненты: Поиск, идентичность проекта, аватары ────────────────────── */
+.ch-search{display:flex;align-items:center;gap:8px;height:var(--chrome-h);padding:0 10px;border-radius:var(--chrome-radius-md);background:var(--chrome-field);color:var(--chrome-muted);font-size:var(--chrome-size);line-height:var(--chrome-leading);box-sizing:border-box}
+.ch-search:hover{background:var(--chrome-field-hover)}
+.ch-search:focus-within{outline:2px solid var(--chrome-accent);outline-offset:0}
+.ch-search__input{flex:1;min-width:0;border:0;padding:0;background:none;font:var(--chrome-weight-body) var(--chrome-size)/var(--chrome-leading) var(--chrome-font);color:var(--chrome-text)}
+.ch-search__input:focus{outline:none}
+.ch-search__input::placeholder{color:var(--chrome-muted)}
+.ch-ident{display:flex;align-items:center;gap:10px}
+.ch-ident__text{display:grid;gap:1px;min-width:0}
+.ch-ident__name{font-size:var(--chrome-size);font-weight:var(--chrome-weight-title);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-ident__sub{font-size:var(--chrome-size);color:var(--chrome-muted)}
+.ch-avatars{display:flex}
+.ch-avatar{width:var(--chrome-h-sm);height:var(--chrome-h-sm);border-radius:var(--chrome-radius-pill);border:2px solid var(--chrome-panel);background:var(--chrome-field);box-sizing:border-box}
+.ch-avatar--1{background:var(--chrome-avatar-1)}.ch-avatar--2{background:var(--chrome-avatar-2)}.ch-avatar--3{background:var(--chrome-avatar-3)}.ch-avatar--4{background:var(--chrome-avatar-4)}
+.ch-avatar+.ch-avatar{margin-left:-8px}
+
+/* ── Компоненты: Карточка блока (палитра) ────────────────────────────────── */
+.ch-block-card{font-family:var(--chrome-font);display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--chrome-radius-md);font-size:var(--chrome-size);cursor:pointer;color:var(--chrome-text)}
+/* Перетаскиваемая карточка — только та, что действительно тянется в холст. */
+.ch-block-card--drag{cursor:grab}
+.ch-block-card--drag:active{cursor:grabbing}
+.ch-block-card:hover,.ch-block-card.is-hover{background:var(--chrome-hover)}
+.ch-block-card__handle{color:var(--chrome-muted)}
+.ch-block-card.is-selected{background:var(--chrome-accent);color:var(--chrome-on-accent);border-radius:0}
+.ch-block-card.is-selected .ch-block-card__handle{color:var(--chrome-on-accent)}
+.ch-block-card.is-selected .ch-tile{background:color-mix(in srgb,var(--chrome-on-accent) 20%,transparent);color:var(--chrome-on-accent)}
+
+/* ── Компоненты: Холст и секции ──────────────────────────────────────────── */
+.ch-cv-section{position:relative}
+.ch-cv-section.is-hover{outline:1px solid color-mix(in srgb,var(--chrome-accent) 40%,transparent);outline-offset:-1px}
+.ch-cv-section.is-selected{outline:2px solid var(--chrome-accent);outline-offset:-2px}
+.ch-cv-toolbar{display:flex;gap:2px;padding:3px;background:var(--chrome-panel);border-radius:var(--chrome-radius-md);box-shadow:var(--chrome-shadow-panel);z-index:var(--chrome-z-canvas)}
+/* Место мини-тулбара — свойство компонента, а не разметки: секция или
+   обёртка .ch-cv-anchor даёт систему координат, --float ставит в угол. */
+.ch-cv-anchor{position:relative}
+.ch-cv-toolbar--float{position:absolute;top:10px;right:10px}
+.ch-cv-toolbar .ch-btn{width:var(--chrome-h-sm);height:var(--chrome-h-sm);padding:0;border:none;line-height:1}
+.ch-cv-drop{height:2px;margin-inline:40px;background:var(--chrome-accent);border-radius:var(--chrome-radius-pill)}
+.ch-cv-ghost{opacity:.55;transform:rotate(1.5deg);box-shadow:var(--chrome-shadow-pop)}
+.ch-cv-empty{font-family:var(--chrome-font);padding:56px 32px;border:2px dashed color-mix(in srgb,var(--chrome-accent) 30%,transparent);border-radius:var(--chrome-radius-lg);background:var(--chrome-panel);text-align:center;color:var(--chrome-muted);font-size:var(--chrome-size);width:100%;max-width:var(--chrome-cv-page);box-sizing:border-box}
+.ch-inline-edit{outline:1px dashed var(--chrome-accent);outline-offset:3px}
+.ch-inline-caret{display:inline-block;width:1px;height:.9em;background:currentColor;vertical-align:-.08em;margin-left:2px}
+
+/* ── Компоненты: Попап, тултип, затемнение ───────────────────────────────── */
+/* Состояние ошибки поля */
+.ch-field__error{font-size:var(--chrome-size);color:var(--chrome-danger)}
+.ch-field.is-invalid .ch-input,.ch-field.is-invalid .ch-select,.ch-field.is-invalid .ch-textarea,.ch-field.is-invalid .ch-num{background:color-mix(in srgb,var(--chrome-danger) 7%,var(--chrome-field));border-color:var(--chrome-danger)}
+.ch-field.is-invalid .ch-input:focus,.ch-field.is-invalid .ch-select:focus,.ch-field.is-invalid .ch-textarea:focus{outline-color:var(--chrome-danger)}
+.ch-field--row .ch-field__error{grid-column:2}
+
+/* Меню и контекстное меню */
+.ch-menu{display:grid;min-width:200px;padding:6px;background:var(--chrome-panel);border-radius:var(--chrome-radius-md);box-shadow:var(--chrome-shadow-pop);font-family:var(--chrome-font);box-sizing:border-box}
+.ch-menu__item{display:flex;align-items:center;gap:10px;width:100%;height:var(--chrome-h-sm);padding:0 8px;border:0;border-radius:var(--chrome-radius-sm);background:none;font:var(--chrome-weight-body) var(--chrome-size)/var(--chrome-leading) var(--chrome-font);color:var(--chrome-text);text-align:left;cursor:pointer}
+.ch-menu__item:hover,.ch-menu__item.is-hover{background:var(--chrome-hover)}
+.ch-menu__item--danger{color:var(--chrome-danger)}
+.ch-menu__item--danger:hover{background:color-mix(in srgb,var(--chrome-danger) 8%,transparent)}
+.ch-menu__item[disabled]{color:var(--chrome-muted);cursor:default;background:none}
+.ch-menu__key{margin-left:auto;color:var(--chrome-muted);font-family:var(--chrome-font-mono);font-size:.92em}
+.ch-menu__sep{height:1px;margin:6px 4px;border:0;background:var(--chrome-border)}
+.ch-menu__label{padding:6px 8px 4px;font-size:var(--chrome-size);font-weight:var(--chrome-weight-strong);color:var(--chrome-muted)}
+.ch-menu__item--sub .ch-menu__key{font-family:var(--chrome-font)}
+/* Подменю: тот же .ch-menu внутри пункта, выезжает вправо от его края. */
+.ch-menu__wrap{position:relative;display:grid}
+.ch-menu__wrap>.ch-menu{position:absolute;top:-6px;left:100%;margin-left:2px;z-index:var(--chrome-z-pop);display:none}
+.ch-menu__wrap:hover>.ch-menu,.ch-menu__wrap.is-open>.ch-menu,.ch-menu__wrap:focus-within>.ch-menu{display:grid}
+.ch-menu__wrap:hover>.ch-menu__item,.ch-menu__wrap.is-open>.ch-menu__item{background:var(--chrome-hover)}
+
+/* Тост — тёмный, как тултип: читается на любом холсте */
+.ch-toast{display:flex;align-items:center;gap:12px;max-width:420px;padding:10px 12px;background:var(--chrome-text);color:var(--chrome-panel);border-radius:var(--chrome-radius-md);box-shadow:var(--chrome-shadow-pop);font:var(--chrome-weight-body) var(--chrome-size)/var(--chrome-leading) var(--chrome-font);z-index:var(--chrome-z-top)}
+.ch-toast--danger{background:var(--chrome-danger);color:var(--chrome-on-accent)}
+.ch-toast__act{margin-left:auto;flex:none;border:0;padding:0;background:none;font:var(--chrome-weight-strong) var(--chrome-size)/var(--chrome-leading) var(--chrome-font);color:inherit;text-decoration:underline;cursor:pointer}
+
+/* Скелетон загрузки */
+.ch-skel{background:var(--chrome-field);border-radius:var(--chrome-radius-sm);animation:ch-skel var(--chrome-motion-slow) ease-in-out infinite}
+@keyframes ch-skel{50%{background:var(--chrome-hover)}}
+
+/* ── Компоненты: Прогресс, спиннер, бейдж ────────────────────────────────── */
+.ch-progress{display:block;width:100%;height:4px;border-radius:var(--chrome-radius-pill);background:var(--chrome-field);overflow:hidden}
+.ch-progress__bar{display:block;height:100%;border-radius:inherit;background:var(--chrome-accent);transition:width var(--chrome-motion-fast) var(--chrome-ease)}
+.ch-progress--indeterminate .ch-progress__bar{width:40%;animation:ch-slide var(--chrome-motion-slow) var(--chrome-ease) infinite}
+@keyframes ch-slide{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
+.ch-spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--chrome-field);border-top-color:var(--chrome-accent);border-radius:var(--chrome-radius-pill);animation:ch-spin var(--chrome-motion-spin) linear infinite;vertical-align:-3px}
+@keyframes ch-spin{to{transform:rotate(360deg)}}
+.ch-badge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 6px;border-radius:var(--chrome-radius-pill);background:var(--chrome-field);color:var(--chrome-muted);font-size:var(--chrome-size);font-weight:var(--chrome-weight-strong);font-variant-numeric:tabular-nums;box-sizing:border-box}
+.ch-badge--accent{background:var(--chrome-accent);color:var(--chrome-on-accent)}
+.ch-badge--danger{background:var(--chrome-danger);color:var(--chrome-on-accent)}
+.ch-badge--dot{min-width:8px;width:8px;height:8px;padding:0}
+
+/* ── Компоненты: Пустое состояние в панели ───────────────────────────────── */
+.ch-empty{display:grid;justify-items:center;gap:6px;padding:28px 12px;color:var(--chrome-muted);font-size:var(--chrome-size);line-height:var(--chrome-leading);text-align:center;text-wrap:pretty}
+.ch-empty__title{color:var(--chrome-text);font-weight:var(--chrome-weight-strong)}
+
+@media (prefers-reduced-motion:reduce){.ch-skel,.ch-spinner,.ch-progress--indeterminate .ch-progress__bar{animation:none}.ch-toggle::after,.ch-progress__bar{transition:none}}
+
+.ch-popup{font-family:var(--chrome-font);color:var(--chrome-text);background:var(--chrome-panel);border-radius:var(--chrome-radius-lg);box-shadow:var(--chrome-shadow-pop);padding:var(--chrome-pad);box-sizing:border-box;z-index:var(--chrome-z-pop)}
+.ch-menu{z-index:var(--chrome-z-pop)}
+.ch-scrim{background:var(--chrome-scrim);z-index:var(--chrome-z-scrim)}
+.ch-tooltip{display:inline-block;position:relative;padding:5px 10px;background:var(--chrome-text);color:var(--chrome-panel);font:var(--chrome-weight-body) var(--chrome-size)/var(--chrome-leading) var(--chrome-font);border-radius:var(--chrome-radius-md);white-space:nowrap;z-index:var(--chrome-z-top)}
+/* Стрелка — квадрат под углом из того же цвета; сторона — модификатором. */
+.ch-tooltip::after{content:'';position:absolute;width:8px;height:8px;background:inherit;transform:rotate(45deg)}
+.ch-tooltip--top::after{bottom:-3px;left:50%;margin-left:-4px}
+.ch-tooltip--bottom::after{top:-3px;left:50%;margin-left:-4px}
+.ch-tooltip--left::after{right:-3px;top:50%;margin-top:-4px}
+.ch-tooltip--right::after{left:-3px;top:50%;margin-top:-4px}
+/* Обёртка для hover-подсказки без скрипта: тултип лежит внутри триггера. */
+.ch-tip{position:relative;display:inline-flex}
+.ch-tip>.ch-tooltip{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(100% + 8px);opacity:0;pointer-events:none;transition:opacity var(--chrome-motion-fast) var(--chrome-ease)}
+.ch-tip:hover>.ch-tooltip,.ch-tip:focus-within>.ch-tooltip{opacity:1}
+/* Модалка — тот же .ch-popup, но с шапкой и полкой действий. */
+.ch-modal{width:440px;max-width:100%;padding:0}
+.ch-modal__head{display:flex;align-items:center;gap:10px;padding:var(--chrome-pad) var(--chrome-pad) 12px;font-size:var(--chrome-size);font-weight:var(--chrome-weight-title)}
+.ch-modal__body{display:grid;gap:8px;padding:0 var(--chrome-pad);color:var(--chrome-muted)}
+.ch-modal__foot{display:flex;justify-content:flex-end;gap:8px;padding:var(--chrome-pad)}
+
+/* ── Компоненты: Дерево слоёв, ручка ресайза ───────────────────────────── */
+/* Дерево слоёв — та же строка, что и карточка блока, только с отступом уровня --ch-depth. */
+.ch-tree{display:grid}
+.ch-tree__row{display:flex;align-items:center;gap:8px;width:100%;height:var(--chrome-h-sm);padding:0 8px 0 calc(8px + var(--ch-depth, 0) * 14px);border:0;border-radius:var(--chrome-radius-sm);background:none;font:var(--chrome-weight-body) var(--chrome-size)/var(--chrome-leading) var(--chrome-font);color:var(--chrome-text);text-align:left;cursor:pointer;box-sizing:border-box}
+.ch-tree__row:hover,.ch-tree__row.is-hover{background:var(--chrome-hover)}
+.ch-tree__row.is-selected{background:var(--chrome-accent);color:var(--chrome-on-accent)}
+.ch-tree__chev{display:inline-flex;flex:none;color:var(--chrome-muted);transition:transform var(--chrome-motion-fast) var(--chrome-ease)}
+.ch-tree__row.is-open .ch-tree__chev{transform:rotate(90deg)}
+.ch-tree__row.is-selected .ch-tree__chev,.ch-tree__row.is-selected .ch-tree__act{color:inherit}
+.ch-tree__name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ch-tree__act{flex:none;display:inline-flex;color:var(--chrome-muted);opacity:0}
+.ch-tree__row:hover .ch-tree__act,.ch-tree__row.is-selected .ch-tree__act,.ch-tree__row:focus-within .ch-tree__act{opacity:1}
+.ch-tree__row.is-hidden .ch-tree__name{color:var(--chrome-muted)}
+
+/* Ручка ресайза колонны: широкая зона захвата, тонкая видимая линия только по hover. */
+.ch-resize{position:relative;flex:none;width:8px;align-self:stretch;border:0;padding:0;background:none;cursor:col-resize}
+.ch-resize--h{width:auto;height:8px;align-self:auto;cursor:row-resize}
+.ch-resize::after{content:'';position:absolute;inset:0;margin:auto;width:2px;border-radius:var(--chrome-radius-pill);background:transparent;transition:background var(--chrome-motion-fast) var(--chrome-ease)}
+.ch-resize--h::after{width:auto;height:2px}
+.ch-resize:hover::after,.ch-resize.is-active::after,.ch-resize:focus-visible::after{background:var(--chrome-accent)}
+.ch-resize:focus-visible{outline:none}
+
+/* ── Полоса прокрутки ───────────────────────────────────────── */
+/* Нативная полоса режет 20px-радиус колонны — тематизируется и она: трек прозрачный,
+   бегунок на pill-радиусе с прозрачной рамкой вместо отступа. */
+.ch-scroll,.ch-panel,.ch-popup,.ch-menu,.ch-ed-palette,.ch-ed-panel,.ch-ed-canvas,.ch-textarea{scrollbar-width:thin;scrollbar-color:var(--chrome-scroll-thumb) transparent}
+.ch-scroll::-webkit-scrollbar,.ch-panel::-webkit-scrollbar,.ch-popup::-webkit-scrollbar,.ch-menu::-webkit-scrollbar,.ch-ed-palette::-webkit-scrollbar,.ch-ed-panel::-webkit-scrollbar,.ch-ed-canvas::-webkit-scrollbar,.ch-textarea::-webkit-scrollbar{width:var(--chrome-scroll-w);height:var(--chrome-scroll-w)}
+.ch-scroll::-webkit-scrollbar-track,.ch-panel::-webkit-scrollbar-track,.ch-popup::-webkit-scrollbar-track,.ch-menu::-webkit-scrollbar-track,.ch-ed-palette::-webkit-scrollbar-track,.ch-ed-panel::-webkit-scrollbar-track,.ch-ed-canvas::-webkit-scrollbar-track,.ch-textarea::-webkit-scrollbar-track{background:transparent}
+.ch-scroll::-webkit-scrollbar-thumb,.ch-panel::-webkit-scrollbar-thumb,.ch-popup::-webkit-scrollbar-thumb,.ch-menu::-webkit-scrollbar-thumb,.ch-ed-palette::-webkit-scrollbar-thumb,.ch-ed-panel::-webkit-scrollbar-thumb,.ch-ed-canvas::-webkit-scrollbar-thumb,.ch-textarea::-webkit-scrollbar-thumb{border:3px solid transparent;background-clip:padding-box;border-radius:var(--chrome-radius-pill);background-color:var(--chrome-scroll-thumb)}
+.ch-scroll::-webkit-scrollbar-thumb:hover,.ch-panel::-webkit-scrollbar-thumb:hover,.ch-popup::-webkit-scrollbar-thumb:hover,.ch-menu::-webkit-scrollbar-thumb:hover,.ch-ed-palette::-webkit-scrollbar-thumb:hover,.ch-ed-panel::-webkit-scrollbar-thumb:hover,.ch-ed-canvas::-webkit-scrollbar-thumb:hover,.ch-textarea::-webkit-scrollbar-thumb:hover{background-color:var(--chrome-scroll-thumb-hover)}
+
+/* ── Каркас окна редактора (используется шаблоном) ───────────────────────── */
+.ch-ed{font-family:var(--chrome-font);color:var(--chrome-text);position:relative;box-sizing:border-box;min-width:var(--chrome-win-min);display:grid;grid-template:'palette canvas panel' 1fr / 260px minmax(360px,1fr) 320px;gap:var(--chrome-gap);padding:var(--chrome-gap);background-color:var(--chrome-scene);background-image:var(--chrome-scene-bg);overflow:hidden}
+.ch-ed-palette{grid-area:palette;display:flex;flex-direction:column;border-radius:var(--chrome-radius-xl);overflow-y:auto}
+.ch-ed-panel{grid-area:panel;display:flex;flex-direction:column;border-radius:var(--chrome-radius-xl);overflow-y:auto}
+.ch-ed-canvas{grid-area:canvas;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:64px 0 76px}
+.ch-ed-toolbar{display:flex;align-items:center;gap:6px;padding:6px;background:var(--chrome-panel);border-radius:var(--chrome-radius-lg);box-shadow:var(--chrome-shadow-float)}
+.ch-ed-toolbar--float{grid-area:canvas;align-self:start;justify-self:center;z-index:var(--chrome-z-float)}
+.ch-ed-toolbar .ch-btn{height:var(--chrome-h-lg)}
+.ch-ed-toolbar .ch-btn--icon{width:var(--chrome-h-lg)}
+.ch-ed-toolbar__sep{width:1px;height:20px;background:var(--chrome-border);margin:0 2px}
+.ch-ed-dock{display:flex;padding:4px;background:var(--chrome-panel);border-radius:var(--chrome-radius-pill);box-shadow:var(--chrome-shadow-float)}
+.ch-ed-dock--float{grid-area:canvas;align-self:end;justify-self:center;z-index:var(--chrome-z-float);margin-bottom:8px}
+.ch-ed-dock .ch-seg{background:transparent;padding:0}
+.ch-ed-dock .ch-seg__opt{padding:0 14px}
+.ch-ed-dock .ch-seg__opt.is-active{background:var(--chrome-accent);color:var(--chrome-on-accent);box-shadow:none}
+.ch-cv-page{width:100%;max-width:var(--chrome-cv-page);background:var(--chrome-panel);border-radius:var(--chrome-radius-lg);box-shadow:var(--chrome-shadow-panel);overflow:hidden}
+/* Тост в окне редактора: место в сетке — тоже модификатор, не инлайн. */
+.ch-toast--float{grid-area:canvas;align-self:end;justify-self:center;margin-bottom:20px;z-index:var(--chrome-z-float)}
+
+/* Фокус с клавиатуры — на всём интерактивном */
+.ch-block-card:focus-visible,.ch-panel__section:focus-visible,.ch-seg__opt:focus-visible,.ch-swatch:focus-visible,.ch-menu__item:focus-visible,.ch-check:focus-visible,.ch-radio:focus-visible,.ch-toast__act:focus-visible,.ch-tile:focus-visible,.ch-num:focus-visible{outline:2px solid var(--chrome-accent);outline-offset:2px}
+/* Строки-дивы (.ch-block-card, .ch-num) фокус сами не получают: в разметке им обязательны
+   tabindex="0" и роль (role="button" для карточки, role="spinbutton" для числа) — без них правило мёртвое. */
+.ch-tree__row:focus-visible{outline:2px solid var(--chrome-accent);outline-offset:-2px}
+.ch-tree__row.is-selected:focus-visible{outline-color:var(--chrome-on-accent)}
+/* На акцентной подложке акцентный контур не виден — ведём его внутрь светлым. */
+.ch-block-card.is-selected:focus-visible{outline-color:var(--chrome-on-accent);outline-offset:-4px}
+.ch-ed-dock .ch-seg__opt.is-active:focus-visible{outline-color:var(--chrome-on-accent);outline-offset:-4px}
+
+/* Ссылки и код — только внутри хрома, не глобально: контент холста не наш. */
+.ch-panel a,.ch-popup a,.ch-menu a,.ch-toast a{color:var(--chrome-accent)}
+.ch-panel a:hover,.ch-popup a:hover,.ch-menu a:hover,.ch-toast a:hover{color:var(--chrome-muted)}
+.ch-code{font-family:var(--chrome-font-mono);font-size:.92em}

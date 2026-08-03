@@ -13,6 +13,8 @@ import { PropertiesPanel } from './properties-panel';
 import { runModuleJs } from './section-scripts';
 import { Topbar } from './topbar';
 
+// Таблица ДС (ch-*, --chrome-*): Vite инлайнит @import и переписывает пути шрифтов.
+import './ds/styles.css';
 import chromeCss from './chrome.css?raw';
 
 // Стор — источник правды редактора; создаётся один раз на модуль (entrypoint один).

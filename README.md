@@ -21,7 +21,20 @@ make clean     # удалить node_modules и dist
 ```
 
 `make help` — список всех команд. Под капотом — npm-скрипты (`dev`, `build`,
-`preview`, `lint`, `format`, `verify`, `export`).
+`preview`, `lint`, `format`, `verify`, `export`, `ds:sync`, `ds:check`).
+
+### Дизайн-система хрома
+
+Исходник — `docs/design/` (побайтовый экспорт из Designer). Продукт читает
+копию в `src/editor/ds/`. После переэкспорта в `docs/design/`:
+
+```bash
+npm run ds:sync   # обновить копию
+npm run ds:check  # побайтовая сверка (входит в verify)
+```
+
+Править только исходник; правка копии — ошибка, `verify` станет красным
+([ADR-0006](docs/adr/ADR-0006-chrome-ds-consumption.md)).
 
 ### Перенос секции из Figma
 
@@ -60,7 +73,7 @@ studio/
 ├─ src/
 │  ├─ main.tsx          точка входа (свой редактор)
 │  ├─ editor-core/      агностичный стор редактора
-│  ├─ editor/           React-UI редактора
+│  ├─ editor/           React-UI редактора (+ ds/ — синк ДС хрома)
 │  ├─ render-core/      агностичный render + реестр блоков
 │  ├─ sections/         модули секций лендинга
 │  └─ tokens/           токены темы (DTCG → CSS)
@@ -81,6 +94,8 @@ studio/
   (superseded ADR-0005).
 - [ADR-0005](docs/adr/ADR-0005-editor-own-engine.md) — собственный движок
   редактора; `@measured/puck` удалён.
+- [ADR-0006](docs/adr/ADR-0006-chrome-ds-consumption.md) — потребление ДС
+  хрома: синк в `src/editor/ds/`, не прямой импорт из `docs/`.
 
 ## Стек
 

@@ -1,0 +1,27 @@
+/*
+ * Загрузка шрифта хрома — единственное место, где система ходит в сеть.
+ * Сейчас сеть НЕ используется: Golos Text подключён локально из assets/fonts/
+ * (лицензия SIL OFL, текст — assets/fonts/OFL.txt).
+ *
+ * ЧТОБЫ ВЕРНУТЬСЯ НА CDN: удалите три @font-face ниже и раскомментируйте @import
+ * (он обязан идти первой строкой файла).
+ * Цепочка запасных в --chrome-font (-apple-system, Segoe UI, Noto Sans)
+ * держит метрики, пока шрифт не приехал.
+ */
+/* @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap'); */
+
+@font-face {
+    font-family: 'Golos Text';
+    src: local('Golos Text Regular'), url('../assets/fonts/GolosText-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Golos Text';
+    src: local('Golos Text Medium'), url('../assets/fonts/GolosText-Medium.woff2') format('woff2');
+    font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Golos Text';
+    src: local('Golos Text SemiBold'), url('../assets/fonts/GolosText-SemiBold.woff2') format('woff2');
+    font-weight: 600; font-style: normal; font-display: swap;
+}
