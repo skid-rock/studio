@@ -158,6 +158,56 @@ test('пустой документ: панель показывает «нет 
     ).toBeVisible();
 });
 
+test('пустое состояние холста: ch-cv-empty, вставка, inline-правка', async ({
+    page,
+}) => {
+    // Тот же DOM-клик путь, что в тесте панели: шторка конверта перехватывает pointer.
+    const sections = page.locator('.ch-cv-section');
+    const count = await sections.count();
+
+    for (let i = 0; i < count; i++) {
+        const section = sections.last();
+        await section.evaluate((el) => {
+            (el as HTMLElement).click();
+        });
+        await section.locator('[aria-label="Удалить секцию"]').evaluate((btn) => {
+            (btn as HTMLButtonElement).click();
+        });
+    }
+
+    const empty = page.locator('.ch-cv-empty');
+    await expect(empty).toBeVisible();
+    await expect(empty).toContainText(
+        'Документ пуст. Добавьте блок из палитры слева.',
+    );
+    await expect(page.locator('.ch-cv-page')).toHaveCount(0);
+
+    // Вставка после пустого документа: .ch-cv-page появляется снова —
+    // callback-ref должен заново повесить inline-edit (регрессия шага 1 плана).
+    await page
+        .getByRole('complementary')
+        .filter({ has: page.getByText('Блоки', { exact: true }) })
+        .getByRole('button', { name: 'Hero (имена и дата)' })
+        .click();
+
+    await expect(empty).toHaveCount(0);
+    await expect(page.locator('.ch-cv-page')).toHaveCount(1);
+    await expect(page.locator('[data-block="hero"]')).toBeVisible();
+
+    // Как в тесте inline+undo: сначала секция выделена (панель жива), потом якорь.
+    // Иначе клик по data-prop всплывает в select → re-render сбрасывает набор.
+    await page.locator('[data-block="hero"]').click();
+    await expect(page.getByRole('textbox', { name: 'Имена' })).toBeVisible();
+
+    const date = page.locator('[data-block="hero"] [data-prop="date"]');
+    await date.click();
+    await expect(date).toBeFocused();
+    await page.keyboard.press('ControlOrMeta+a');
+    await page.keyboard.type('01.01.2030');
+    await page.keyboard.press('Enter');
+    await expect(date).toHaveText('01.01.2030');
+});
+
 test('экспорт: вес в бюджете 190 KiB, якоря разметки на месте', async ({ page }) => {
     // Экспорт показывает alert — регистрируем обработчик ДО клика
     const dialogs: string[] = [];

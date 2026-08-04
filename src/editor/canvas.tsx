@@ -7,13 +7,13 @@ import {
     PointerActivationConstraints,
 } from '@dnd-kit/dom';
 import type { Customizable, Sensors } from '@dnd-kit/dom';
-import { SortableKeyboardPlugin } from '@dnd-kit/dom/sortable';
+import { isKeyboardEvent } from '@dnd-kit/dom/utilities';
 import {
     DragDropProvider,
     DragOverlay,
     useDragOperation,
 } from '@dnd-kit/react';
-import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/react';
+import type { DragEndEvent, DragMoveEvent, DragStartEvent } from '@dnd-kit/react';
 import { useSortable, isSortable } from '@dnd-kit/react/sortable';
 
 import type { EditorStore } from '../editor-core';
@@ -60,7 +60,7 @@ interface LiveDrag {
 
 /**
  * Переставить source относительно target по положению указателя.
- * Идемпотентно: без изменений возвращает тот же массив (dragover частый).
+ * Идемпотентно: без изменений возвращает тот же массив (dragmove частый).
  */
 function applySectionDragOver(
     order: string[],
@@ -100,6 +100,61 @@ function applySectionDragOver(
     return next;
 }
 
+/** Сдвиг на одну позицию вверх/вниз (клавиатурный DnD). */
+function moveAdjacent(order: string[], movedId: string, down: boolean): string[] {
+    const from = order.indexOf(movedId);
+
+    if (from < 0) {
+        return order;
+    }
+
+    const to = down
+        ? Math.min(from + 1, order.length - 1)
+        : Math.max(from - 1, 0);
+
+    if (to === from) {
+        return order;
+    }
+
+    const next = order.slice();
+    next.splice(from, 1);
+    next.splice(to, 0, movedId);
+
+    return next;
+}
+
+type DragOperationSlice = DragMoveEvent['operation'];
+
+/** Mid-point over текущей цели — для мыши/тача (не для клавиатуры). */
+function orderFromPointer(
+    order: string[],
+    operation: DragOperationSlice,
+): string[] {
+    const { source, target, position } = operation;
+
+    if (
+        !source ||
+        !target ||
+        !isSortable(source) ||
+        !isSortable(target)
+    ) {
+        return order;
+    }
+
+    // shape — у droppable; isSortable сужает тип без поля shape.
+    const center = (
+        target as typeof target & { shape?: { center?: { y: number } } }
+    ).shape?.center;
+    const below = center != null ? position.current.y > center.y : true;
+
+    return applySectionDragOver(
+        order,
+        String(source.id),
+        String(target.id),
+        below,
+    );
+}
+
 /** Холст: страница из секций, выделение кликом, мини-тулбар, DnD-переупорядочивание. */
 export function Canvas({ store, doc, selectedId }: CanvasProps): ReactElement {
     const detachInline = useRef<(() => void) | null>(null);
@@ -124,7 +179,9 @@ export function Canvas({ store, doc, selectedId }: CanvasProps): ReactElement {
 
     // Live-порядок: state для рендера, ref — для обработчиков dnd-kit (замыкание).
     // OptimisticSortingPlugin отключён у useSortable — двигает DOM в обход React
-    // (см. tracker Card.tsx). Расступ делает React через onDragOver.
+    // (см. tracker Card.tsx). Расступ делает React через onDragMove: mid-point
+    // нужно пересчитывать на каждом движении мыши внутри секции, а не только
+    // при смене цели (onDragOver срабатывает редко — вход в чужую секцию).
     const [live, setLive] = useState<LiveDrag | null>(null);
     const liveRef = useRef<LiveDrag | null>(null);
     const updateLive = (value: LiveDrag | null): void => {
@@ -145,31 +202,37 @@ export function Canvas({ store, doc, selectedId }: CanvasProps): ReactElement {
         updateLive({ movedId: source.id, start: ids, order: ids });
     };
 
-    const handleDragOver = (event: DragOverEvent): void => {
-        const { source, target, position } = event.operation;
+    const handleDragMove = (event: DragMoveEvent): void => {
         const prev = liveRef.current;
 
-        if (
-            !prev ||
-            !source ||
-            !target ||
-            !isSortable(source) ||
-            !isSortable(target)
-        ) {
+        if (!prev) {
             return;
         }
 
-        const sourceId = String(source.id);
-        const targetId = String(target.id);
-        // Ниже ли указатель центра цели — before/after (как tracker boardDragLive).
-        const center = target.shape?.center;
-        const below = center != null ? position.current.y > center.y : true;
-        const next = applySectionDragOver(
-            prev.order,
-            sourceId,
-            targetId,
-            below,
-        );
+        // Клавиатура: SortableKeyboardPlugin без OptimisticSorting не двигает
+        // source.index (индекс контролирует наш React `index`). Один шаг за
+        // стрелку — в live-порядке; синтетический move плагина не слушаем.
+        if (isKeyboardEvent(event.operation.activatorEvent)) {
+            if (!isKeyboardEvent(event.nativeEvent)) {
+                return;
+            }
+
+            const { by } = event;
+
+            if (!by || by.y === 0) {
+                return;
+            }
+
+            const next = moveAdjacent(prev.order, prev.movedId, by.y > 0);
+
+            if (next !== prev.order) {
+                updateLive({ ...prev, order: next });
+            }
+
+            return;
+        }
+
+        const next = orderFromPointer(prev.order, event.operation);
 
         if (next !== prev.order) {
             updateLive({ ...prev, order: next });
@@ -178,23 +241,39 @@ export function Canvas({ store, doc, selectedId }: CanvasProps): ReactElement {
 
     const handleDragEnd = (event: DragEndEvent): void => {
         const session = liveRef.current;
-        updateLive(null);
+        const { source, activatorEvent } = event.operation;
 
         // Отмена (Esc) — live сброшен, документ не трогаем.
         if (event.canceled) {
+            updateLive(null);
+
             return;
         }
 
-        const { source } = event.operation;
+        let commitTo = -1;
+
+        if (session) {
+            if (isKeyboardEvent(activatorEvent)) {
+                // Стрелки уже сдвинули live-порядок пошагово.
+                commitTo = session.order.indexOf(session.movedId);
+            } else {
+                // Финальный mid-point: резкий прыжок курсора (Playwright dragTo,
+                // флик) может не успеть перестроить порядок через onDragMove —
+                // на отпускании позиция и shape уже окончательные.
+                const order = orderFromPointer(session.order, event.operation);
+                commitTo = order.indexOf(session.movedId);
+            }
+        }
+
+        updateLive(null);
 
         if (session) {
             const from = session.start.indexOf(session.movedId);
-            const to = session.order.indexOf(session.movedId);
 
-            if (from !== to && to >= 0) {
-                // to — индекс в полном списке с перемещённой секцией; совпадает
-                // с контрактом moveSection (индекс вставки в список без неё).
-                store.moveSection(session.movedId, to);
+            if (from !== commitTo && commitTo >= 0) {
+                // commitTo — индекс в полном списке с перемещённой секцией;
+                // совпадает с контрактом moveSection (индекс вставки без неё).
+                store.moveSection(session.movedId, commitTo);
             }
 
             return;
@@ -215,7 +294,7 @@ export function Canvas({ store, doc, selectedId }: CanvasProps): ReactElement {
             sensors={sensors}
             modifiers={[RestrictToVerticalAxis]}
             onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
+            onDragMove={handleDragMove}
             onDragEnd={handleDragEnd}
         >
             {sections.length === 0 ? (
@@ -262,7 +341,7 @@ interface CanvasSectionsProps {
 
 /**
  * Список секций в live-порядке. Линия ch-cv-drop — в щели перед перетаскиваемой
- * секцией (её текущий слот после onDragOver).
+ * секцией (её текущий слот после onDragMove).
  */
 function CanvasSections({
     orderIds,
@@ -326,11 +405,13 @@ function SectionShell({
 }: SectionShellProps): ReactElement {
     const mod = defaultRegistry.get(node.type);
     const [isHovered, setHovered] = useState(false);
-    // Только клавиатура: OptimisticSortingPlugin отключён — live-порядок в React.
+    // Плагины sortable выключены: OptimisticSorting двигает DOM в обход React;
+    // SortableKeyboard без него не обновляет индекс. И мышь, и клавиатура —
+    // через live-порядок в React (onDragMove).
     const { ref, handleRef, isDragging } = useSortable({
         id: node.id,
         index,
-        plugins: [SortableKeyboardPlugin],
+        plugins: [],
     });
 
     // Секция на холсте — контейнер, не кнопка: role="button" схлопнул бы
@@ -447,14 +528,25 @@ interface SectionBodyProps {
     node: SectionNode;
     doc: StudioDocument;
     mod: ReturnType<typeof defaultRegistry.get>;
+    /** Overlay: не дублировать id секции в DOM (слот уже с этим id). */
+    omitDomId?: boolean;
 }
 
-function SectionBody({ node, doc, mod }: SectionBodyProps): ReactElement {
+function SectionBody({
+    node,
+    doc,
+    mod,
+    omitDomId = false,
+}: SectionBodyProps): ReactElement {
     if (mod) {
         return (
             <BlockPreview
                 mod={mod}
-                props={{ ...node.props, id: node.id }}
+                props={
+                    omitDomId
+                        ? { ...node.props }
+                        : { ...node.props, id: node.id }
+                }
                 doc={doc}
             />
         );
@@ -476,7 +568,9 @@ function SectionBody({ node, doc, mod }: SectionBodyProps): ReactElement {
     );
 }
 
-/** Плавающая копия секции под курсором (DragOverlay) — без тулбара. */
+/** Плавающая копия секции под курсором (DragOverlay) — без тулбара.
+ *  Слот в списке остаётся бледным (`ch-cv-ghost`); копия под курсором
+ *  непрозрачна, чтобы текст не двоился. */
 function SectionOverlay({
     node,
     doc,
@@ -493,9 +587,15 @@ function SectionOverlay({
                 width: 'var(--chrome-cv-page)',
                 maxWidth: '100%',
                 pointerEvents: 'none',
+                opacity: 1,
             }}
         >
-            <SectionBody node={node} doc={doc} mod={mod} />
+            <SectionBody
+                node={node}
+                doc={doc}
+                mod={mod}
+                omitDomId
+            />
         </div>
     );
 }

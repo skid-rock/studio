@@ -106,3 +106,71 @@ test('клик по ручке без движения не создаёт ша�
         page.getByRole('button', { name: 'Отменить (Cmd/Ctrl+Z)' }),
     ).toBeDisabled();
 });
+
+test('кнопки Выше/Ниже: сдвигают секцию, undo, края disabled', async ({
+    page,
+}) => {
+    const before = await blockOrder(page);
+    const heroIndex = before.indexOf('hero');
+    // hero не на краю сэмпла — обе кнопки должны быть доступны.
+    expect(heroIndex).toBeGreaterThan(0);
+    expect(heroIndex).toBeLessThan(before.length - 1);
+
+    await page.locator('[data-block="hero"]').click();
+    // Кнопки только у выделенной: после сдвига сосед может остаться под hover
+    // и в DOM окажутся две ручки «Выше»/«Ниже».
+    const selected = page.locator('.ch-cv-section.is-selected');
+    const up = selected.getByRole('button', { name: 'Выше' });
+    const down = selected.getByRole('button', { name: 'Ниже' });
+    await expect(up).toBeEnabled();
+    await expect(down).toBeEnabled();
+
+    await down.click();
+    await expect
+        .poll(async () => (await blockOrder(page)).indexOf('hero'))
+        .toBe(heroIndex + 1);
+
+    await up.click();
+    await expect
+        .poll(async () => (await blockOrder(page)).indexOf('hero'))
+        .toBe(heroIndex);
+
+    // Два шага истории (Ниже, затем Выше) — один undo возвращает после Ниже.
+    await page.getByRole('button', { name: 'Отменить (Cmd/Ctrl+Z)' }).click();
+    await expect
+        .poll(async () => (await blockOrder(page)).indexOf('hero'))
+        .toBe(heroIndex + 1);
+    await page.getByRole('button', { name: 'Отменить (Cmd/Ctrl+Z)' }).click();
+    await expect.poll(async () => blockOrder(page)).toEqual(before);
+
+    // Края: evaluate-клик — у конверта шторка перехватывает обычный pointer.
+    const first = page.locator('.ch-cv-section').first();
+    await first.evaluate((el) => {
+        (el as HTMLElement).click();
+    });
+    await expect(
+        page.locator('.ch-cv-section.is-selected').getByRole('button', {
+            name: 'Выше',
+        }),
+    ).toBeDisabled();
+    await expect(
+        page.locator('.ch-cv-section.is-selected').getByRole('button', {
+            name: 'Ниже',
+        }),
+    ).toBeEnabled();
+
+    const last = page.locator('.ch-cv-section').last();
+    await last.evaluate((el) => {
+        (el as HTMLElement).click();
+    });
+    await expect(
+        page.locator('.ch-cv-section.is-selected').getByRole('button', {
+            name: 'Ниже',
+        }),
+    ).toBeDisabled();
+    await expect(
+        page.locator('.ch-cv-section.is-selected').getByRole('button', {
+            name: 'Выше',
+        }),
+    ).toBeEnabled();
+});
