@@ -40,6 +40,12 @@ export function Palette({
         store.select(id);
     };
 
+    // Тип выделенной секции: его карточка в палитре подсвечена как нажатая
+    // (эталон editor-mvp — .ch-block-card.is-selected.ch-bleed, STUDIO-051).
+    const selectedType = selectedId
+        ? (doc.sections.find((s) => s.id === selectedId)?.type ?? null)
+        : null;
+
     return (
         <aside className="ch-panel ch-ed-palette">
             <div className="ch-ident">
@@ -56,9 +62,14 @@ export function Palette({
             {registry.list().map((mod) => (
                 <div
                     key={mod.type}
-                    className="ch-block-card"
+                    className={
+                        mod.type === selectedType
+                            ? 'ch-block-card is-selected ch-bleed'
+                            : 'ch-block-card'
+                    }
                     role="button"
                     tabIndex={0}
+                    aria-pressed={mod.type === selectedType}
                     onClick={() => insert(mod.type)}
                     // div, а не button: .ch-block-card не сбрасывает рамку и фон,
                     // которые браузер рисует кнопке. Клавиатуру добираем вручную.

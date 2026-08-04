@@ -9,12 +9,15 @@ interface ThemeSwitcherProps {
 export function ThemeSwitcher({ value, onChange }: ThemeSwitcherProps) {
     return (
         <div className="ch-field ch-field--row">
-            <label className="ch-field__label" htmlFor="ch-page-theme">
+            {/* id без префикса ch-: по readme ДС префикс закреплён за классами
+                хрома, а на id он ломает статическое снятие классов в
+                ds:contract (STUDIO-051). */}
+            <label className="ch-field__label" htmlFor="page-theme">
                 Тема
             </label>
             <select
                 className="ch-select"
-                id="ch-page-theme"
+                id="page-theme"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
             >

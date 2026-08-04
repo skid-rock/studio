@@ -14,6 +14,7 @@
         "tokens": "tsx src/tokens/build.mts",
         "ds:sync": "tsx scripts/ds-sync.mts",
         "ds:check": "tsx scripts/ds-check.mts",
+        "ds:contract": "tsx scripts/ds-contract.mts",
         "ds:intake": "tsx scripts/ds-intake.mts",
         "export": "tsx scripts/export.mts",
         "figma:inventory": "tsx scripts/figma/inventory.mts",
@@ -21,7 +22,7 @@
         "figma:check": "tsx scripts/figma/check-section.mts",
         "pretest": "npm run tokens",
         "test": "vitest run",
-        "verify": "npm run tokens && npm run ds:check && npm run lint && npm run build && npm run test",
+        "verify": "npm run tokens && npm run ds:check && npm run ds:contract && npm run lint && npm run build && npm run test",
         "test:e2e": "playwright test",
         "verify:e2e": "npm run verify && npm run test:e2e",
         "test:watch": "vitest"

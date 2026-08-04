@@ -115,15 +115,19 @@ export function ThemeOverrides({
                     )}
                     {FONT_TOKENS.map((t) => (
                         <div className="ch-field ch-field--row" key={t.key}>
+                            {/* id без префикса ch-: по readme ДС префикс
+                                закреплён за классами хрома, а на id он ломает
+                                статическое снятие классов в ds:contract
+                                (STUDIO-051). */}
                             <label
                                 className="ch-field__label"
-                                htmlFor={`ch-font-${t.key.slice(2)}`}
+                                htmlFor={`font-${t.key.slice(2)}`}
                             >
                                 {t.label}
                             </label>
                             <input
                                 className="ch-input"
-                                id={`ch-font-${t.key.slice(2)}`}
+                                id={`font-${t.key.slice(2)}`}
                                 type="text"
                                 // плейсхолдер — текущий шрифт пресета, чтобы был виден дефолт.
                                 placeholder={preset(t.key) || 'напр. Georgia, serif'}
