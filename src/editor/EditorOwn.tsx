@@ -79,7 +79,18 @@ export function EditorOwn(): ReactElement {
     return (
         // Высота — inline: .ch-ed это grid без своей высоты, в эталоне она тоже
         // задана инлайном. Своего .css в src/editor/ быть не должно (STUDIO-051).
-        <div className="ch-ed" style={{ height: '100dvh' }}>
+        <div
+            className="ch-ed"
+            style={{ height: '100dvh' }}
+            onClick={(e) => {
+                // Клик по сцене окна (padding/gap сетки .ch-ed), не по колоннам.
+                // Сцена видна при любом scrollTop холста — в отличие от padding
+                // .ch-ed-canvas, который уезжает за край (STUDIO-055).
+                if (e.target === e.currentTarget) {
+                    store.select(null);
+                }
+            }}
+        >
             <ToastProvider>
                 <style>{FRAME_BASE_CSS}</style>
                 <style>{themeCss}</style>
@@ -119,10 +130,9 @@ export function EditorOwn(): ReactElement {
                 <main
                     className="ch-ed-canvas"
                     onClick={(e) => {
-                        // Клик мимо секции снимает выделение. Ловим на всём холсте:
-                        // у .ch-ed-canvas есть свои пиксели (padding сверху/снизу и
-                        // гаттеры по бокам страницы), в отличие от прежней обёртки
-                        // холста, чей рект совпадал со страницей (STUDIO-048).
+                        // Клик по фону холста (padding сверху/снизу) снимает выделение.
+                        // Боковых гаттеров у страницы при типичном 1280 нет: колонка
+                        // уже --chrome-cv-page. Доп. путь — клик по сцене .ch-ed (STUDIO-055).
                         if (!(e.target as HTMLElement).closest('.ch-cv-section')) {
                             store.select(null);
                         }

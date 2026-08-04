@@ -96,22 +96,19 @@ test('снятие выделения: панель глохнет, но пом�
     const names = panel.getByRole('textbox', { name: 'Имена' });
     await expect(names).toBeEnabled();
 
-    // Снятие выделения — клик по фону холста: у main.ch-ed-canvas свой
-    // padding сверху (64px), туда мышь и попадает.
-    // Прокрутку сбрасываем обязательно: position у click отсчитывается от
-    // padding-box контейнера, а не от его содержимого. Клик по hero выше
-    // прокрутил холст (STUDIO-054 вернул ему прокрутку), и на прокрученном
-    // холсте точка {20,20} накрывает уже саму страницу — клик выделил бы
-    // секцию вместо снятия выделения.
-    // Боковых гаттеров у страницы здесь нет: при viewport 1280 колонка
-    // холста 652px, что уже --chrome-cv-page 720px, поэтому фон — только
-    // полосы padding сверху и снизу.
-    const canvas = page.locator('main.ch-ed-canvas');
+    // Снятие выделения — клик по сцене окна (padding сетки .ch-ed).
+    // Не зависит от scrollTop холста: сцена всегда на экране (STUDIO-055).
+    // x=6 — внутри padding-left 12px; y по центру окна, мимо плавающего тулбара.
+    const editor = page.locator('.ch-ed');
+    const box = await editor.boundingBox();
 
-    await canvas.evaluate((el) => {
-        el.scrollTop = 0;
+    if (!box) {
+        throw new Error('.ch-ed не найден');
+    }
+
+    await editor.click({
+        position: { x: 6, y: Math.round(box.height / 2) },
     });
-    await canvas.click({ position: { x: 20, y: 20 } });
 
     // Правило «выделенная → последняя выделенная → первая в документе»: разметка
     // та же, заголовок прежний, поля выключены (STUDIO-048). Первая секция
