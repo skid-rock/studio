@@ -13,6 +13,7 @@ import { FRAME_BASE_CSS } from './frame-css';
 import { resolveThemeCss, themeCssById } from './theme-assets';
 import { ThemeOverrides } from './theme-overrides';
 import { ThemeSwitcher } from './theme-switcher';
+import { useToast } from './toast';
 
 export interface PageTabProps {
     store: EditorStore;
@@ -20,6 +21,8 @@ export interface PageTabProps {
 }
 
 export function PageTab({ store, doc }: PageTabProps): ReactElement {
+    const showToast = useToast();
+
     /** Изменить точечный оверрайд токена темы ('' — снять оверрайд). */
     const handleOverrideChange = (key: string, value: string): void => {
         const overrides = { ...(doc.theme.overrides ?? {}) };
@@ -32,7 +35,7 @@ export function PageTab({ store, doc }: PageTabProps): ReactElement {
         store.setThemeOverrides(overrides);
     };
 
-    /** Собрать index.html текущего документа, замерить вес, скачать. */
+    /** Собрать index.html текущего документа, замерить вес, скачать, отчитаться тостом. */
     const handleExport = (): void => {
         const { html, bytes, withinBudget } = buildExportHtml(
             doc,
@@ -41,14 +44,13 @@ export function PageTab({ store, doc }: PageTabProps): ReactElement {
         );
 
         downloadHtml(html);
-        // Отчёт о весе: бюджет — самостоятельный index.html без внешних картинок/шрифтов.
+        // Бюджет — самостоятельный index.html без внешних картинок/шрифтов.
         const status = withinBudget ? 'в бюджете' : 'ПРЕВЫШЕН бюджет';
 
-        console.info(`Экспорт: ${formatBytes(bytes)} (${status})`);
-        alert(
-            `Экспортирован index.html\nВес: ${formatBytes(bytes)} — ${status}\n` +
-                `(картинки и шрифты подключаются ссылками и в этот вес не входят)`,
-        );
+        showToast({
+            text: `Экспортирован index.html — ${formatBytes(bytes)}, ${status}`,
+            danger: !withinBudget,
+        });
     };
 
     return (

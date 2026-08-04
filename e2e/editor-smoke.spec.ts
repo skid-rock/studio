@@ -235,13 +235,6 @@ test('пустое состояние холста: ch-cv-empty, вставка,
 });
 
 test('экспорт: вес в бюджете 190 KiB, якоря разметки на месте', async ({ page }) => {
-    // Экспорт показывает alert — регистрируем обработчик ДО клика
-    const dialogs: string[] = [];
-    page.on('dialog', (dialog) => {
-        dialogs.push(dialog.message());
-        void dialog.accept();
-    });
-
     await page.getByRole('tab', { name: 'Страница' }).click();
     const downloadPromise = page.waitForEvent('download');
     await page.getByRole('button', { name: 'Экспорт HTML' }).click();
@@ -251,7 +244,7 @@ test('экспорт: вес в бюджете 190 KiB, якоря размет�
     const filePath = await download.path();
     const html = readFileSync(filePath!, 'utf-8');
 
-    // Вес — независимо от alert, тем же способом, что buildExportHtml
+    // Вес — независимо от тоста, тем же способом, что buildExportHtml
     expect(new TextEncoder().encode(html).length).toBeLessThanOrEqual(BUDGET_BYTES);
 
     // Ключевые якоря экспортированной разметки
@@ -260,7 +253,47 @@ test('экспорт: вес в бюджете 190 KiB, якоря размет�
     expect(html).toContain('data-prop="date"');
     expect(html).toContain('data-prop="title"');
 
-    // alert подтвердил бюджет
-    expect(dialogs.join('\n')).toContain('в бюджете');
-    expect(dialogs.join('\n')).not.toContain('ПРЕВЫШЕН');
+    // Отчёт о весе — тост (STUDIO-050). Роль + hasText: у status текст не
+    // становится accessible name, а голый getByRole ловит RSVP/dnd-kit.
+    const toast = page
+        .getByRole('status')
+        .filter({ hasText: 'Экспортирован index.html' });
+
+    await expect(toast).toContainText('Экспортирован index.html');
+    await expect(toast).toContainText('в бюджете');
+    await expect(toast).not.toContainText('ПРЕВЫШЕН');
+
+    // Уходит по кнопке
+    await toast.getByRole('button', { name: 'Скрыть' }).click();
+    await expect(toast).toBeHidden();
+});
+
+test('загрузка битого JSON: тост danger, «Ещё раз» открывает диалог', async ({
+    page,
+}) => {
+    await page.getByRole('tab', { name: 'Страница' }).click();
+
+    // Скрытый input — как в DocumentActions; setInputFiles обходит UI-диалог.
+    await page.locator('input[type="file"]').setInputFiles({
+        name: 'broken.json',
+        mimeType: 'application/json',
+        buffer: Buffer.from('{'),
+    });
+
+    // Ошибка — role=alert (danger). Фильтр по тексту: на странице могут быть
+    // и другие live-region'ы.
+    const toast = page
+        .getByRole('alert')
+        .filter({ hasText: 'Не удалось загрузить документ' });
+
+    await expect(toast).toBeVisible();
+    await expect(toast).toContainText('Невалидный JSON');
+
+    // «Ещё раз» = снова открыть файловый диалог (решение Р4), тост закрыть.
+    const fileChooserPromise = page.waitForEvent('filechooser');
+    await toast.getByRole('button', { name: 'Ещё раз' }).click();
+    const fileChooser = await fileChooserPromise;
+
+    expect(fileChooser.isMultiple()).toBe(false);
+    await expect(toast).toBeHidden();
 });

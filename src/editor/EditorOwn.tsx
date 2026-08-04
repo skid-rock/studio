@@ -12,6 +12,7 @@ import { Icon } from './icons';
 import { Palette } from './palette';
 import { PropertiesPanel } from './properties-panel';
 import { runModuleJs } from './section-scripts';
+import { ToastProvider } from './toast';
 
 // Таблица ДС (ch-*, --chrome-*): Vite инлайнит @import и переписывает пути шрифтов.
 import './ds/styles.css';
@@ -79,66 +80,68 @@ export function EditorOwn(): ReactElement {
         // Высота — inline: .ch-ed это grid без своей высоты, в эталоне она тоже
         // задана инлайном. Своего .css в src/editor/ быть не должно (STUDIO-051).
         <div className="ch-ed" style={{ height: '100dvh' }}>
-            <style>{FRAME_BASE_CSS}</style>
-            <style>{themeCss}</style>
-            <style>{MODULES_CSS}</style>
-            <style>{CANVAS_CSS}</style>
+            <ToastProvider>
+                <style>{FRAME_BASE_CSS}</style>
+                <style>{themeCss}</style>
+                <style>{MODULES_CSS}</style>
+                <style>{CANVAS_CSS}</style>
 
-            <Palette
-                store={store}
-                registry={defaultRegistry}
-                doc={state.document}
-                selectedId={state.selectedId}
-            />
-
-            <div className="ch-ed-toolbar ch-ed-toolbar--float">
-                <button
-                    type="button"
-                    className="ch-btn ch-btn--ghost ch-btn--icon"
-                    disabled={!store.canUndo()}
-                    onClick={() => store.undo()}
-                    title="Отменить (Cmd/Ctrl+Z)"
-                    aria-label="Отменить (Cmd/Ctrl+Z)"
-                >
-                    <Icon name="undo" />
-                </button>
-                <button
-                    type="button"
-                    className="ch-btn ch-btn--ghost ch-btn--icon"
-                    disabled={!store.canRedo()}
-                    onClick={() => store.redo()}
-                    title="Повторить (Shift+Cmd/Ctrl+Z)"
-                    aria-label="Повторить (Shift+Cmd/Ctrl+Z)"
-                >
-                    <Icon name="redo" />
-                </button>
-            </div>
-
-            <main
-                className="ch-ed-canvas"
-                onClick={(e) => {
-                    // Клик мимо секции снимает выделение. Ловим на всём холсте:
-                    // у .ch-ed-canvas есть свои пиксели (padding сверху/снизу и
-                    // гаттеры по бокам страницы), в отличие от прежней обёртки
-                    // холста, чей рект совпадал со страницей (STUDIO-048).
-                    if (!(e.target as HTMLElement).closest('.ch-cv-section')) {
-                        store.select(null);
-                    }
-                }}
-            >
-                <Canvas
+                <Palette
                     store={store}
+                    registry={defaultRegistry}
                     doc={state.document}
                     selectedId={state.selectedId}
                 />
-            </main>
 
-            <PropertiesPanel
-                store={store}
-                registry={defaultRegistry}
-                doc={state.document}
-                selectedId={state.selectedId}
-            />
+                <div className="ch-ed-toolbar ch-ed-toolbar--float">
+                    <button
+                        type="button"
+                        className="ch-btn ch-btn--ghost ch-btn--icon"
+                        disabled={!store.canUndo()}
+                        onClick={() => store.undo()}
+                        title="Отменить (Cmd/Ctrl+Z)"
+                        aria-label="Отменить (Cmd/Ctrl+Z)"
+                    >
+                        <Icon name="undo" />
+                    </button>
+                    <button
+                        type="button"
+                        className="ch-btn ch-btn--ghost ch-btn--icon"
+                        disabled={!store.canRedo()}
+                        onClick={() => store.redo()}
+                        title="Повторить (Shift+Cmd/Ctrl+Z)"
+                        aria-label="Повторить (Shift+Cmd/Ctrl+Z)"
+                    >
+                        <Icon name="redo" />
+                    </button>
+                </div>
+
+                <main
+                    className="ch-ed-canvas"
+                    onClick={(e) => {
+                        // Клик мимо секции снимает выделение. Ловим на всём холсте:
+                        // у .ch-ed-canvas есть свои пиксели (padding сверху/снизу и
+                        // гаттеры по бокам страницы), в отличие от прежней обёртки
+                        // холста, чей рект совпадал со страницей (STUDIO-048).
+                        if (!(e.target as HTMLElement).closest('.ch-cv-section')) {
+                            store.select(null);
+                        }
+                    }}
+                >
+                    <Canvas
+                        store={store}
+                        doc={state.document}
+                        selectedId={state.selectedId}
+                    />
+                </main>
+
+                <PropertiesPanel
+                    store={store}
+                    registry={defaultRegistry}
+                    doc={state.document}
+                    selectedId={state.selectedId}
+                />
+            </ToastProvider>
         </div>
     );
 }

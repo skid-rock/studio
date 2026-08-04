@@ -6,6 +6,7 @@ import { useRef } from 'react';
 
 import type { StudioDocument } from '../render-core/document';
 import { downloadDocument, readDocumentFile } from './document-io';
+import { useToast } from './toast';
 
 interface DocumentActionsProps {
     /** Текущий живой документ для сохранения. */
@@ -22,6 +23,7 @@ export function DocumentActions({
     onExport,
 }: DocumentActionsProps) {
     const fileRef = useRef<HTMLInputElement>(null);
+    const showToast = useToast();
 
     async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
@@ -34,8 +36,13 @@ export function DocumentActions({
         try {
             onLoad(await readDocumentFile(file));
         } catch (err) {
-            // Тост придёт в STUDIO-050; пока alert как раньше.
-            alert(`Не удалось загрузить документ: ${(err as Error).message}`);
+            // «Ещё раз» = открыть диалог заново, без запоминания файла (решение Р4).
+            showToast({
+                text: `Не удалось загрузить документ: ${(err as Error).message}`,
+                danger: true,
+                actionLabel: 'Ещё раз',
+                onAction: () => fileRef.current?.click(),
+            });
         }
     }
 
