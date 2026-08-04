@@ -215,7 +215,7 @@ input.ch-color-field__value[disabled]{color:var(--chrome-muted);cursor:default}
 .ch-cv-toolbar .ch-btn{width:var(--chrome-h-sm);height:var(--chrome-h-sm);padding:0;border:none;line-height:1}
 .ch-cv-drop{height:2px;margin-inline:40px;background:var(--chrome-accent);border-radius:var(--chrome-radius-pill)}
 .ch-cv-ghost{opacity:.55;transform:rotate(1.5deg);box-shadow:var(--chrome-shadow-pop)}
-.ch-cv-empty{font-family:var(--chrome-font);padding:56px 32px;border:2px dashed color-mix(in srgb,var(--chrome-accent) 30%,transparent);border-radius:var(--chrome-radius-lg);background:var(--chrome-panel);text-align:center;color:var(--chrome-muted);font-size:var(--chrome-size);width:100%;max-width:var(--chrome-cv-page);box-sizing:border-box}
+.ch-cv-empty{font-family:var(--chrome-font);padding:56px 32px;border:2px dashed color-mix(in srgb,var(--chrome-accent) 30%,transparent);border-radius:var(--chrome-radius-lg);background:var(--chrome-panel);text-align:center;color:var(--chrome-muted);font-size:var(--chrome-size);width:100%;max-width:var(--chrome-cv-page);box-sizing:border-box;margin-inline:auto}
 .ch-inline-edit{outline:1px dashed var(--chrome-accent);outline-offset:3px}
 .ch-inline-caret{display:inline-block;width:1px;height:.9em;background:currentColor;vertical-align:-.08em;margin-left:2px}
 
@@ -325,7 +325,7 @@ input.ch-color-field__value[disabled]{color:var(--chrome-muted);cursor:default}
 .ch-ed{font-family:var(--chrome-font);color:var(--chrome-text);position:relative;box-sizing:border-box;min-width:var(--chrome-win-min);display:grid;grid-template:'palette canvas panel' 1fr / 260px minmax(360px,1fr) 320px;gap:var(--chrome-gap);padding:var(--chrome-gap);background-color:var(--chrome-scene);background-image:var(--chrome-scene-bg);overflow:hidden}
 .ch-ed-palette{grid-area:palette;display:flex;flex-direction:column;border-radius:var(--chrome-radius-xl);overflow-y:auto}
 .ch-ed-panel{grid-area:panel;display:flex;flex-direction:column;border-radius:var(--chrome-radius-xl);overflow-y:auto}
-.ch-ed-canvas{grid-area:canvas;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:64px 0 76px}
+.ch-ed-canvas{grid-area:canvas;overflow-y:auto;padding:64px 0 76px}
 .ch-ed-toolbar{display:flex;align-items:center;gap:6px;padding:6px;background:var(--chrome-panel);border-radius:var(--chrome-radius-lg);box-shadow:var(--chrome-shadow-float)}
 .ch-ed-toolbar--float{grid-area:canvas;align-self:start;justify-self:center;z-index:var(--chrome-z-float)}
 .ch-ed-toolbar .ch-btn{height:var(--chrome-h-lg)}
@@ -336,7 +336,7 @@ input.ch-color-field__value[disabled]{color:var(--chrome-muted);cursor:default}
 .ch-ed-dock .ch-seg{background:transparent;padding:0}
 .ch-ed-dock .ch-seg__opt{padding:0 14px}
 .ch-ed-dock .ch-seg__opt.is-active{background:var(--chrome-accent);color:var(--chrome-on-accent);box-shadow:none}
-.ch-cv-page{width:100%;max-width:var(--chrome-cv-page);background:var(--chrome-panel);border-radius:var(--chrome-radius-lg);box-shadow:var(--chrome-shadow-panel);overflow:hidden}
+.ch-cv-page{width:100%;max-width:var(--chrome-cv-page);margin-inline:auto;background:var(--chrome-panel);border-radius:0;box-shadow:var(--chrome-shadow-panel);overflow:hidden}
 /* Тост в окне редактора: место в сетке — тоже модификатор, не инлайн. */
 .ch-toast--float{grid-area:canvas;align-self:end;justify-self:center;margin-bottom:20px;z-index:var(--chrome-z-float)}
 

@@ -22,6 +22,21 @@ test('загрузка сэмпла: hero на холсте, панель вык
     ).toBeDisabled();
 });
 
+// STUDIO-054: страница на холсте не должна сжиматься во viewport (flex-shrink),
+// иначе scrollHeight ≈ clientHeight и нижние секции недостижимы.
+test('холст прокручивается до последней секции', async ({ page }) => {
+    const canvas = page.locator('main.ch-ed-canvas');
+    const metrics = await canvas.evaluate((el) => ({
+        scrollHeight: el.scrollHeight,
+        clientHeight: el.clientHeight,
+    }));
+    expect(metrics.scrollHeight).toBeGreaterThan(metrics.clientHeight);
+
+    const last = page.locator('[data-block="closing"]');
+    await last.scrollIntoViewIfNeeded();
+    await expect(last).toBeInViewport();
+});
+
 test('панель свойств: несколько символов подряд без потери фокуса', async ({ page }) => {
     // Клик по содержимому всплывает в обёртку секции и выделяет её.
     await page.locator('[data-block="hero"]').click();
@@ -81,11 +96,22 @@ test('снятие выделения: панель глохнет, но пом�
     const names = panel.getByRole('textbox', { name: 'Имена' });
     await expect(names).toBeEnabled();
 
-    // Снятие выделения — клик по фону холста: у main.ch-ed-canvas свои поля
-    // (padding сверху и гаттеры по бокам страницы), туда мышь попадает.
-    await page
-        .locator('main.ch-ed-canvas')
-        .click({ position: { x: 20, y: 20 } });
+    // Снятие выделения — клик по фону холста: у main.ch-ed-canvas свой
+    // padding сверху (64px), туда мышь и попадает.
+    // Прокрутку сбрасываем обязательно: position у click отсчитывается от
+    // padding-box контейнера, а не от его содержимого. Клик по hero выше
+    // прокрутил холст (STUDIO-054 вернул ему прокрутку), и на прокрученном
+    // холсте точка {20,20} накрывает уже саму страницу — клик выделил бы
+    // секцию вместо снятия выделения.
+    // Боковых гаттеров у страницы здесь нет: при viewport 1280 колонка
+    // холста 652px, что уже --chrome-cv-page 720px, поэтому фон — только
+    // полосы padding сверху и снизу.
+    const canvas = page.locator('main.ch-ed-canvas');
+
+    await canvas.evaluate((el) => {
+        el.scrollTop = 0;
+    });
+    await canvas.click({ position: { x: 20, y: 20 } });
 
     // Правило «выделенная → последняя выделенная → первая в документе»: разметка
     // та же, заголовок прежний, поля выключены (STUDIO-048). Первая секция
