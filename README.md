@@ -21,20 +21,32 @@ make clean     # удалить node_modules и dist
 ```
 
 `make help` — список всех команд. Под капотом — npm-скрипты (`dev`, `build`,
-`preview`, `lint`, `format`, `verify`, `export`, `ds:sync`, `ds:check`).
+`preview`, `lint`, `format`, `verify`, `export`, `ds:sync`, `ds:check`,
+`ds:intake`).
 
 ### Дизайн-система хрома
 
-Исходник — `docs/design/` (побайтовый экспорт из Designer). Продукт читает
-копию в `src/editor/ds/`. После переэкспорта в `docs/design/`:
+**Источник истины — `docs/design/`.** Claude Design — поверхность; продукт читает
+копию в `src/editor/ds/` ([ADR-0006](docs/adr/ADR-0006-chrome-ds-consumption.md),
+[D9](../gd-brain/docs/strategy/decisions/2026-08-03-claude-design-channel.md)).
+
+Два канала обновления:
+
+1. **DesignSync** (основной) — паритет репо ↔ проект «Studio» в Claude Design
+   (`list_files` → `finalize_plan` → `write_files`; проверка — `get_file` + sha256).
+2. **Архив** — распаковать в `docs/design/` и сказать агенту («ДС приземлена»);
+   агент гоняет intake и отдаёт отчёт.
 
 ```bash
-npm run ds:sync   # обновить копию
-npm run ds:check  # побайтовая сверка (входит в verify)
+make ds-sync     # обновить копию src/editor/ds/
+make ds-check    # побайтовая сверка (входит в verify)
+make ds-intake    # sync + check + verify + сводка для отчёта
 ```
 
-Править только исходник; правка копии — ошибка, `verify` станет красным
-([ADR-0006](docs/adr/ADR-0006-chrome-ds-consumption.md)).
+Править только `docs/design/`; правка копии — ошибка. Новый файл для продукта —
+дописать `scripts/ds-files.mts`. Шаблон отчёта —
+[`gd-brain/docs/studio/ds-intake-report-template.md`](../gd-brain/docs/studio/ds-intake-report-template.md).
+Гид по классам и токенам — [`docs/design/readme.md`](docs/design/readme.md).
 
 ### Перенос секции из Figma
 
@@ -94,8 +106,10 @@ studio/
   (superseded ADR-0005).
 - [ADR-0005](docs/adr/ADR-0005-editor-own-engine.md) — собственный движок
   редактора; `@measured/puck` удалён.
-- [ADR-0006](docs/adr/ADR-0006-chrome-ds-consumption.md) — потребление ДС
-  хрома: синк в `src/editor/ds/`, не прямой импорт из `docs/`.
+- [ADR-0006](docs/adr/ADR-0006-chrome-ds-consumption.md) — ДС хрома: SoT
+  `docs/design/`, синк в `src/editor/ds/`, каналы DesignSync и архив/intake.
+- [ADR-0007](docs/adr/ADR-0007-template-contract.md) — эталон `editor-mvp` как
+  машинный контракт «эталон = код ⊆ ДС».
 
 ## Стек
 

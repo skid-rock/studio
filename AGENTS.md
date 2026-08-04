@@ -14,7 +14,8 @@
 
 - Dev-сервер и Playwright base URL студии — порт `5577` (не дефолтный Vite 5173).
 - Задачи и планы реализации studio живут в `../gd-brain/tasks/studio/` (`STUDIO-NNN`); статусы обновляются там, не в репозитории studio.
-- HTML-мокапы в `docs/design/editor/` — историческая спека/песочница; актуальный UI — живой редактор; принципы — `docs/design/design-system.md`.
+- HTML-мокапы в `docs/design/editor/` — историческая спека/песочница; актуальный UI — живой редактор; принципы и токены — `docs/design/readme.md` (каталог `docs/design/` — SoT ДС хрома).
+- **ДС хрома:** SoT = `docs/design/`; продукт = копия `src/editor/ds/` (`ds:sync` / `ds:check`). Паритет с Claude Design — **DesignSync**; bulk/архив — распаковка в `docs/design/` + сигнал агенту → skill `ds-intake` / `make ds-intake` + отчёт по `../gd-brain/docs/studio/ds-intake-report-template.md`. Не править `src/editor/ds/` руками. Канон: ADR-0006, D9 в gd-brain.
 - Запись багов/техдолга: `docs/improvements/bugs.md` и `docs/improvements/backlog.md` (IMP-xxx).
 - Локальный клон `figma-use` для bun-link: `/Users/alexey/devp/figma-use` (master с GitHub).
 - Общее для Figma CLI: из URL `node-id` (`38-2` → `38:2`); Figma desktop с `--remote-debugging-port=9222`; `figma-use status` → Connected. Цели Makefile — `README.md` § «Перенос секции из Figma».

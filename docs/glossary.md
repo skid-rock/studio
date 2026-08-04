@@ -211,10 +211,12 @@ React-обёртка превью: зовёт тот же `mod.render(props, ctx
 
 ### **ДС хрома (дизайн-система хрома)**
 
-CSS-система хрома, собранная в Claude Designer и лежащая в репозитории побайтовым
-экспортом: токены `--chrome-*`, слой компонентов `ch-*`, витрины, шаблоны окон.
-Импортируемых JS-компонентов в ней нет — хром собирается разметкой продукта.
-[docs/design/readme.md](design/readme.md) · [ADR-0006](adr/ADR-0006-chrome-ds-consumption.md)
+CSS-система хрома. **Источник истины — `docs/design/`** (токены `--chrome-*`,
+слой `ch-*`, витрины, шаблоны, adherence). Claude Design — поверхность
+редактирования; паритет через DesignSync или архив. Импортируемых JS-компонентов
+нет — хром собирается разметкой продукта.
+[docs/design/readme.md](design/readme.md) · [ADR-0006](adr/ADR-0006-chrome-ds-consumption.md) ·
+[D9](../../../gd-brain/docs/strategy/decisions/2026-08-03-claude-design-channel.md)
 
 ### **`ch-*` / `is-*`**
 
@@ -233,10 +235,10 @@ CSS-система хрома, собранная в Claude Designer и лежа
 
 ### **эталон-шаблон (`templates/editor-mvp/`)**
 
-Шаблон окна редактора, собранный в Designer под текущий минимально необходимый
-функционал. Работает **контрактом**: чекер требует равенства множеств классов
-«эталон = код» и вложенности «код ⊆ ДС». Правка вёрстки хрома начинается в
-Designer, а не в TSX.
+Шаблон окна редактора под текущий минимально необходимый функционал. Работает
+**контрактом**: чекер требует равенства множеств классов «эталон = код» и
+вложенности «код ⊆ ДС». Правка вёрстки хрома начинается в `docs/design/`, не в TSX;
+паритет с Designer — DesignSync или архив.
 [ADR-0007](adr/ADR-0007-template-contract.md)
 
 ### **витрина будущего / резерв ДС**
@@ -252,13 +254,21 @@ Designer, а не в TSX.
 `docs/design/_adherence.oxlintrc.json`: запрет литералов hex и px, запрет чужих
 шрифтов, реестр 56 токенов с типами. Исполняется oxlint по файлам хрома.
 
-### **`ds:sync` / `ds:check`**
+### **`ds:sync` / `ds:check` / `ds:intake`**
 
-Канал ДС в сборку: `ds:sync` копирует `styles.css`, `styles/*.css` и
-`assets/fonts/*` из `docs/design/` в `src/editor/ds/`; `ds:check` побайтово (sha256)
-сверяет копию с исходником и валит `verify` при расхождении. Правда одностороння:
-правится только исходник.
-[ADR-0006](adr/ADR-0006-chrome-ds-consumption.md)
+Канал ДС в сборку: `ds:sync` копирует файлы из `DS_FILES` (`docs/design/` →
+`src/editor/ds/`); `ds:check` побайтово (sha256) сверяет копию и валит `verify`
+при расхождении; `ds:intake` / `make ds-intake` — sync + check + verify и сводка
+для отчёта при приёме архива или после DesignSync. Правда одностороння: правится
+только `docs/design/`.
+[ADR-0006](adr/ADR-0006-chrome-ds-consumption.md) ·
+[шаблон отчёта](../../../gd-brain/docs/studio/ds-intake-report-template.md)
+
+### **DesignSync**
+
+Инструмент Claude Design для записи файлов проекта «Studio». Основной канал
+паритета репозиторий ↔ Designer (`list_files` → `finalize_plan` → `write_files`).
+Крупные бинарники и bulk — архивом в `docs/design/` + ритуал intake.
 
 ## Процесс / контроль
 

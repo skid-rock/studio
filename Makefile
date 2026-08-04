@@ -3,6 +3,7 @@
 
 .DEFAULT_GOAL := help
 .PHONY: help install dev build preview lint format tokens export verify e2e clean \
+	ds-sync ds-check ds-intake \
 	figma-inventory figma-export figma-lint figma-check
 
 # Пресет линта «studio» для макетов Figma: состав правил задан явным списком,
@@ -44,8 +45,17 @@ tokens: ## Сгенерировать CSS-токены из DTCG JSON
 export: ## Статический экспорт примера лендинга в dist-export/
 	npm run tokens && npm run export
 
-verify: ## Единый гейт сдачи: токены + lint + build (tsc) + тесты
+verify: ## Единый гейт сдачи: токены + ds:check + lint + build (tsc) + тесты
 	npm run verify
+
+ds-sync: ## Скопировать ДС docs/design → src/editor/ds
+	npm run ds:sync
+
+ds-check: ## Побайтовая сверка копии ДС с docs/design
+	npm run ds:check
+
+ds-intake: ## Приём обновления ДС: sync + check + verify + сводка
+	npm run ds:intake
 
 e2e: ## e2e-смоук редактора (Playwright)
 	npm run test:e2e

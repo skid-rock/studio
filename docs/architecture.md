@@ -128,6 +128,18 @@ render:
 Границу держат `editor-core` (без React) и ESLint-ограждения. Замена оболочки —
 переписать `src/editor/`, не трогая ядро ([ADR-0005](adr/ADR-0005-editor-own-engine.md)).
 
+## 5a. Дизайн-система хрома
+
+Хром редактора — CSS-система `ch-*` / `--chrome-*`. **Источник истины —
+[`docs/design/`](design/readme.md)**; продукт подключает синкнутую копию
+[`src/editor/ds/`](../src/editor/ds/) (`ds:sync` / `ds:check`). Claude Design —
+поверхность; паритет — DesignSync или архив + `ds:intake`
+([ADR-0006](adr/ADR-0006-chrome-ds-consumption.md),
+[D9](../../../gd-brain/docs/strategy/decisions/2026-08-03-claude-design-channel.md)).
+Эталон окна — контракт классов «эталон = код ⊆ ДС»
+([ADR-0007](adr/ADR-0007-template-contract.md)). Контур темы лендинга
+(`src/tokens/`) в хром не протекает.
+
 ## 6. Карта файлов ядра (`render-core/`)
 
 | Файл                                                          | Ответственность                                                                                        |
@@ -155,6 +167,9 @@ render:
   историческое, до STUDIO-035).
 - [ADR-0005](adr/ADR-0005-editor-own-engine.md) — собственный движок редактора;
   `@measured/puck` удалён.
+- [ADR-0006](adr/ADR-0006-chrome-ds-consumption.md) — ДС хрома: SoT `docs/design/`,
+  синк в `src/editor/ds/`, DesignSync и архив/intake.
+- [ADR-0007](adr/ADR-0007-template-contract.md) — эталон `editor-mvp` как контракт.
 
 ## Ссылки
 

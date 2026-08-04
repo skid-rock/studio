@@ -25,6 +25,9 @@ studio — конструктор лендингов: визуальный ре�
 - `src/sections/` — модули блоков (`intro-envelope`, `hero`, `closing`, …) +
   `registry.default.ts`. Зависит от `render-core`, не наоборот.
 - `src/tokens/` — токены темы (DTCG JSON → CSS через Style Dictionary), `theme.ts`.
+- `docs/design/` — **источник истины** дизайн-системы хрома (`ch-*`, `--chrome-*`);
+  продукт читает копию `src/editor/ds/` (`ds:sync`). Claude Design — поверхность
+  (DesignSync / архив + `ds:intake`). Гид — `docs/design/readme.md`.
 - `src/editor-core/` — агностичный стор редактора: команды, selection, undo/redo
   над `StudioDocument` (без React).
 - `src/editor/` — собственный редактор (React-UI): холст, палитра, панель свойств,
