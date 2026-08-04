@@ -1,7 +1,6 @@
 /**
- * Временный дом управления страницей (STUDIO-047): тема, оверрайды токенов,
- * сохранение/загрузка, экспорт HTML. Переехало из topbar.tsx как есть — на ДС
- * это хозяйство переводит STUDIO-048 (вкладка «Страница» правой панели).
+ * Вкладка «Страница» правой панели (STUDIO-048): тема, оверрайды токенов,
+ * сохранение/загрузка, экспорт HTML. Разметка — эталон editor-mvp, строки 138–160.
  */
 import type { ReactElement } from 'react';
 
@@ -15,12 +14,12 @@ import { resolveThemeCss, themeCssById } from './theme-assets';
 import { ThemeOverrides } from './theme-overrides';
 import { ThemeSwitcher } from './theme-switcher';
 
-export interface PageControlsProps {
+export interface PageTabProps {
     store: EditorStore;
     doc: StudioDocument;
 }
 
-export function PageControls({ store, doc }: PageControlsProps): ReactElement {
+export function PageTab({ store, doc }: PageTabProps): ReactElement {
     /** Изменить точечный оверрайд токена темы ('' — снять оверрайд). */
     const handleOverrideChange = (key: string, value: string): void => {
         const overrides = { ...(doc.theme.overrides ?? {}) };
@@ -53,21 +52,27 @@ export function PageControls({ store, doc }: PageControlsProps): ReactElement {
     };
 
     return (
-        <div>
+        <>
+            <p className="ch-panel__title">Страница</p>
             <ThemeSwitcher
                 value={doc.theme.id}
                 onChange={(id) => store.setTheme(id)}
             />
+            <p className="ch-panel__hint">
+                Оверрайды пишутся в документ и уезжают в экспорт.
+            </p>
+            <hr className="ch-panel__sep ch-panel__sep--flush" />
             <ThemeOverrides
                 value={doc.theme.overrides}
                 presetCss={themeCssById(doc.theme.id)}
                 onChange={handleOverrideChange}
             />
+            <hr className="ch-panel__sep ch-panel__sep--flush" />
             <DocumentActions
                 getDoc={() => store.getState().document}
                 onLoad={(loaded) => store.loadDocument(loaded)}
                 onExport={handleExport}
             />
-        </div>
+        </>
     );
 }

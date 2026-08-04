@@ -32,13 +32,19 @@ function mount(
     schema: ParamSchema,
     values: Record<string, unknown>,
     onChange: (key: string, value: unknown) => void = vi.fn(),
+    disabled = false,
 ): { onChange: typeof onChange } {
     container = document.createElement('div');
     document.body.appendChild(container);
     root = createRoot(container);
     act(() => {
         root.render(
-            <SchemaFields schema={schema} values={values} onChange={onChange} />,
+            <SchemaFields
+                schema={schema}
+                values={values}
+                disabled={disabled}
+                onChange={onChange}
+            />,
         );
     });
 
@@ -83,7 +89,7 @@ describe('SchemaFields', () => {
 
         mount(schema, { lineWidth: 1.5 });
 
-        expect(container.querySelector('label')?.firstElementChild?.textContent).toBe(
+        expect(container.querySelector('.ch-field__label')?.textContent).toBe(
             'Толщина линии, px',
         );
         const range = container.querySelector(
@@ -121,7 +127,7 @@ describe('SchemaFields', () => {
 
         mount(schema, {});
 
-        expect(container.querySelector('label')?.firstElementChild?.textContent).toBe(
+        expect(container.querySelector('.ch-field__label')?.textContent).toBe(
             'Длина дуги',
         );
     });
@@ -141,42 +147,77 @@ describe('SchemaFields', () => {
         const ta = container.querySelector('textarea') as HTMLTextAreaElement;
         expect(ta).toBeTruthy();
         expect(ta.value).toBe('А & Б');
-        expect(container.querySelector('label')?.firstElementChild?.textContent).toBe(
+        expect(container.querySelector('.ch-field__label')?.textContent).toBe(
             'Имена',
         );
     });
 
-    it('select → select с options', () => {
-        const options = [
-            { value: 'left', label: 'Слева' },
-            { value: 'center', label: 'По центру' },
-        ];
+    it('disabled: нативные контролы выключены, кнопки групп активны', () => {
         const schema: ParamSchema = [
             {
-                group: 'Лейаут',
+                group: 'A',
                 items: [
                     {
-                        key: 'align',
-                        label: 'Выравнивание',
-                        type: 'select',
-                        options,
-                        def: 'center',
+                        key: 'lineWidth',
+                        label: 'Толщина линии',
+                        min: 0,
+                        max: 4,
+                        step: 0.25,
+                        def: 1,
+                        unit: 'px',
+                    },
+                ],
+            },
+            {
+                group: 'B',
+                items: [
+                    {
+                        key: 'lineColor',
+                        label: 'Цвет линии',
+                        type: 'color',
+                        def: '#275889',
                     },
                 ],
             },
         ];
 
-        mount(schema, { align: 'left' });
+        mount(schema, { lineWidth: 1.5, lineColor: '#aabbcc' }, vi.fn(), true);
 
-        const sel = container.querySelector('select') as HTMLSelectElement;
-        expect(sel.value).toBe('left');
-        expect([...sel.options].map((o) => o.value)).toEqual([
-            'left',
-            'center',
-        ]);
+        const range = container.querySelector(
+            'input[type="range"]',
+        ) as HTMLInputElement;
+        const number = container.querySelector(
+            'input[type="number"]',
+        ) as HTMLInputElement;
+
+        expect(range.disabled).toBe(true);
+        expect(number.disabled).toBe(true);
+
+        const buttons = [
+            ...container.querySelectorAll('button.ch-panel__section'),
+        ] as HTMLButtonElement[];
+        const btnB = buttons.find((b) => b.textContent?.trim() === 'B');
+        expect(btnB).toBeTruthy();
+        expect(btnB!.disabled).toBe(false);
+
+        expect(container.querySelector('.ch-color-field__swatch')).toBeNull();
+
+        act(() => {
+            btnB!.click();
+        });
+
+        const swatch = container.querySelector(
+            '.ch-color-field__swatch',
+        ) as HTMLInputElement;
+        const hex = container.querySelector(
+            '.ch-color-field__value',
+        ) as HTMLInputElement;
+
+        expect(swatch.disabled).toBe(true);
+        expect(hex.disabled).toBe(true);
     });
 
-    it('color → свотч + hex-текст', () => {
+    it('color → свотч + hex-текст и hex-guard', () => {
         const schema: ParamSchema = [
             {
                 group: 'Цвета',
@@ -191,22 +232,35 @@ describe('SchemaFields', () => {
             },
         ];
 
-        mount(schema, { lineColor: '#aabbcc' });
+        const onChange = vi.fn();
+        mount(schema, { lineColor: '#aabbcc' }, onChange);
 
         const swatch = container.querySelector(
-            'input[type="color"]',
+            '.ch-color-field__swatch',
         ) as HTMLInputElement;
-        const hex = swatch.parentElement?.querySelector(
-            'input[type="text"]',
+        const hex = container.querySelector(
+            '.ch-color-field__value',
         ) as HTMLInputElement;
         expect(swatch.value).toBe('#aabbcc');
         expect(hex.value).toBe('#aabbcc');
-        expect(container.querySelector('label')?.firstElementChild?.textContent).toBe(
+
+        expect(container.querySelector('.ch-field__label')?.textContent).toBe(
             'Цвет линии',
         );
+        expect(onChange).not.toHaveBeenCalled();
+
+        act(() => {
+            setInputValue(hex, '#zz');
+        });
+        expect(onChange).not.toHaveBeenCalled();
+
+        act(() => {
+            setInputValue(hex, '#112233');
+        });
+        expect(onChange).toHaveBeenCalledWith('lineColor', '#112233');
     });
 
-    it('плющит группы: все ключи схемы видны как поля', () => {
+    it('группы: сворачиваемые и плоская единственная', () => {
         const schema: ParamSchema = [
             {
                 group: 'A',
@@ -232,13 +286,55 @@ describe('SchemaFields', () => {
         mount(schema, { a: 'x', b: 0.5, c: '#000000' });
 
         const titles = [
-            ...container.querySelectorAll('h3'),
-        ].map((el) => el.textContent);
+            ...container.querySelectorAll('button.ch-panel__section'),
+        ].map((el) => el.textContent?.trim());
         expect(titles).toEqual(['A', 'B']);
-        const labels = [...container.querySelectorAll('label')].map(
-            (label) => label.firstElementChild?.textContent,
+
+        // По умолчанию открыт только первый group.
+        const labelsInitial = [
+            ...container.querySelectorAll('.ch-field__label'),
+        ].map((el) => el.textContent?.trim());
+        expect(labelsInitial).toEqual(['A']);
+
+        const buttons = [
+            ...container.querySelectorAll('button.ch-panel__section'),
+        ] as HTMLButtonElement[];
+        const btnB = buttons.find((b) => b.textContent?.trim() === 'B');
+
+        act(() => {
+            btnB?.click();
+        });
+
+        const labelsAfter = [
+            ...container.querySelectorAll('.ch-field__label'),
+        ].map((el) => el.textContent?.trim());
+        expect(labelsAfter).toEqual(['A', 'B', 'C']);
+
+        // Второй кейс: одна группа — без раскрывашек.
+        act(() => {
+            root.unmount();
+        });
+        container.remove();
+
+        const singleSchema: ParamSchema = [
+            {
+                group: 'Only',
+                items: [{ key: 'x', label: 'X', type: 'text', def: '' }],
+            },
+        ];
+
+        mount(singleSchema, { x: 'y' });
+
+        expect(container.querySelector('.ch-panel__group')?.textContent?.trim()).toBe(
+            'Only',
         );
-        expect(labels).toEqual(['A', 'B', 'C']);
+        expect(container.querySelectorAll('button.ch-panel__section')).toHaveLength(
+            0,
+        );
+        const singleLabels = [
+            ...container.querySelectorAll('.ch-field__label'),
+        ].map((el) => el.textContent?.trim());
+        expect(singleLabels).toEqual(['X']);
     });
 
     it('onChange: text → string, range → number, select → string', () => {
@@ -272,9 +368,12 @@ describe('SchemaFields', () => {
         const onChange = vi.fn();
         mount(schema, { title: 'hi', gap: 4, align: 'left' }, onChange);
 
-        const ta = container.querySelector('textarea') as HTMLTextAreaElement;
+        const tas = [
+            ...container.querySelectorAll('textarea.ch-textarea'),
+        ] as HTMLTextAreaElement[];
+        expect(tas.length).toBe(2);
         act(() => {
-            setInputValue(ta, 'hello');
+            setInputValue(tas[0], 'hello');
         });
 
         const number = container.querySelector(
@@ -284,9 +383,8 @@ describe('SchemaFields', () => {
             setInputValue(number, '7');
         });
 
-        const sel = container.querySelector('select') as HTMLSelectElement;
         act(() => {
-            setInputValue(sel, 'right');
+            setInputValue(tas[1], 'right');
         });
 
         expect(onChange).toHaveBeenCalledWith('title', 'hello');

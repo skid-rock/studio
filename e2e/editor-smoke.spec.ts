@@ -13,9 +13,13 @@ test.beforeEach(async ({ page }) => {
     await expect(page.locator('[data-section-id]')).toHaveCount(10);
 });
 
-test('загрузка сэмпла: hero на холсте, панель пустая до выделения', async ({ page }) => {
+test('загрузка сэмпла: hero на холсте, панель выключена до выделения', async ({ page }) => {
     await expect(page.locator('[data-block="hero"]')).toBeVisible();
-    await expect(page.getByText('Выберите секцию на холсте')).toBeVisible();
+    // Панель не прячется и не подменяется текстом — показывает схему первой секции
+    // выключенной (STUDIO-048).
+    await expect(
+        page.getByRole('slider', { name: 'Высота схождения' }),
+    ).toBeDisabled();
 });
 
 test('панель свойств: несколько символов подряд без потери фокуса', async ({ page }) => {
@@ -67,6 +71,88 @@ test('inline-правка на холсте + undo/redo (кнопки и хот�
     await expect(date).toHaveText(before);
 });
 
+test('снятие выделения: панель глохнет, но помнит последнюю секцию', async ({
+    page,
+}) => {
+    await page.locator('[data-block="hero"]').click();
+    const panel = page
+        .getByRole('complementary')
+        .filter({ has: page.getByRole('tab', { name: 'Секция' }) });
+    const names = panel.getByRole('textbox', { name: 'Имена' });
+    await expect(names).toBeEnabled();
+
+    // Снятие выделения — DOM-клик по .own-canvas, а не pointer: у обёртки холста
+    // сегодня нет ни одного своего пикселя (её рект совпадает с .own-page, гаттеры
+    // принадлежат main.ch-ed-canvas), поэтому мышью до select(null) не дотянуться.
+    // Проверяем память панели, а не попадание по фону — зона холста в STUDIO-049.
+    await page.locator('.own-canvas').evaluate((el) => {
+        (el as HTMLElement).click();
+    });
+
+    // Правило «выделенная → последняя выделенная → первая в документе»: разметка
+    // та же, заголовок прежний, поля выключены (STUDIO-048). Первая секция
+    // документа — конверт, так что hero тут доказывает именно память панели.
+    await expect(panel.locator('.ch-panel__title')).toHaveText(
+        'Hero (имена и дата)',
+    );
+    await expect(names).toBeDisabled();
+    await expect(
+        panel.getByText('Ничего не выделено', { exact: false }),
+    ).toBeVisible();
+});
+
+test('вкладки: переключение не сбрасывает выделение секции', async ({
+    page,
+}) => {
+    await page.locator('[data-block="hero"]').click();
+    // complementary — и палитра, и правая панель; сужаем по вкладкам.
+    const panel = page
+        .getByRole('complementary')
+        .filter({ has: page.getByRole('tab', { name: 'Секция' }) });
+    const names = panel.getByRole('textbox', { name: 'Имена' });
+    await expect(names).toBeEnabled();
+    await expect(
+        panel.locator('.ch-panel__title'),
+    ).toHaveText('Hero (имена и дата)');
+
+    await page.getByRole('tab', { name: 'Страница' }).click();
+    await expect(page.getByLabel('Тема')).toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Экспорт HTML' }),
+    ).toBeVisible();
+
+    await page.getByRole('tab', { name: 'Секция' }).click();
+    await expect(names).toBeEnabled();
+    await expect(
+        panel.locator('.ch-panel__title'),
+    ).toHaveText('Hero (имена и дата)');
+});
+
+test('пустой документ: панель показывает «нет секций»', async ({ page }) => {
+    // Pointer-клик по тулбару нестабилен: у конверта modal-оверлей и tall
+    // секция уезжают из viewport. Удаляем через DOM-click кнопки — проверяем
+    // именно пустое состояние панели, не hover-тулбар.
+    const sections = page.locator('.own-section');
+    const count = await sections.count();
+
+    for (let i = 0; i < count; i++) {
+        await sections.last().evaluate((el) => {
+            const btn = el.querySelector(
+                '[aria-label="Удалить секцию"]',
+            ) as HTMLButtonElement | null;
+            btn?.click();
+        });
+    }
+
+    await expect(page.locator('[data-section-id]')).toHaveCount(0);
+    await expect(page.getByText('В документе нет секций')).toBeVisible();
+    await expect(
+        page.getByText(
+            'Добавьте блок из палитры — панель покажет его поля',
+        ),
+    ).toBeVisible();
+});
+
 test('экспорт: вес в бюджете 190 KiB, якоря разметки на месте', async ({ page }) => {
     // Экспорт показывает alert — регистрируем обработчик ДО клика
     const dialogs: string[] = [];
@@ -75,8 +161,9 @@ test('экспорт: вес в бюджете 190 KiB, якоря размет�
         void dialog.accept();
     });
 
+    await page.getByRole('tab', { name: 'Страница' }).click();
     const downloadPromise = page.waitForEvent('download');
-    await page.getByRole('button', { name: 'Экспорт' }).click();
+    await page.getByRole('button', { name: 'Экспорт HTML' }).click();
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toBe('index.html');
 

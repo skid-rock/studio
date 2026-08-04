@@ -27,7 +27,9 @@ export type IconName =
     | 'phone'
     | 'clipboard'
     | 'pencil'
-    | 'grid';
+    | 'grid'
+    | 'chevron-down'
+    | 'chevron-right';
 
 const PATHS: Record<IconName, ReactNode> = {
     // ── хром ──────────────────────────────────────────────────────────────
@@ -158,6 +160,9 @@ const PATHS: Record<IconName, ReactNode> = {
             <rect x="14" y="14" width="7" height="7" rx="1" />
         </>
     ),
+    // ── раскрывашки панели (STUDIO-048) ───────────────────────────────────
+    'chevron-down': <path d="m6 9 6 6 6-6" />,
+    'chevron-right': <path d="m9 6 6 6-6 6" />,
 };
 
 export interface IconProps {

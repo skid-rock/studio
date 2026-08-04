@@ -1,5 +1,5 @@
 /**
- * Кнопки «Сохранить» / «Загрузить» документа в шапке редактора (Puck headerActions).
+ * Действия документа во вкладке «Страница»: сохранить / загрузить / экспорт.
  * Загрузка — через скрытый <input type="file">. Слой редактора (React/DOM).
  */
 import { useRef } from 'react';
@@ -8,7 +8,7 @@ import type { StudioDocument } from '../render-core/document';
 import { downloadDocument, readDocumentFile } from './document-io';
 
 interface DocumentActionsProps {
-    /** Текущий живой документ для сохранения (docRef из Editor). */
+    /** Текущий живой документ для сохранения. */
     getDoc: () => StudioDocument;
     /** Применить загруженный документ (сброс холста). */
     onLoad: (doc: StudioDocument) => void;
@@ -34,20 +34,40 @@ export function DocumentActions({
         try {
             onLoad(await readDocumentFile(file));
         } catch (err) {
+            // Тост придёт в STUDIO-050; пока alert как раньше.
             alert(`Не удалось загрузить документ: ${(err as Error).message}`);
         }
     }
 
     return (
-        <>
-            <button type="button" onClick={() => downloadDocument(getDoc())}>
-                Сохранить
-            </button>
-            <button type="button" onClick={() => fileRef.current?.click()}>
-                Загрузить
-            </button>
-            <button type="button" onClick={onExport}>
-                Экспорт
+        <div className="ch-panel__foot">
+            <p className="ch-panel__group">Документ</p>
+            <div className="ch-panel__actions">
+                <button
+                    type="button"
+                    className="ch-btn ch-btn--ghost ch-btn--sm"
+                    onClick={() => downloadDocument(getDoc())}
+                >
+                    Сохранить
+                </button>
+                <button
+                    type="button"
+                    className="ch-btn ch-btn--ghost ch-btn--sm"
+                    onClick={() => fileRef.current?.click()}
+                >
+                    Загрузить
+                </button>
+            </div>
+            <p className="ch-panel__hint">
+                Самостоятельный index.html: картинки и шрифты — ссылками. Вес и бюджет
+                придут тостом.
+            </p>
+            <button
+                type="button"
+                className="ch-btn ch-btn--primary ch-btn--block"
+                onClick={onExport}
+            >
+                Экспорт HTML
             </button>
             <input
                 ref={fileRef}
@@ -56,6 +76,6 @@ export function DocumentActions({
                 hidden
                 onChange={handleFile}
             />
-        </>
+        </div>
     );
 }

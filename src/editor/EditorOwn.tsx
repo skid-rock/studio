@@ -9,7 +9,6 @@ import { resolveThemeCss } from './theme-assets';
 import { Canvas } from './canvas';
 import { CANVAS_CSS, FRAME_BASE_CSS, MODULES_CSS } from './frame-css';
 import { Icon } from './icons';
-import { PageControls } from './page-controls';
 import { Palette } from './palette';
 import { PropertiesPanel } from './properties-panel';
 import { runModuleJs } from './section-scripts';
@@ -119,9 +118,7 @@ export function EditorOwn(): ReactElement {
                 registry={defaultRegistry}
                 doc={state.document}
                 selectedId={state.selectedId}
-            >
-                <PageControls store={store} doc={state.document} />
-            </PropertiesPanel>
+            />
         </div>
     );
 }
