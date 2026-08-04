@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useRef, useState } from 'react';
+import { Fragment, useCallback, useMemo, useRef, useState } from 'react';
 import type { ReactElement } from 'react';
 
 import { RestrictToVerticalAxis } from '@dnd-kit/abstract/modifiers';
@@ -7,7 +7,13 @@ import {
     PointerActivationConstraints,
 } from '@dnd-kit/dom';
 import type { Customizable, Sensors } from '@dnd-kit/dom';
-import { DragDropProvider, useDragOperation } from '@dnd-kit/react';
+import { SortableKeyboardPlugin } from '@dnd-kit/dom/sortable';
+import {
+    DragDropProvider,
+    DragOverlay,
+    useDragOperation,
+} from '@dnd-kit/react';
+import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/react';
 import { useSortable, isSortable } from '@dnd-kit/react/sortable';
 
 import type { EditorStore } from '../editor-core';
@@ -45,6 +51,55 @@ const sensors: Customizable<Sensors> = (defaults) => [
     }),
 ];
 
+/** Live-порядок секций во время drag (паттерн tracker / TRCK-021). */
+interface LiveDrag {
+    movedId: string;
+    start: string[];
+    order: string[];
+}
+
+/**
+ * Переставить source относительно target по положению указателя.
+ * Идемпотентно: без изменений возвращает тот же массив (dragover частый).
+ */
+function applySectionDragOver(
+    order: string[],
+    sourceId: string,
+    targetId: string,
+    below: boolean,
+): string[] {
+    if (sourceId === targetId) {
+        return order;
+    }
+
+    const from = order.indexOf(sourceId);
+    const targetIdx = order.indexOf(targetId);
+
+    if (from < 0 || targetIdx < 0) {
+        return order;
+    }
+
+    const next = order.slice();
+    next.splice(from, 1);
+    let insertAt = next.indexOf(targetId);
+
+    if (insertAt < 0) {
+        return order;
+    }
+
+    if (below) {
+        insertAt += 1;
+    }
+
+    next.splice(insertAt, 0, sourceId);
+
+    if (next.length === order.length && next.every((id, i) => id === order[i])) {
+        return order;
+    }
+
+    return next;
+}
+
 /** Холст: страница из секций, выделение кликом, мини-тулбар, DnD-переупорядочивание. */
 export function Canvas({ store, doc, selectedId }: CanvasProps): ReactElement {
     const detachInline = useRef<(() => void) | null>(null);
@@ -62,30 +117,106 @@ export function Canvas({ store, doc, selectedId }: CanvasProps): ReactElement {
     );
 
     const sections = sortedSections(doc);
+    const byId = useMemo(
+        () => new Map(sections.map((node) => [node.id, node])),
+        [sections],
+    );
+
+    // Live-порядок: state для рендера, ref — для обработчиков dnd-kit (замыкание).
+    // OptimisticSortingPlugin отключён у useSortable — двигает DOM в обход React
+    // (см. tracker Card.tsx). Расступ делает React через onDragOver.
+    const [live, setLive] = useState<LiveDrag | null>(null);
+    const liveRef = useRef<LiveDrag | null>(null);
+    const updateLive = (value: LiveDrag | null): void => {
+        liveRef.current = value;
+        setLive(value);
+    };
+
+    const orderIds = live?.order ?? sections.map((node) => node.id);
+
+    const handleDragStart = (event: DragStartEvent): void => {
+        const { source } = event.operation;
+
+        if (!source || !isSortable(source) || typeof source.id !== 'string') {
+            return;
+        }
+
+        const ids = sortedSections(store.getState().document).map((s) => s.id);
+        updateLive({ movedId: source.id, start: ids, order: ids });
+    };
+
+    const handleDragOver = (event: DragOverEvent): void => {
+        const { source, target, position } = event.operation;
+        const prev = liveRef.current;
+
+        if (
+            !prev ||
+            !source ||
+            !target ||
+            !isSortable(source) ||
+            !isSortable(target)
+        ) {
+            return;
+        }
+
+        const sourceId = String(source.id);
+        const targetId = String(target.id);
+        // Ниже ли указатель центра цели — before/after (как tracker boardDragLive).
+        const center = target.shape?.center;
+        const below = center != null ? position.current.y > center.y : true;
+        const next = applySectionDragOver(
+            prev.order,
+            sourceId,
+            targetId,
+            below,
+        );
+
+        if (next !== prev.order) {
+            updateLive({ ...prev, order: next });
+        }
+    };
+
+    const handleDragEnd = (event: DragEndEvent): void => {
+        const session = liveRef.current;
+        updateLive(null);
+
+        // Отмена (Esc) — live сброшен, документ не трогаем.
+        if (event.canceled) {
+            return;
+        }
+
+        const { source } = event.operation;
+
+        if (session) {
+            const from = session.start.indexOf(session.movedId);
+            const to = session.order.indexOf(session.movedId);
+
+            if (from !== to && to >= 0) {
+                // to — индекс в полном списке с перемещённой секцией; совпадает
+                // с контрактом moveSection (индекс вставки в список без неё).
+                store.moveSection(session.movedId, to);
+            }
+
+            return;
+        }
+
+        // Фолбэк: если live не успел (редко) — индекс из sortable.
+        if (source && isSortable(source) && typeof source.id === 'string') {
+            const { initialIndex, index } = source;
+
+            if (initialIndex !== index) {
+                store.moveSection(source.id, index);
+            }
+        }
+    };
 
     return (
         <DragDropProvider
             sensors={sensors}
             modifiers={[RestrictToVerticalAxis]}
-            onDragEnd={(event) => {
-                // Отмена (Esc) — dnd-kit сам откатывает DOM, документ не трогаем.
-                if (event.canceled) {
-                    return;
-                }
-
-                const { source } = event.operation;
-
-                if (source && isSortable(source)) {
-                    const { initialIndex, index } = source;
-
-                    // Позиция не изменилась — не засорять историю undo пустым шагом.
-                    if (initialIndex !== index && typeof source.id === 'string') {
-                        // source.index — финальный индекс; совпадает с контрактом
-                        // moveSection (индекс в списке без перетаскиваемой секции).
-                        store.moveSection(source.id, index);
-                    }
-                }
-            }}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
         >
             {sections.length === 0 ? (
                 <div className="ch-cv-empty">
@@ -94,55 +225,83 @@ export function Canvas({ store, doc, selectedId }: CanvasProps): ReactElement {
             ) : (
                 <div className="ch-cv-page" ref={pageRef}>
                     <CanvasSections
-                        sections={sections}
+                        orderIds={orderIds}
+                        byId={byId}
                         doc={doc}
                         store={store}
                         selectedId={selectedId}
+                        draggedId={live?.movedId ?? null}
                     />
                 </div>
             )}
+            <DragOverlay>
+                {(source) => {
+                    const node = byId.get(String(source.id));
+
+                    if (!node) {
+                        return null;
+                    }
+
+                    return (
+                        <SectionOverlay node={node} doc={doc} />
+                    );
+                }}
+            </DragOverlay>
         </DragDropProvider>
     );
 }
 
 interface CanvasSectionsProps {
-    sections: SectionNode[];
+    orderIds: string[];
+    byId: Map<string, SectionNode>;
     doc: StudioDocument;
     store: EditorStore;
     selectedId: string | null;
+    draggedId: string | null;
 }
 
 /**
- * Список секций. Отдельный компонент — потому что useDragOperation работает только
- * внутри DragDropProvider: из него берём id перетаскиваемой секции, чтобы поставить
- * линию места вставки (ch-cv-drop) в её текущий слот.
+ * Список секций в live-порядке. Линия ch-cv-drop — в щели перед перетаскиваемой
+ * секцией (её текущий слот после onDragOver).
  */
 function CanvasSections({
-    sections,
+    orderIds,
+    byId,
     doc,
     store,
     selectedId,
+    draggedId,
 }: CanvasSectionsProps): ReactElement {
+    // useDragOperation — страховка: если live ещё не выставлен, а drag уже идёт.
     const { source } = useDragOperation();
-    const draggedId = typeof source?.id === 'string' ? source.id : null;
+    const activeId =
+        draggedId ?? (typeof source?.id === 'string' ? source.id : null);
 
     return (
         <>
-            {sections.map((node, index) => (
-                <Fragment key={node.id}>
-                    {draggedId === node.id && (
-                        <div className="ch-cv-drop" aria-hidden="true" />
-                    )}
-                    <SectionShell
-                        node={node}
-                        index={index}
-                        total={sections.length}
-                        doc={doc}
-                        store={store}
-                        isSelected={node.id === selectedId}
-                    />
-                </Fragment>
-            ))}
+            {orderIds.map((id, index) => {
+                const node = byId.get(id);
+
+                if (!node) {
+                    return null;
+                }
+
+                return (
+                    <Fragment key={node.id}>
+                        {activeId === node.id && (
+                            <div className="ch-cv-drop" aria-hidden="true" />
+                        )}
+                        <SectionShell
+                            node={node}
+                            index={index}
+                            total={orderIds.length}
+                            doc={doc}
+                            store={store}
+                            isSelected={node.id === selectedId}
+                        />
+                    </Fragment>
+                );
+            })}
         </>
     );
 }
@@ -167,9 +326,11 @@ function SectionShell({
 }: SectionShellProps): ReactElement {
     const mod = defaultRegistry.get(node.type);
     const [isHovered, setHovered] = useState(false);
+    // Только клавиатура: OptimisticSortingPlugin отключён — live-порядок в React.
     const { ref, handleRef, isDragging } = useSortable({
         id: node.id,
         index,
+        plugins: [SortableKeyboardPlugin],
     });
 
     // Секция на холсте — контейнер, не кнопка: role="button" схлопнул бы
@@ -181,7 +342,9 @@ function SectionShell({
 
     // Тулбар рендерится, а не прячется стилем: в ДС правила видимости нет, а
     // лишние скрытые ручки в DOM ломали бы строгий режим Playwright.
-    const showToolbar = isHovered || isSelected;
+    // Во время drag оставляем тулбар (хотя бы ручку) смонтированным — иначе
+    // размонтаж handleRef оборвёт жест.
+    const showToolbar = isHovered || isSelected || isDragging;
 
     return (
         <div
@@ -190,7 +353,7 @@ function SectionShell({
                 'ch-cv-section',
                 'ch-cv-anchor',
                 isSelected ? 'is-selected' : '',
-                isHovered && !isSelected ? 'is-hover' : '',
+                isHovered && !isSelected && !isDragging ? 'is-hover' : '',
                 isDragging ? 'ch-cv-ghost' : '',
             ]
                 .filter(Boolean)
@@ -275,26 +438,64 @@ function SectionShell({
                     </button>
                 </div>
             )}
-            {mod ? (
-                <BlockPreview
-                    mod={mod}
-                    props={{ ...node.props, id: node.id }}
-                    doc={doc}
-                />
-            ) : (
-                // Заглушка по эталону (EditorMvp.dc.html): моноширинный абзац
-                // внутри обычной секции, без своего класса.
-                <p
-                    style={{
-                        margin: 0,
-                        padding: '32px 48px',
-                        font: '400 13px/1.4 var(--chrome-font-mono)',
-                        color: 'var(--chrome-muted)',
-                    }}
-                >
-                    Неизвестный тип секции: {node.type}
-                </p>
-            )}
+            <SectionBody node={node} doc={doc} mod={mod} />
+        </div>
+    );
+}
+
+interface SectionBodyProps {
+    node: SectionNode;
+    doc: StudioDocument;
+    mod: ReturnType<typeof defaultRegistry.get>;
+}
+
+function SectionBody({ node, doc, mod }: SectionBodyProps): ReactElement {
+    if (mod) {
+        return (
+            <BlockPreview
+                mod={mod}
+                props={{ ...node.props, id: node.id }}
+                doc={doc}
+            />
+        );
+    }
+
+    // Заглушка по эталону (EditorMvp.dc.html): моноширинный абзац
+    // внутри обычной секции, без своего класса.
+    return (
+        <p
+            style={{
+                margin: 0,
+                padding: '32px 48px',
+                font: '400 13px/1.4 var(--chrome-font-mono)',
+                color: 'var(--chrome-muted)',
+            }}
+        >
+            Неизвестный тип секции: {node.type}
+        </p>
+    );
+}
+
+/** Плавающая копия секции под курсором (DragOverlay) — без тулбара. */
+function SectionOverlay({
+    node,
+    doc,
+}: {
+    node: SectionNode;
+    doc: StudioDocument;
+}): ReactElement {
+    const mod = defaultRegistry.get(node.type);
+
+    return (
+        <div
+            className="ch-cv-section ch-cv-ghost"
+            style={{
+                width: 'var(--chrome-cv-page)',
+                maxWidth: '100%',
+                pointerEvents: 'none',
+            }}
+        >
+            <SectionBody node={node} doc={doc} mod={mod} />
         </div>
     );
 }

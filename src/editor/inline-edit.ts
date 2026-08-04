@@ -75,6 +75,9 @@ export function attachInlineEdit(
             return;
         }
 
+        // Снять подсветку ДС; каретку не инжектим — браузерная.
+        anchor.classList.remove('ch-inline-edit');
+
         const host = anchor.closest<HTMLElement>('[data-section-id]');
         const sectionId = host?.dataset.sectionId;
         const propKey = anchor.dataset.prop;
@@ -100,12 +103,24 @@ export function attachInlineEdit(
         store.updateProps(sectionId, { [propKey]: raw });
     };
 
+    // Подсветка правки по месту: класс ДС на фокусе якоря (каретка — нативная).
+    const onFocusIn = (e: FocusEvent): void => {
+        const t = e.target as HTMLElement | null;
+        const anchor = t?.closest<HTMLElement>('[data-prop]');
+
+        if (anchor && root.contains(anchor)) {
+            anchor.classList.add('ch-inline-edit');
+        }
+    };
+
     root.addEventListener('keydown', onKeyDown);
+    root.addEventListener('focusin', onFocusIn);
     root.addEventListener('focusout', onFocusOut);
 
     return () => {
         observer.disconnect();
         root.removeEventListener('keydown', onKeyDown);
+        root.removeEventListener('focusin', onFocusIn);
         root.removeEventListener('focusout', onFocusOut);
     };
 }
