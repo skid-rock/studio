@@ -73,7 +73,37 @@
 <aside class="ch-panel ch-ed-panel">
 <sc-if value="{{ tabSection }}" hint-placeholder-val="{{ true }}"><div class="ch-seg ch-seg--fill" role="tablist"><button type="button" class="ch-seg__opt is-active" role="tab" aria-selected="true">Секция</button><button type="button" class="ch-seg__opt" role="tab" aria-selected="false">Страница</button></div></sc-if><sc-if value="{{ tabPage }}" hint-placeholder-val="{{ false }}"><div class="ch-seg ch-seg--fill" role="tablist"><button type="button" class="ch-seg__opt" role="tab" aria-selected="false">Секция</button><button type="button" class="ch-seg__opt is-active" role="tab" aria-selected="true">Страница</button></div></sc-if>
 
-<sc-if value="{{ sectionLive }}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{ sectionEnvelope }}" hint-placeholder-val="{{ false }}">
+<p class="ch-panel__title">Конверт-заставка</p>
+<button type="button" class="ch-panel__section" aria-expanded="true">Форма клапанов<span class="ch-panel__section__chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
+<div class="ch-panel__section-body">
+<div class="ch-field"><label class="ch-field__label" for="e-foldY">Высота схождения</label><div class="ch-field__pair"><input class="ch-range" id="e-foldY" type="range" min="30" max="70" step="0.5" value="50"><input class="ch-input" type="number" min="30" max="70" step="0.5" value="50" aria-label="Высота схождения — точное значение"></div></div>
+<div class="ch-field"><label class="ch-field__label" for="e-tipLength">Длина дуги</label><div class="ch-field__pair"><input class="ch-range" id="e-tipLength" type="range" min="0" max="15" step="0.1" value="1.4"><input class="ch-input" type="number" min="0" max="15" step="0.1" value="1.4" aria-label="Длина дуги — точное значение"></div></div>
+<div class="ch-field"><label class="ch-field__label" for="e-tipDepth">Глубина дуги</label><div class="ch-field__pair"><input class="ch-range" id="e-tipDepth" type="range" min="0" max="20" step="0.1" value="2.4"><input class="ch-input" type="number" min="0" max="20" step="0.1" value="2.4" aria-label="Глубина дуги — точное значение"></div></div>
+<div class="ch-field"><label class="ch-field__label" for="e-roundDir">Направление</label><div class="ch-field__pair"><input class="ch-range" id="e-roundDir" type="range" min="-1" max="1" step="1" value="1"><input class="ch-input" type="number" min="-1" max="1" step="1" value="1" aria-label="Направление — точное значение"></div></div>
+</div>
+<hr class="ch-panel__sep ch-panel__sep--flush">
+<button type="button" class="ch-panel__section" aria-expanded="true">Линии и бумага<span class="ch-panel__section__chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
+<div class="ch-panel__section-body">
+<div class="ch-field ch-field--row"><span class="ch-field__label">Цвет линии</span><div class="ch-color-field"><input class="ch-color-field__swatch" type="color" value="#275889" style="background:#275889" aria-label="Цвет линии"><input class="ch-color-field__value" type="text" value="#275889" spellcheck="false" aria-label="Цвет линии — hex"></div></div>
+<div class="ch-field"><label class="ch-field__label" for="e-lineWidth">Толщина линии, px</label><div class="ch-field__pair"><input class="ch-range" id="e-lineWidth" type="range" min="0" max="4" step="0.25" value="1"><input class="ch-input" type="number" min="0" max="4" step="0.25" value="1" aria-label="Толщина линии, px — точное значение"></div></div>
+<div class="ch-field"><label class="ch-field__label" for="e-lineOpacity">Яркость линии</label><div class="ch-field__pair"><input class="ch-range" id="e-lineOpacity" type="range" min="0" max="1" step="0.05" value="0.85"><input class="ch-input" type="number" min="0" max="1" step="0.05" value="0.85" aria-label="Яркость линии — точное значение"></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Цвет бумаги</span><div class="ch-color-field"><input class="ch-color-field__swatch" type="color" value="#ffffff" style="background:#ffffff" aria-label="Цвет бумаги"><input class="ch-color-field__value" type="text" value="#ffffff" spellcheck="false" aria-label="Цвет бумаги — hex"></div></div>
+<div class="ch-field"><label class="ch-field__label" for="e-paperAlpha">Плотность бумаги</label><div class="ch-field__pair"><input class="ch-range" id="e-paperAlpha" type="range" min="0" max="1" step="0.02" value="0.38"><input class="ch-input" type="number" min="0" max="1" step="0.02" value="0.38" aria-label="Плотность бумаги — точное значение"></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Цвет фона</span><div class="ch-color-field"><input class="ch-color-field__swatch" type="color" value="#fffaf1" style="background:#fffaf1" aria-label="Цвет фона"><input class="ch-color-field__value" type="text" value="#fffaf1" spellcheck="false" aria-label="Цвет фона — hex"></div></div>
+</div>
+<hr class="ch-panel__sep ch-panel__sep--flush">
+<button type="button" class="ch-panel__section" aria-expanded="false">Печать<span class="ch-panel__section__chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+<hr class="ch-panel__sep ch-panel__sep--flush">
+<button type="button" class="ch-panel__section" aria-expanded="false">Тексты<span class="ch-panel__section__chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+<hr class="ch-panel__sep ch-panel__sep--flush">
+<button type="button" class="ch-panel__section" aria-expanded="false">Раскрытие (анимация)<span class="ch-panel__section__chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+<hr class="ch-panel__sep ch-panel__sep--flush">
+<button type="button" class="ch-panel__section" aria-expanded="false">Надписи<span class="ch-panel__section__chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+<div class="ch-panel__foot"><p class="ch-panel__hint">Групп в схеме шесть, полей 27 — открыта одна-две, остальные свёрнуты. Группы сворачиваемые, потому что их больше одной; секция с единственной группой идёт плоской подписью. Единица измерения стоит в подписи, значение — в поле точного ввода.</p></div>
+</sc-if>
+
+<sc-if value="{{ sectionSchedule }}" hint-placeholder-val="{{ true }}">
 <p class="ch-panel__title">Расписание дня</p>
 <p class="ch-panel__group">Расписание</p>
 <div class="ch-panel__stack ch-panel__stack--lg">
@@ -87,17 +117,22 @@
 </sc-if>
 
 <sc-if value="{{ sectionDead }}" hint-placeholder-val="{{ false }}">
-<p class="ch-panel__title">Секция</p>
+<p class="ch-panel__title">Расписание дня</p>
 <p class="ch-panel__group">Расписание</p>
 <div class="ch-panel__stack ch-panel__stack--lg">
-<label class="ch-field"><span class="ch-field__label">Заголовок</span><textarea class="ch-textarea" rows="2" disabled="disabled">—</textarea></label>
-<label class="ch-field"><span class="ch-field__label">Пункт 1</span><textarea class="ch-textarea" rows="2" disabled="disabled">—</textarea></label>
-<label class="ch-field"><span class="ch-field__label">Пункт 2</span><textarea class="ch-textarea" rows="2" disabled="disabled">—</textarea></label>
-<label class="ch-field"><span class="ch-field__label">Пункт 3</span><textarea class="ch-textarea" rows="2" disabled="disabled">—</textarea></label>
-<label class="ch-field"><span class="ch-field__label">Пункт 4</span><textarea class="ch-textarea" rows="2" disabled="disabled">—</textarea></label>
-<label class="ch-field"><span class="ch-field__label">Пункт 5</span><textarea class="ch-textarea" rows="2" disabled="disabled">—</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Заголовок</span><textarea class="ch-textarea" rows="2" disabled="disabled">ПРОГРАММА ДНЯ</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 1</span><textarea class="ch-textarea" rows="2" disabled="disabled">16:00 Сбор гостей</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 2</span><textarea class="ch-textarea" rows="2" disabled="disabled">17:00 Церемония</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 3</span><textarea class="ch-textarea" rows="2" disabled="disabled">18:00 Банкет</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 4</span><textarea class="ch-textarea" rows="2" disabled="disabled">21:00 Фейерверк</textarea></label>
+<label class="ch-field"><span class="ch-field__label">Пункт 5</span><textarea class="ch-textarea" rows="2" disabled="disabled" placeholder="Пустой слот не рендерится"></textarea></label>
 </div>
-<div class="ch-panel__foot"><p class="ch-panel__hint">Выберите секцию на холсте — панель оживёт. Ничего не спрятано, всё выключено.</p></div>
+<div class="ch-panel__foot"><p class="ch-panel__hint">Ничего не выделено — панель показывает схему последней выделенной секции (при холодном старте — первой в документе). Разметка та же, всё выключено: панель глохнет, а не прячется.</p></div>
+</sc-if>
+
+<sc-if value="{{ sectionEmpty }}" hint-placeholder-val="{{ false }}">
+<p class="ch-panel__title">Секция</p>
+<div class="ch-empty"><span class="ch-empty__title">В документе нет секций</span><span>Добавьте блок из палитры — панель покажет его поля</span></div>
 </sc-if>
 
 <sc-if value="{{ tabPage }}" hint-placeholder-val="{{ false }}">
@@ -107,10 +142,10 @@
 <hr class="ch-panel__sep ch-panel__sep--flush">
 <button type="button" class="ch-panel__section" aria-expanded="true"><span class="ch-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="9" r="1"/><circle cx="15" cy="9" r="1"/><circle cx="9.5" cy="15" r="1"/></svg></span>Палитра и шрифты<span class="ch-panel__section__chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>
 <div class="ch-panel__section-body">
-<div class="ch-field ch-field--row"><span class="ch-field__label">Основной</span><button type="button" class="ch-color-field"><span class="ch-color-field__swatch" style="background:#275889"></span><span class="ch-color-field__value">#275889</span></button></div>
-<div class="ch-field ch-field--row"><span class="ch-field__label">Акцент</span><div class="ch-field__pair"><button type="button" class="ch-color-field"><span class="ch-color-field__swatch" style="background:#8a4b2f"></span><span class="ch-color-field__value">#8a4b2f</span></button><button type="button" class="ch-btn ch-btn--ghost ch-btn--sm">Сброс</button></div></div>
-<div class="ch-field ch-field--row"><span class="ch-field__label">Фон</span><button type="button" class="ch-color-field"><span class="ch-color-field__swatch" style="background:#fffaf1"></span><span class="ch-color-field__value">#fffaf1</span></button></div>
-<div class="ch-field ch-field--row"><span class="ch-field__label">Текст</span><button type="button" class="ch-color-field"><span class="ch-color-field__swatch" style="background:#275889"></span><span class="ch-color-field__value">#275889</span></button></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Основной</span><div class="ch-color-field"><input class="ch-color-field__swatch" type="color" value="#275889" style="background:#275889" aria-label="Основной"><input class="ch-color-field__value" type="text" value="#275889" spellcheck="false" aria-label="Основной — hex"></div></div>
+<div class="ch-field"><span class="ch-field__label">Акцент</span><div class="ch-field__pair"><div class="ch-color-field"><input class="ch-color-field__swatch" type="color" value="#8a4b2f" style="background:#8a4b2f" aria-label="Акцент"><input class="ch-color-field__value" type="text" value="#8a4b2f" spellcheck="false" aria-label="Акцент — hex"></div><button type="button" class="ch-btn ch-btn--ghost">Сброс</button></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Фон</span><div class="ch-color-field"><input class="ch-color-field__swatch" type="color" value="#fffaf1" style="background:#fffaf1" aria-label="Фон"><input class="ch-color-field__value" type="text" value="#fffaf1" spellcheck="false" aria-label="Фон — hex"></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Текст</span><div class="ch-color-field"><input class="ch-color-field__swatch" type="color" value="#275889" style="background:#275889" aria-label="Текст"><input class="ch-color-field__value" type="text" value="#275889" spellcheck="false" aria-label="Текст — hex"></div></div>
 <div class="ch-field ch-field--row"><label class="ch-field__label" for="f-d">Заголовки</label><input class="ch-input" id="f-d" type="text" placeholder="Source Serif Pro, Georgia, serif"></div>
 <div class="ch-field ch-field--row"><label class="ch-field__label" for="f-b">Текст</label><input class="ch-input" id="f-b" type="text" placeholder="Inter, system-ui, sans-serif"></div>
 </div>
@@ -127,7 +162,7 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;selected&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;panelTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Секция&quot;,&quot;Страница&quot;],&quot;default&quot;:&quot;Секция&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;emptyDoc&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;dragging&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;hoverSection&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;inlineEdit&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;unknownSection&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;canUndo&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;toast&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Нет&quot;,&quot;Экспорт — в бюджете&quot;,&quot;Экспорт — превышен&quot;,&quot;Ошибка загрузки&quot;],&quot;default&quot;:&quot;Нет&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Состояние окна&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;selected&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;panelTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Секция&quot;,&quot;Страница&quot;],&quot;default&quot;:&quot;Секция&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;sectionSchema&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Расписание дня (текст)&quot;,&quot;Конверт-заставка (числа и цвета)&quot;],&quot;default&quot;:&quot;Расписание дня (текст)&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;emptyDoc&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;dragging&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;hoverSection&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;inlineEdit&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;unknownSection&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;canUndo&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние окна&quot;},&quot;toast&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Нет&quot;,&quot;Экспорт — в бюджете&quot;,&quot;Экспорт — превышен&quot;,&quot;Ошибка загрузки&quot;],&quot;default&quot;:&quot;Нет&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Состояние окна&quot;}}">
 class Component extends DCLogic {
   renderVals() {
     const empty = this.props.emptyDoc ?? false;
@@ -138,6 +173,11 @@ class Component extends DCLogic {
     const canUndo = this.props.canUndo ?? true;
     const storyHover = (this.props.hoverSection ?? false) && !empty;
     const toast = this.props.toast ?? 'Нет';
+    // Правило выбора схемы: выделенная секция → последняя выделенная → первая в
+    // документе. Пустой документ — единственный случай, когда полей неоткуда взять.
+    const envelope =
+      (this.props.sectionSchema ?? 'Расписание дня (текст)') ===
+      'Конверт-заставка (числа и цвета)';
     return {
       storyHover, storyPlain: !storyHover,
       toastExport: toast === 'Экспорт — в бюджете',
@@ -146,8 +186,10 @@ class Component extends DCLogic {
       empty, hasDoc: !empty,
       selected: selected && !dragging, noSelection: !selected,
       tabSection, tabPage: !tabSection,
-      sectionLive: tabSection && selected,
-      sectionDead: tabSection && !selected,
+      sectionSchedule: tabSection && selected && !envelope,
+      sectionEnvelope: tabSection && selected && envelope,
+      sectionDead: tabSection && !selected && !empty,
+      sectionEmpty: tabSection && empty,
       dragging,
       scheduleDragging: dragging,
       scheduleSelected: !dragging && selected,

@@ -1,4 +1,4 @@
-<!-- @dsCard group="Компоненты" name="Поля" subtitle="Строки-поля, залитые контролы, числа с ключом, тумблер, сегменты" viewport="660x760" -->
+<!-- @dsCard group="Компоненты" name="Поля" subtitle="Строки-поля, залитые контролы, числа с ключом, тумблер, сегменты" viewport="660x820" -->
 <!doctype html>
 <html lang="ru"><head><meta charset="utf-8"><title>studio — Поля</title><link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../styles/docs.css"></head>
 <body class="ds"><main class="demo">
@@ -19,14 +19,21 @@
 <div class="stack">
 <div class="ch-field"><label class="ch-field__label" for="f2">Заголовок</label><input class="ch-input" id="f2" type="text" value="Дом у реки"></div>
 <div class="ch-field"><label class="ch-field__label" for="f3">Подзаголовок</label><input class="ch-input" id="f3" type="text" placeholder="Необязательно"></div>
-<div class="ch-field"><label class="ch-field__label" for="f4">Отступ сверху — 48px</label><input class="ch-range" id="f4" type="range" min="0" max="120" value="48"></div>
+<div class="ch-field"><label class="ch-field__label" for="f4">Отступ сверху, px</label><div class="ch-field__pair"><input class="ch-range" id="f4" type="range" min="0" max="120" step="1" value="48"><input class="ch-input" type="number" min="0" max="120" step="1" value="48" aria-label="Отступ сверху, px — точное значение"></div></div>
 </div>
 </div>
-<div class="demo-head">Цвет</div>
+<div class="demo-head">Цвет — произвольный hex</div>
 <div class="ch-panel" style="max-width:320px">
-<div class="ch-field"><span class="ch-field__label" style="margin-bottom:4px">Фон секции</span><div class="ch-swatches"><button type="button" class="ch-swatch is-selected" style="background:#fffdf8" aria-label="Cream light"></button><button type="button" class="ch-swatch" style="background:#f6f1e7" aria-label="Cream"></button><button type="button" class="ch-swatch" style="background:#e8e2d4" aria-label="Sand"></button><button type="button" class="ch-swatch" style="background:#1f3a5f" aria-label="Ink"></button><button type="button" class="ch-swatch" style="background:#4a4a44" aria-label="Slate"></button><button type="button" class="ch-swatch" style="background:#ffffff" aria-label="White"></button></div></div>
-<hr class="ch-panel__sep">
-<div class="ch-field ch-field--row"><span class="ch-field__label">Точное значение</span><div class="ch-color-field"><span class="ch-color-field__swatch" style="background:#fffdf8"></span><span class="ch-color-field__value" style="margin-left:auto">#FFFDF8</span></div></div>
+<div class="stack" style="gap:8px">
+<div class="ch-field ch-field--row"><span class="ch-field__label">Цвет линии</span><div class="ch-color-field"><input class="ch-color-field__swatch" type="color" value="#275889" style="background:#275889" aria-label="Цвет линии"><input class="ch-color-field__value" type="text" value="#275889" spellcheck="false" aria-label="Цвет линии — hex"></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Образец 3</span><div class="ch-color-field"><input class="ch-color-field__swatch" type="color" value="#f3ece1" style="background:#f3ece1" aria-label="Образец 3"><input class="ch-color-field__value" type="text" value="#f3ece1" spellcheck="false" aria-label="Образец 3 — hex"></div></div>
+<div class="ch-field ch-field--row"><span class="ch-field__label">Образец 4</span><div class="ch-color-field"><input class="ch-color-field__swatch" type="color" aria-label="Образец 4"><input class="ch-color-field__value" type="text" value="" placeholder="не задан" spellcheck="false" aria-label="Образец 4 — hex"></div></div>
 </div>
-<p class="note">Поле показывает текущее значение, а не подсказку: пустой <code>placeholder</code> только там, где значения может не быть. Сетка свотчей — основной способ выбрать цвет из темы; <code>.ch-color-field</code> остаётся для точного значения.</p>
+<hr class="ch-panel__sep">
+<div class="ch-field"><span class="ch-field__label" style="margin-bottom:4px">Фон из палитры темы</span><div class="ch-swatches"><button type="button" class="ch-swatch is-selected" style="background:#fffdf8" aria-label="Cream light"></button><button type="button" class="ch-swatch" style="background:#f6f1e7" aria-label="Cream"></button><button type="button" class="ch-swatch" style="background:#e8e2d4" aria-label="Sand"></button><button type="button" class="ch-swatch" style="background:#1f3a5f" aria-label="Ink"></button><button type="button" class="ch-swatch" style="background:#4a4a44" aria-label="Slate"></button><button type="button" class="ch-swatch" style="background:#ffffff" aria-label="White"></button></div></div>
+</div>
+<p class="note">Поле показывает текущее значение, а не подсказку: пустой <code>placeholder</code> только там, где значения может не быть. Число с <code>min</code>/<code>max</code> — пара <code>.ch-range</code> + <code>.ch-input</code> в <code>.ch-field__pair</code>: тянуть мышью и вписать точное значение. Единица измерения — в подписи («Отступ сверху, px»), а не в значении.</p>
+<p class="note">Произвольный цвет (параметры секций типа <code>color</code> хранят hex, а не выбор из темы) — <code>.ch-color-field</code>: свотч это нативный <code>&lt;input type="color"&gt;</code>, клик открывает системный пикер, своего попапа система не держит. Hex рядом — второй нативный инпут, а не подпись: произвольное значение вставляют из брендбука, и путь «открой системный диалог, найди там поле hex» этого не заменяет. <code>.ch-swatches</code> — только там, где выбор идёт из фиксированной палитры темы.</p>
+<p class="note">Цвет свотча приходит инлайновым <code>background</code> на инпуте — это значение параметра. Нет значения — нет <code>background</code>: свотч остаётся пустым кружком, а «не задан» приходит <code>placeholder</code>-ом на инпуте значения, а не текстом (у «Образца 4» в дресс-коде дефолт — пустая строка, и чёрный квадрат вместо пустоты был бы врун).</p>
+<p class="note">В панели свойств цвет идёт строкой (<code>.ch-field--row</code>) даже там, где числа и тексты той же секции лежат стопкой: hex короткий и помещается в правую колонку, а стопка нужна значениям, которым узко.</p>
 </main></body></html>

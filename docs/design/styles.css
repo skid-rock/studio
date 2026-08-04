@@ -65,6 +65,27 @@
 .ch-color-field{display:flex;align-items:center;gap:8px;height:var(--chrome-h);padding:0 10px;border:1px solid transparent;border-radius:var(--chrome-radius-md);background:var(--chrome-field);font-size:var(--chrome-size);box-sizing:border-box}
 .ch-color-field__swatch{width:18px;height:18px;border-radius:var(--chrome-radius-pill);border:1px solid var(--chrome-border);flex:none}
 .ch-color-field__value{color:var(--chrome-muted);font-size:var(--chrome-size)}
+/* Свотч — нативный <input type="color">, загримированный под кружок: клик открывает
+   системный пикер, своего попапа система не держит. Собственную заливку и рамку инпут
+   отдаёт классу — цвет приходит инлайновым background (это значение параметра, а не
+   оформление), поэтому пустая заливка читается как «цвет не задан».
+   !important на служебном вкладыше ::-*-color-swatch вынужденный: браузер красит его
+   значением поля приоритетом выше обычного правила, и без !important вкладыш глухо
+   закрывает заливку инпута — пустое значение рисуется чёрным вместо пустого кружка. */
+input.ch-color-field__swatch{appearance:none;-webkit-appearance:none;margin:0;padding:0;background:none;box-sizing:border-box;cursor:pointer}
+input.ch-color-field__swatch::-webkit-color-swatch-wrapper{padding:0}
+input.ch-color-field__swatch::-webkit-color-swatch{border:0;border-radius:inherit;background-color:transparent !important}
+input.ch-color-field__swatch::-moz-color-swatch{border:0;border-radius:inherit;background-color:transparent !important}
+input.ch-color-field__swatch:focus-visible{outline:2px solid var(--chrome-accent);outline-offset:2px}
+input.ch-color-field__swatch[disabled]{cursor:default}
+/* Значение — тоже нативный инпут: произвольный hex приходит вставкой из брендбука,
+   а не набором в системном диалоге, поэтому поле обязано принимать текст. Тот же
+   класс на другом теге, как у свотча; рамку, фон и отступы инпут отдаёт полю, шрифт
+   наследует — hex стоит в той же сетке, что остальные значения панели. */
+input.ch-color-field__value{appearance:none;-webkit-appearance:none;flex:1;min-width:0;margin:0;padding:0;border:0;background:none;font:inherit;font-variant-numeric:tabular-nums;color:var(--chrome-muted);box-sizing:border-box}
+input.ch-color-field__value::placeholder{color:var(--chrome-muted);opacity:1}
+input.ch-color-field__value:focus-visible{outline:2px solid var(--chrome-accent);outline-offset:2px;border-radius:var(--chrome-radius-sm)}
+input.ch-color-field__value[disabled]{color:var(--chrome-muted);cursor:default}
 /* Ползунок тематизован целиком: бегунок — тот же knob, что у тумблера и сегмента. */
 .ch-range{appearance:none;-webkit-appearance:none;width:100%;height:var(--chrome-h-sm);background:none;cursor:pointer}
 .ch-range::-webkit-slider-runnable-track{height:4px;border-radius:var(--chrome-radius-pill);background:var(--chrome-field)}
@@ -119,6 +140,10 @@
 .ch-field__pair{display:flex;gap:6px;min-width:0}
 .ch-field__pair>.ch-color-field,.ch-field__pair>.ch-input,.ch-field__pair>.ch-select{flex:1;min-width:0}
 .ch-field__pair>.ch-btn{flex:none}
+/* Пара «ползунок + точное значение»: тянуть удобно длинным, читать — коротким,
+   отсюда 2:1. Пропорция — свойство пары, а не разметки: инлайновый flex уехал бы
+   в код литералом в каждое числовое поле схемы. */
+.ch-field__pair>.ch-range{flex:2;min-width:0}
 .ch-num{display:flex;align-items:center;gap:6px;flex:1;min-width:0;height:var(--chrome-h-sm);padding:0 9px;border-radius:var(--chrome-radius-sm);background:var(--chrome-field);font:var(--chrome-weight-body) var(--chrome-size)/var(--chrome-leading) var(--chrome-font);color:var(--chrome-text);box-sizing:border-box}
 .ch-num:hover{background:var(--chrome-field-hover)}
 .ch-num__key{color:var(--chrome-muted);font-weight:var(--chrome-weight-strong)}
