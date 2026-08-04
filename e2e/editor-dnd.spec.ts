@@ -27,7 +27,7 @@ test('DnD мышью: hero уезжает ниже our-story, undo откаты�
 
     // Тулбар виден при hover; drag стартует только с ручки (distance ≥ 6px).
     await hero.hover();
-    // Видна только ручка наведённой секции (остальные display:none).
+    // Мини-тулбар рендерится только у наведённой/выделенной секции — ручка в DOM одна.
     const handle = page.getByRole('button', { name: 'Перетащить секцию' });
     await expect(handle).toBeVisible();
 

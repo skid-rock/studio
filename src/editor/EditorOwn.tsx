@@ -35,6 +35,15 @@ export function EditorOwn(): ReactElement {
                 return;
             }
 
+            // Escape — клавиатурный путь снятия выделения (пара к клику по фону).
+            // Внутри contentEditable сюда не доходим: правка текста выходит из
+            // режима сама, документ не трогаем.
+            if (e.key === 'Escape') {
+                store.select(null);
+
+                return;
+            }
+
             const mod = e.metaKey || e.ctrlKey;
 
             if (!mod || e.key.toLowerCase() !== 'z') {
@@ -56,7 +65,7 @@ export function EditorOwn(): ReactElement {
     // скрипты модулей (countdown и т.п.). rAF — дать React дорисовать блоки.
     useEffect(() => {
         const raf = requestAnimationFrame(() => {
-            const root = document.querySelector('.own-page');
+            const root = document.querySelector('.ch-cv-page');
 
             if (root) {
                 runModuleJs(root);
@@ -105,7 +114,18 @@ export function EditorOwn(): ReactElement {
                 </button>
             </div>
 
-            <main className="ch-ed-canvas">
+            <main
+                className="ch-ed-canvas"
+                onClick={(e) => {
+                    // Клик мимо секции снимает выделение. Ловим на всём холсте:
+                    // у .ch-ed-canvas есть свои пиксели (padding сверху/снизу и
+                    // гаттеры по бокам страницы), в отличие от прежней обёртки
+                    // холста, чей рект совпадал со страницей (STUDIO-048).
+                    if (!(e.target as HTMLElement).closest('.ch-cv-section')) {
+                        store.select(null);
+                    }
+                }}
+            >
                 <Canvas
                     store={store}
                     doc={state.document}

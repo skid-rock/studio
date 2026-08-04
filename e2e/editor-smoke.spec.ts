@@ -81,13 +81,11 @@ test('снятие выделения: панель глохнет, но пом�
     const names = panel.getByRole('textbox', { name: 'Имена' });
     await expect(names).toBeEnabled();
 
-    // Снятие выделения — DOM-клик по .own-canvas, а не pointer: у обёртки холста
-    // сегодня нет ни одного своего пикселя (её рект совпадает с .own-page, гаттеры
-    // принадлежат main.ch-ed-canvas), поэтому мышью до select(null) не дотянуться.
-    // Проверяем память панели, а не попадание по фону — зона холста в STUDIO-049.
-    await page.locator('.own-canvas').evaluate((el) => {
-        (el as HTMLElement).click();
-    });
+    // Снятие выделения — клик по фону холста: у main.ch-ed-canvas свои поля
+    // (padding сверху и гаттеры по бокам страницы), туда мышь попадает.
+    await page
+        .locator('main.ch-ed-canvas')
+        .click({ position: { x: 20, y: 20 } });
 
     // Правило «выделенная → последняя выделенная → первая в документе»: разметка
     // та же, заголовок прежний, поля выключены (STUDIO-048). Первая секция
@@ -99,6 +97,12 @@ test('снятие выделения: панель глохнет, но пом�
     await expect(
         panel.getByText('Ничего не выделено', { exact: false }),
     ).toBeVisible();
+
+    // Клавиатурный путь: Escape снимает выделение так же, как клик по фону.
+    await page.locator('[data-block="hero"]').click();
+    await expect(names).toBeEnabled();
+    await page.keyboard.press('Escape');
+    await expect(names).toBeDisabled();
 });
 
 test('вкладки: переключение не сбрасывает выделение секции', async ({
@@ -130,17 +134,18 @@ test('вкладки: переключение не сбрасывает выд�
 
 test('пустой документ: панель показывает «нет секций»', async ({ page }) => {
     // Pointer-клик по тулбару нестабилен: у конверта modal-оверлей и tall
-    // секция уезжают из viewport. Удаляем через DOM-click кнопки — проверяем
-    // именно пустое состояние панели, не hover-тулбар.
-    const sections = page.locator('.own-section');
+    // секция уезжают из viewport. Удаляем через DOM-click: сначала выделяем
+    // секцию (тулбар рендерится только при hover/selected), затем жмём удалить.
+    const sections = page.locator('.ch-cv-section');
     const count = await sections.count();
 
     for (let i = 0; i < count; i++) {
-        await sections.last().evaluate((el) => {
-            const btn = el.querySelector(
-                '[aria-label="Удалить секцию"]',
-            ) as HTMLButtonElement | null;
-            btn?.click();
+        const section = sections.last();
+        await section.evaluate((el) => {
+            (el as HTMLElement).click();
+        });
+        await section.locator('[aria-label="Удалить секцию"]').evaluate((btn) => {
+            (btn as HTMLButtonElement).click();
         });
     }
 

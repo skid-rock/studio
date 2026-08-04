@@ -15,7 +15,7 @@ describe('runModuleJs', () => {
 
     it('навешивает тикающий countdown на разметку модуля', () => {
         vi.useFakeTimers();
-        // Корень — любой connected-элемент; класс хрома (own-page) не нужен.
+        // Корень — любой connected-элемент; класс хрома страницы не нужен.
         document.body.innerHTML = `
             <div>
               <div class="s-countdown__grid"
