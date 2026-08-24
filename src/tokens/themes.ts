@@ -12,7 +12,7 @@ export const THEMES: ThemePreset[] = [
     { id: 'cream-navy', name: 'Cream & Navy' },
     { id: 'forest-blush', name: 'Forest & Blush' },
     { id: 'charcoal-gold', name: 'Charcoal & Gold' },
-    { id: 'pearl-beige', name: 'Pearl & Beige' },
+    { id: 'marine', name: 'Marine' },
 ];
 
 /** Тема по умолчанию (фолбэк для неизвестного id). */

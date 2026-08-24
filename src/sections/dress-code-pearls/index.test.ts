@@ -6,7 +6,7 @@ import { dressCodePearlsModule } from './index';
 const stubCtx = {
     doc: {
         schemaVersion: 1,
-        theme: { id: 'pearl-beige' },
+        theme: { id: 'marine' },
         motion: { preset: 'subtle' },
         sections: [],
     } satisfies StudioDocument,

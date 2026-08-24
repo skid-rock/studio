@@ -23,12 +23,16 @@ const stubCtx = {
 };
 
 describe('data-prop якоря (STUDIO-014)', () => {
-    it('hero — три якоря с raw-содержимым', () => {
+    it('hero — якоря на текстах, но не на URL фото', () => {
         const html = heroModule.render(heroModule.defaults, stubCtx);
 
+        expect(html).toContain('data-prop="name1"');
+        expect(html).toContain('data-prop="ampersand"');
+        expect(html).toContain('data-prop="name2"');
         expect(html).toContain('data-prop="eyebrow"');
-        expect(html).toContain('data-prop="names"');
+        expect(html).toContain('data-prop="message"');
         expect(html).toContain('data-prop="date"');
+        expect(html).not.toContain('data-prop="photoUrl"');
     });
 
     it('closing — signature и ps (литерал P.S. вне якоря)', () => {
