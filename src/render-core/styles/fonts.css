@@ -1,5 +1,40 @@
 /* Локальные шрифты для превью и экспорта (относительные пути — работают и по file://). */
 
+/* Морская тема (pearl-beige): Arina / Open Sans Condensed / Crimson Pro — STUDIO-059 */
+
+@font-face {
+    font-family: 'Arina';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/Arina-Regular.woff2') format('woff2');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Open Sans Condensed';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/OpenSansCondensed-Light.woff2') format('woff2');
+    font-display: swap;
+}
+
+/* Алиас из фолбэк-цепочки токена --font-body */
+@font-face {
+    font-family: 'Open Sans Condensed Light';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/OpenSansCondensed-Light.woff2') format('woff2');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Crimson Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/CrimsonPro-Regular.woff2') format('woff2');
+    font-display: swap;
+}
+
 @font-face {
     font-family: 'Source Serif Pro';
     font-style: normal;
