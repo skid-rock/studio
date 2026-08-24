@@ -6,6 +6,9 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-reveal: 1.2s;
   --duration-fast: 0.35s;
+  --shadow-photo: 0px 1px 2px 0px rgba(102, 92, 92, 0.25), 2px 3px 3px 0px rgba(102, 92, 92, 0.21), 4px 6px 4px 0px rgba(102, 92, 92, 0.13), 7px 11px 5px 0px rgba(102, 92, 92, 0.04);
+  --shadow-shell: 1px 2px 6px 0px rgba(36, 35, 35, 0.34), 5px 9px 11px 0px rgba(36, 35, 35, 0.3), 12px 21px 14px 0px rgba(36, 35, 35, 0.18), 22px 37px 17px 0px rgba(36, 35, 35, 0.05);
+  --shadow-button: 1px 0px 1px 0px rgba(0, 0, 0, 0.1), 2px 1px 2px 0px rgba(0, 0, 0, 0.09), 5px 2px 3px 0px rgba(0, 0, 0, 0.05), inset 0px 0px 1px 0px rgba(0, 0, 0, 0.25);
   --container-max: 420px;
   --container-wide: 960px;
   --radius-sm: 8px;
@@ -16,6 +19,7 @@
   --font-display: "Source Serif Pro", "Cormorant Garamond", Georgia, serif;
   --font-script: "Florisel", "Felidae", cursive;
   --font-body: "Inter", system-ui, sans-serif;
+  --font-numeral: "Source Serif Pro", "Cormorant Garamond", Georgia, serif;
   --color-cream: #f4f2ee;
   --color-cream-alt: #eceae4;
   --color-navy: #2b2b2f;

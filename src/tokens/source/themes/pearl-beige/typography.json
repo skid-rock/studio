@@ -7,6 +7,10 @@
         "body": {
             "$type": "fontFamily",
             "$value": "\"Open Sans Condensed\", \"Open Sans Condensed Light\", \"Inter\", system-ui, sans-serif"
+        },
+        "numeral": {
+            "$type": "fontFamily",
+            "$value": "\"Crimson Pro\", \"Source Serif Pro\", Georgia, serif"
         }
     }
 }

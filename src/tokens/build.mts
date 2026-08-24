@@ -7,13 +7,15 @@ import StyleDictionary from 'style-dictionary';
 
 import { THEMES } from './themes.ts';
 
-// Те же трансформы, что в прежнем config.json (проверенный набор для CSS-переменных).
+// CSS-переменные: имена kebab, цвет, шрифт, easing, время;
+// shadow/css/shorthand склеивает массив слоёв (в т.ч. inset) в box-shadow (STUDIO-057).
 const TRANSFORMS = [
     'name/kebab',
     'color/css',
     'fontFamily/css',
     'cubicBezier/css',
     'time/seconds',
+    'shadow/css/shorthand',
 ];
 
 for (const { id } of THEMES) {

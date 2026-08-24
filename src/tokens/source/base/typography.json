@@ -11,6 +11,10 @@
         "body": {
             "$type": "fontFamily",
             "$value": "\"Inter\", system-ui, sans-serif"
+        },
+        "numeral": {
+            "$type": "fontFamily",
+            "$value": "\"Source Serif Pro\", \"Cormorant Garamond\", Georgia, serif"
         }
     }
 }

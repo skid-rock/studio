@@ -278,25 +278,28 @@ error TS2322: 'RFn<EnvelopeState>'        is not assignable to 'RFn<Record<strin
   `gd-brain/docs/knowledge/tools/figma/figma-to-studio-recipe.md`,
   раздел «Что осталось за кадром»).
 - **Где:** [`src/tokens/source/themes/pearl-beige/typography.json`](../../src/tokens/source/themes/pearl-beige/typography.json)
-  (`font.display` → `"Arina"`, `font.body` → `"Open Sans Condensed"`),
+  (`font.display` → `"Arina"`, `font.body` → `"Open Sans Condensed"`,
+  `font.numeral` → `"Crimson Pro"`),
   [`src/render-core/styles/fonts.css`](../../src/render-core/styles/fonts.css),
   [`public/fonts/`](../../public/fonts).
-- **Появилось в:** STUDIO-038 (перенос секции `dress-code-pearls` из Figma).
+- **Появилось в:** STUDIO-038 (перенос секции `dress-code-pearls` из Figma);
+  дополнено STUDIO-057 (`font.numeral` → Crimson Pro).
 
 ### Симптом
 
 Превью в редакторе и локальный экспорт выглядят как макет — но только на машине,
-где Arina и Open Sans Condensed установлены в системе. У любого другого читателя
-экспортированной страницы обе гарнитуры уедут в фолбэк (`Cormorant Garamond` /
-`Inter`), то есть типографика темы, ради совпадения с макетом и заведённой,
-не доедет до пользователя. Сигнала нет: сборка, тесты и бюджет веса зелёные.
+где Arina, Open Sans Condensed и Crimson Pro установлены в системе. У любого
+другого читателя экспортированной страницы три гарнитуры уедут в фолбэк
+(`Cormorant Garamond` / `Inter` / `Source Serif Pro`), то есть типографика темы,
+ради совпадения с макетом и заведённой, не доедет до пользователя. Сигнала нет:
+сборка, тесты и бюджет веса зелёные.
 
 ### Корень
 
 Механизм на месте и работает — `fonts.css` раздаёт `@font-face` относительными
 путями на `public/fonts/`, `export.mts` копирует каталог. Не хватает двух вещей:
-файлов `.woff2` для Arina и Open Sans Condensed и пары `@font-face`-блоков под
-них. Тема заведена «по значениям из макета» и молча положилась на системную
+файлов `.woff2` для Arina, Open Sans Condensed и Crimson Pro и `@font-face`-блоков
+под них. Тема заведена «по значениям из макета» и молча положилась на системную
 установку — а ограждения, которое ловит семейство из токенов темы без
 соответствующего `@font-face`, в проекте нет (ни один тест не связывает
 `typography.json` тем с `fonts.css`).
@@ -307,8 +310,8 @@ error TS2322: 'RFn<EnvelopeState>'        is not assignable to 'RFn<Record<strin
 ### Рекомендация и триггер
 
 Довести до конца по образцу уже лежащих в `fonts.css` семейств: получить
-webfont-файлы (для Open Sans Condensed — с Google Fonts, кириллица + latin
-сабсетами, как у Inter; для Arina — по лицензии), положить в `public/fonts/`,
+webfont-файлы (для Open Sans Condensed и Crimson Pro — с Google Fonts, кириллица
++ latin сабсетами, как у Inter; для Arina — по лицензии), положить в `public/fonts/`,
 добавить `@font-face` c `font-display: swap`, пересчитать бюджет веса
 (STUDIO-025) — гарнитуры добавят к каждой экспортируемой странице сотни КБ, тут
 уместен `unicode-range`-сабсет. Заодно — ограждение: тест, сверяющий семейства
@@ -318,3 +321,49 @@ webfont-файлы (для Open Sans Condensed — с Google Fonts, кирилл
 
 Триггер срочности — первый настоящий выпуск лендинга на теме `pearl-beige`
 (показ страницы кому-то, кроме себя). До этого момента боли нет.
+
+---
+
+## IMP-008. Хардкод теней в секциях мимо токенов `shadow.*`
+
+- **Статус:** открыто (решение STUDIO-057: не переносить сейчас).
+- **Где:** [`src/sections/dress-code-pearls/index.ts:243`](../../src/sections/dress-code-pearls/index.ts)
+  (`box-shadow: -1px 3px 4.5px rgba(0, 0, 0, 0.25)`);
+  [`src/sections/intro-envelope/styles.ts:89`](../../src/sections/intro-envelope/styles.ts)
+  и [`:160`](../../src/sections/intro-envelope/styles.ts)
+  (`filter: drop-shadow(...)`).
+- **Появилось в:** STUDIO-038 (pearls) и STUDIO-006 (envelope); зафиксировано
+  как IMP в STUDIO-057, когда в теме появились `--shadow-photo` / `--shadow-shell`
+  / `--shadow-button`.
+
+### Симптом
+
+В теме есть категория `shadow`, а три живых тени в секциях по-прежнему литералы.
+Новые секции с морского макета смогут взять `var(--shadow-*)`; старые — нет,
+и привычка копировать значение руками остаётся рядом с правильным путём.
+
+### Корень
+
+Значения **не совпадают** с тремя токенами макета, а форма у двух из трёх —
+не `box-shadow`.
+
+- `dress-code-pearls` — один слой `-1px 3px 4.5px` чёрным 25%. Ни `photo`
+  (4 слоя `#665C5C`), ни `shell` (`#242323`), ни `button` (3 drop + inset)
+  так не выглядят. Подстановка `--shadow-photo` сдвинет уже перенесённую секцию.
+- `intro-envelope` — `filter: drop-shadow()` цветом navy свадебного лендинга.
+  Shorthand `--shadow-*` туда не встаёт: `drop-shadow()` не принимает spread и
+  inset, многослойность — цепочка функций, не запятая.
+
+### Рекомендация и триггер
+
+Не заводить четвёртый токен под старое значение pearls и не изобретать
+`drop-shadow`-форму «на всякий случай».
+
+- `box-shadow` pearls — оставить литерал, пока секцию не перенесут заново
+  с морского макета (фаза B). Если в макете у карточки будет `shadow/photo`
+  (или новый стиль) — подставить `var(--shadow-*)`, не выдумывая имя.
+- `drop-shadow` конверта — отдельный токен только если появится второй
+  потребитель той же формы. Пока это специфика модуля, не темы.
+
+Триггер — перенос соответствующей секции в фазе B или появление второго
+такого же `drop-shadow` вне envelope.

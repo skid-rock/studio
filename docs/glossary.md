@@ -146,7 +146,7 @@ BlockModule`. `defineBlock(mod)` — единственная точка **ст�
 
 ### **токены (W3C DTCG)**
 
-Примитивы темы (палитра, типографика, размеры, motion) в JSON по стандарту **W3C
+Примитивы темы (палитра, типографика, тени, размеры, motion) в JSON по стандарту **W3C
 DTCG** (`src/tokens/source/`). CSS — производное (Style Dictionary → `dist/*.css` с
 CSS-переменными). Источник правды — JSON, CSS руками не правят.
 [tokens/README](../src/tokens/README.md) · [tokens/source/](../src/tokens/source/)
