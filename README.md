@@ -110,6 +110,8 @@ studio/
   `docs/design/`, синк в `src/editor/ds/`, каналы DesignSync и архив/intake.
 - [ADR-0007](docs/adr/ADR-0007-template-contract.md) — эталон `editor-mvp` как
   машинный контракт «эталон = код ⊆ ДС».
+- [ADR-0008](docs/adr/ADR-0008-section-instance-identity.md) — идентичность
+  экземпляра секции: `sectionId` в `RenderContext`, не в схеме параметров.
 
 ## Стек
 

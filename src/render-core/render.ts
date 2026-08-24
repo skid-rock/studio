@@ -11,7 +11,6 @@ export function renderDocument(
     doc: StudioDocument,
     opts: RenderOptions,
 ): RenderResult {
-    const ctx: RenderContext = { doc };
     const cssParts = new Map<string, string>(); // type -> css (дедуп по типу)
     const jsParts = new Map<string, string>(); // type -> js (дедуп по типу)
     const htmlParts: string[] = [];
@@ -32,6 +31,10 @@ export function renderDocument(
         if (mod.js && !jsParts.has(mod.type)) {
             jsParts.set(mod.type, mod.js);
         }
+        // Контекст свой на каждый узел: sectionId — идентичность экземпляра
+        // секции (ADR-0008), общим на документ он быть не может.
+        const ctx: RenderContext = { doc, sectionId: node.id };
+
         htmlParts.push(mod.render(node.props, ctx));
     }
 

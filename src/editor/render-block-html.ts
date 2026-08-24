@@ -26,7 +26,12 @@ export function renderModuleHtml(
     props: Record<string, unknown>,
     doc: StudioDocument,
 ): string {
-    const ctx: RenderContext = { doc };
+    // id снимается с props (служебный ключ холста) и уходит в контекст —
+    // паритет с экспортом по ADR-0008: в сам render он не попадает ни там, ни тут.
+    const ctx: RenderContext = {
+        doc,
+        sectionId: typeof props.id === 'string' ? props.id : '',
+    };
 
     return mod.render(stripInternalProps(props), ctx);
 }

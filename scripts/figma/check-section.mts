@@ -47,6 +47,9 @@ const SECTION_TYPES = [
     'closing-collage',
 ] as const;
 
+/** Попап RSVP — не секция лендинга; имя RSVP/Popup принято (STUDIO-056/061). */
+const NON_SECTION_ROOTS = new Set(['RSVP/Popup']);
+
 export interface Options {
     rootId: string;
     width: number;
@@ -267,6 +270,10 @@ export function checkStructure(root: TreeNode, width: number): Finding[] {
  * («1 Intro», «3 Schedule»), и вердикт на этом ронять рано.
  */
 export function checkNaming(root: TreeNode): Finding[] {
+    if (NON_SECTION_ROOTS.has(root.name)) {
+        return [];
+    }
+
     const match = /^Section\/(.+)$/.exec(root.name);
 
     if (!match) {

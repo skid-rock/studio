@@ -10,6 +10,7 @@ const stubCtx = {
         motion: { preset: 'subtle' },
         sections: [],
     } satisfies StudioDocument,
+    sectionId: 's_test',
 };
 
 describe('rsvp', () => {
@@ -18,16 +19,48 @@ describe('rsvp', () => {
     it('рендерит форму с нативной HTML5-валидацией', () => {
         expect(html).toContain('<form class="s-rsvp__form" data-rsvp>');
         expect(html).toContain(
-            '<input type="text" name="name" autocomplete="name" required />',
+            '<input class="s-rsvp__name" type="text" name="name" autocomplete="name" placeholder="Анна Иванова" required />',
         );
-        expect(html).toContain(
-            '<input type="radio" name="attend" value="yes" checked /> Да, с удовольствием',
-        );
-        expect(html).toContain(
-            '<input type="radio" name="attend" value="no" /> К сожалению, нет',
-        );
-        expect(html).toContain('name="drinks"');
         expect(html).toContain('data-rsvp-hint role="status"');
+    });
+
+    // Секция в потоке — только приглашение по макету (STUDIO-061): title, lead,
+    // CTA. Формы в потоке нет, она уехала в попап.
+    it('в потоке страницы держит приглашение, а анкету — в попапе', () => {
+        const inFlow = html.slice(
+            html.indexOf('s-rsvp__inner'),
+            html.indexOf('s-rsvp-popup'),
+        );
+
+        expect(inFlow).toContain('s-rsvp__title');
+        expect(inFlow).toContain('s-rsvp__lead');
+        expect(inFlow).toContain('s-rsvp__open');
+        expect(inFlow).not.toContain('<form');
+        expect(inFlow).not.toContain('<input');
+    });
+
+    it('содержит четыре группы полей анкеты по макету', () => {
+        expect(html).toContain('name="name"');
+        expect(html).toContain('name="presence"');
+        expect(html).toContain('name="drinks"');
+        expect(html).toContain('name="menu"');
+        expect(html.match(/type="radio"/g)).toHaveLength(3);
+        expect(html.match(/type="checkbox"/g)).toHaveLength(10);
+    });
+
+    // ADR-0008: якорь попапа выводится из идентичности экземпляра секции
+    // (ctx.sectionId), иначе два RSVP на странице поделят один id.
+    it('выводит якорь попапа из sectionId контекста', () => {
+        expect(html).toContain('id="rsvp-s_test"');
+        expect(html).toContain('href="#rsvp-s_test"');
+
+        const other = rsvpModule.render(rsvpModule.defaults, {
+            ...stubCtx,
+            sectionId: 's_other',
+        });
+
+        expect(other).toContain('id="rsvp-s_other"');
+        expect(other).toContain('href="#rsvp-s_other"');
     });
 
     it('ставит data-prop только на редактируемые тексты', () => {
@@ -36,7 +69,7 @@ describe('rsvp', () => {
         expect(html).toContain('data-prop="submit"');
         expect(html).not.toContain('data-prop="endpoint"');
         expect(html).not.toContain('data-prop="name"');
-        expect(html).not.toContain('data-prop="attend"');
+        expect(html).not.toContain('data-prop="presence"');
         expect(html).not.toContain('data-prop="drinks"');
     });
 

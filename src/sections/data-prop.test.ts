@@ -20,6 +20,7 @@ const stubCtx = {
         motion: { preset: 'subtle' },
         sections: [],
     } satisfies StudioDocument,
+    sectionId: 's_test',
 };
 
 describe('data-prop якоря (STUDIO-014)', () => {

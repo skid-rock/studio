@@ -10,6 +10,7 @@ const stubCtx = {
         motion: { preset: 'subtle' },
         sections: [],
     } satisfies StudioDocument,
+    sectionId: 's_test',
 };
 
 describe('countdown', () => {

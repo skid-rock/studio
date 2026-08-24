@@ -170,6 +170,8 @@ render:
 - [ADR-0006](adr/ADR-0006-chrome-ds-consumption.md) — ДС хрома: SoT `docs/design/`,
   синк в `src/editor/ds/`, DesignSync и архив/intake.
 - [ADR-0007](adr/ADR-0007-template-contract.md) — эталон `editor-mvp` как контракт.
+- [ADR-0008](adr/ADR-0008-section-instance-identity.md) — `sectionId` в
+  `RenderContext`: идентичность экземпляра секции мимо схемы параметров.
 
 ## Ссылки
 

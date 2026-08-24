@@ -26,6 +26,24 @@ export const CANVAS_CSS = `
   position: absolute;
 }
 
+/* RSVP-попап на холсте — в потоке под секцией, чтобы тексты анкеты
+   были видны и доступны inline (STUDIO-061). */
+.editor-block[data-block="rsvp"] .s-rsvp-popup {
+  display: block;
+  position: relative;
+  inset: auto;
+  z-index: auto;
+  margin-top: 1.5rem;
+}
+.editor-block[data-block="rsvp"] .s-rsvp-popup__backdrop,
+.editor-block[data-block="rsvp"] .s-rsvp-popup__close {
+  display: none;
+}
+.editor-block[data-block="rsvp"] .s-rsvp-popup__panel {
+  max-height: none;
+  overflow: visible;
+}
+
 /* Изоляция stacking context холста: без неё envelope (z-index:200 внутри секции)
    пробивает колонки редактора и перекрывает палитру/правую панель. Это
    нейтрализация чужого контента лендинга, не стиль хрома — поэтому здесь, а не
