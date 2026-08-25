@@ -31,17 +31,44 @@ test('DnD мышью: hero уезжает ниже our-story, undo откаты�
     const handle = page.getByRole('button', { name: 'Перетащить секцию' });
     await expect(handle).toBeVisible();
 
-    const storyBox = await story.boundingBox();
-    expect(storyBox).toBeTruthy();
+    // Секции морского макета выше вьюпорта (hero ≈ 828px при 720): our-story
+    // в момент захвата за экраном, и одиночный прыжок dragTo уронил бы указатель
+    // обратно в hero (source === target — перестановки нет). Поэтому ведём мышь
+    // руками и держим у нижней кромки, пока автоскролл dnd-kit не подвезёт цель.
+    const handleBox = (await handle.boundingBox())!;
+    const viewport = page.viewportSize()!;
+    const edgeY = viewport.height - 20;
+
+    await page.mouse.move(
+        handleBox.x + handleBox.width / 2,
+        handleBox.y + handleBox.height / 2,
+    );
+    await page.mouse.down();
+    // Первый сдвиг — мимо порога активации (distance ≥ 6px).
+    await page.mouse.move(handleBox.x + handleBox.width / 2, handleBox.y + 40, {
+        steps: 5,
+    });
+
+    const centerX = Math.round(viewport.width / 2);
+    let storyBox = await story.boundingBox();
+
+    // Держим у кромки короткими шагами: автоскролл идёт, пока указатель движется.
+    for (let i = 0; i < 60 && (!storyBox || storyBox.y > edgeY); i++) {
+        await page.mouse.move(centerX, edgeY + (i % 2), { steps: 1 });
+        await page.waitForTimeout(50);
+        storyBox = await story.boundingBox();
+    }
+
+    expect(storyBox, 'автоскролл не довёз our-story во вьюпорт').toBeTruthy();
 
     // Цель — нижняя половина our-story, чтобы финальный индекс был после неё.
-    await handle.dragTo(story, {
-        targetPosition: {
-            x: storyBox!.width / 2,
-            y: storyBox!.height - 8,
-        },
-        force: true,
-    });
+    await page.mouse.move(
+        centerX,
+        Math.min(storyBox!.y + storyBox!.height - 8, edgeY),
+        { steps: 3 },
+    );
+    await page.waitForTimeout(150);
+    await page.mouse.up();
 
     await expect
         .poll(async () => {
