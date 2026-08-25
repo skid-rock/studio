@@ -92,11 +92,14 @@ export function attachInlineEdit(
 
         // Без изменений — не коммитим: updateSectionProps всегда создаёт новый
         // документ, и каждый blur засорял бы историю undo пустыми шагами.
-        const section = store
-            .getState()
-            .document.sections.find((s) => s.id === sectionId);
+        //
+        // Сравнивать надо с ЭФФЕКТИВНЫМ значением (props поверх defaults модуля):
+        // документ хранит только переопределения, и у унаследованного поля
+        // section.props[propKey] === undefined. Прямое сравнение с props
+        // коммитило дефолт при первом же blur — пустой шаг истории.
+        const current = store.effectiveProps(sectionId);
 
-        if (!section || section.props[propKey] === raw) {
+        if (!current || current[propKey] === raw) {
             return;
         }
 

@@ -39,6 +39,12 @@ export interface EditorStore {
     moveSection(id: string, toIndex: number): void;
     duplicateSection(id: string): void;
     updateProps(id: string, patch: Record<string, unknown>): void;
+    /**
+     * Эффективные props секции: переопределения документа поверх defaults модуля.
+     * Документ хранит только отличия от дефолта, поэтому «текущее значение поля»
+     * из одного `section.props` не прочитать — нужен реестр, а он тут.
+     */
+    effectiveProps(id: string): Record<string, unknown> | undefined;
     setTheme(themeId: string): void;
     setThemeOverrides(overrides: Record<string, string>): void;
     /** Заменить документ целиком (загрузка из файла). Идёт через историю — откатывается Ctrl+Z. */
@@ -151,6 +157,17 @@ export function createEditorStore(
                 : undefined;
 
             commit(docUpdateSectionProps(doc, id, patch, schema));
+        },
+        effectiveProps(id) {
+            const section = doc.sections.find((s) => s.id === id);
+
+            if (!section) {
+                return undefined;
+            }
+
+            const mod = registry.get(section.type);
+
+            return { ...(mod?.defaults ?? {}), ...section.props };
         },
         setTheme(themeId) {
             commit(docSetTheme(doc, themeId));
