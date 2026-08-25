@@ -120,6 +120,65 @@ describe('createEditorStore — команды', () => {
         });
     });
 
+    it('effectiveProps: defaults модуля под переопределениями документа', () => {
+        const store = makeStore(
+            docWithSections([
+                {
+                    id: 'a',
+                    type: 'hero',
+                    order: 'a0',
+                    // subtitle в документе нет — приходит из defaults модуля.
+                    props: { title: 'Свой' },
+                },
+            ]),
+        );
+
+        expect(store.effectiveProps('a')).toEqual({
+            title: 'Свой',
+            subtitle: 'Subtext',
+        });
+    });
+
+    it('effectiveProps: нет секции — undefined; нет модуля — только props', () => {
+        const store = makeStore(
+            docWithSections([
+                {
+                    id: 'a',
+                    type: 'unknown-block',
+                    order: 'a0',
+                    props: { title: 'Свой' },
+                },
+            ]),
+        );
+
+        expect(store.effectiveProps('нет-такой')).toBeUndefined();
+        expect(store.effectiveProps('a')).toEqual({ title: 'Свой' });
+    });
+
+    // Регресс: inline-правка сравнивает введённый текст с эффективным значением.
+    // Пока сравнение шло с section.props[key], у унаследованного поля там было
+    // undefined — и первый blur коммитил дефолт как правку, создавая пустой шаг
+    // истории (e2e «клик по ручке без движения не создаёт шаг undo»).
+    it('effectiveProps даёт inline-правке сравнить дефолт без пустого шага', () => {
+        const store = makeStore(
+            docWithSections([
+                { id: 'a', type: 'hero', order: 'a0', props: { title: 'Свой' } },
+            ]),
+        );
+
+        const raw = 'Subtext';
+        const current = store.effectiveProps('a');
+
+        expect(current?.subtitle).toBe(raw);
+
+        // Коммита нет — значит и шага истории нет.
+        if (current?.subtitle !== raw) {
+            store.updateProps('a', { subtitle: raw });
+        }
+
+        expect(store.canUndo()).toBe(false);
+    });
+
     it('setTheme / setThemeOverrides меняют тему', () => {
         const store = makeStore();
 
