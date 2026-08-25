@@ -40,21 +40,23 @@ test('холст прокручивается до последней секци
 test('панель свойств: несколько символов подряд без потери фокуса', async ({ page }) => {
     // Клик по содержимому всплывает в обёртку секции и выделяет её.
     await page.locator('[data-block="hero"]').click();
-    const names = page.getByRole('textbox', { name: 'Имена' });
+    const name1 = page.getByRole('textbox', { name: 'Имя 1' });
+    // Заголовок панели — по классу, а не по тексту: после STUDIO-060 label
+    // модуля ('Hero') совпадает с названием группы полей, и getByText нестрог.
     await expect(
         page
             .getByRole('complementary')
-            .filter({ has: names })
-            .getByText('Hero (имена и дата)', { exact: true }),
-    ).toBeVisible();
-    await names.click();
+            .filter({ has: name1 })
+            .locator('.ch-panel__title'),
+    ).toHaveText('Hero');
+    await name1.click();
     // Регресс класса фокус-багов (docs/improvements/bugs.md): если фокус слетает
     // после символа, часть последовательности не попадёт в поле
-    await names.pressSequentially('12345', { delay: 50 });
-    await expect(names).toBeFocused();
-    await expect(names).toHaveValue(/12345/);
+    await name1.pressSequentially('12345', { delay: 50 });
+    await expect(name1).toBeFocused();
+    await expect(name1).toHaveValue(/12345/);
     // Правка из панели видна на холсте
-    await expect(page.locator('[data-block="hero"] [data-prop="names"]')).toContainText('12345');
+    await expect(page.locator('[data-block="hero"] [data-prop="name1"]')).toContainText('12345');
 });
 
 test('inline-правка на холсте + undo/redo (кнопки и хоткей)', async ({ page }) => {
@@ -62,7 +64,7 @@ test('inline-правка на холсте + undo/redo (кнопки и хот�
     // всплывает в store.select → re-render BlockPreview сбрасывает фокус
     // contentEditable до набора (dangerouslySetInnerHTML).
     await page.locator('[data-block="hero"]').click();
-    await expect(page.getByRole('textbox', { name: 'Имена' })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Имя 1' })).toBeVisible();
 
     const date = page.locator('[data-block="hero"] [data-prop="date"]');
     const before = (await date.textContent()) ?? '';
@@ -93,8 +95,8 @@ test('снятие выделения: панель глохнет, но пом�
     const panel = page
         .getByRole('complementary')
         .filter({ has: page.getByRole('tab', { name: 'Секция' }) });
-    const names = panel.getByRole('textbox', { name: 'Имена' });
-    await expect(names).toBeEnabled();
+    const name1 = panel.getByRole('textbox', { name: 'Имя 1' });
+    await expect(name1).toBeEnabled();
 
     // Снятие выделения — клик по сцене окна (padding сетки .ch-ed).
     // Не зависит от scrollTop холста: сцена всегда на экране (STUDIO-055).
@@ -114,18 +116,18 @@ test('снятие выделения: панель глохнет, но пом�
     // та же, заголовок прежний, поля выключены (STUDIO-048). Первая секция
     // документа — конверт, так что hero тут доказывает именно память панели.
     await expect(panel.locator('.ch-panel__title')).toHaveText(
-        'Hero (имена и дата)',
+        'Hero',
     );
-    await expect(names).toBeDisabled();
+    await expect(name1).toBeDisabled();
     await expect(
         panel.getByText('Ничего не выделено', { exact: false }),
     ).toBeVisible();
 
     // Клавиатурный путь: Escape снимает выделение так же, как клик по фону.
     await page.locator('[data-block="hero"]').click();
-    await expect(names).toBeEnabled();
+    await expect(name1).toBeEnabled();
     await page.keyboard.press('Escape');
-    await expect(names).toBeDisabled();
+    await expect(name1).toBeDisabled();
 });
 
 test('вкладки: переключение не сбрасывает выделение секции', async ({
@@ -136,11 +138,11 @@ test('вкладки: переключение не сбрасывает выд�
     const panel = page
         .getByRole('complementary')
         .filter({ has: page.getByRole('tab', { name: 'Секция' }) });
-    const names = panel.getByRole('textbox', { name: 'Имена' });
-    await expect(names).toBeEnabled();
+    const name1 = panel.getByRole('textbox', { name: 'Имя 1' });
+    await expect(name1).toBeEnabled();
     await expect(
         panel.locator('.ch-panel__title'),
-    ).toHaveText('Hero (имена и дата)');
+    ).toHaveText('Hero');
 
     await page.getByRole('tab', { name: 'Страница' }).click();
     await expect(page.getByLabel('Тема')).toBeVisible();
@@ -149,10 +151,10 @@ test('вкладки: переключение не сбрасывает выд�
     ).toBeVisible();
 
     await page.getByRole('tab', { name: 'Секция' }).click();
-    await expect(names).toBeEnabled();
+    await expect(name1).toBeEnabled();
     await expect(
         panel.locator('.ch-panel__title'),
-    ).toHaveText('Hero (имена и дата)');
+    ).toHaveText('Hero');
 });
 
 test('пустой документ: панель показывает «нет секций»', async ({ page }) => {
@@ -210,7 +212,7 @@ test('пустое состояние холста: ch-cv-empty, вставка,
     await page
         .getByRole('complementary')
         .filter({ has: page.getByText('Блоки', { exact: true }) })
-        .getByRole('button', { name: 'Hero (имена и дата)' })
+        .getByRole('button', { name: 'Hero' })
         .click();
 
     await expect(empty).toHaveCount(0);
@@ -220,7 +222,7 @@ test('пустое состояние холста: ch-cv-empty, вставка,
     // Как в тесте inline+undo: сначала секция выделена (панель жива), потом якорь.
     // Иначе клик по data-prop всплывает в select → re-render сбрасывает набор.
     await page.locator('[data-block="hero"]').click();
-    await expect(page.getByRole('textbox', { name: 'Имена' })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Имя 1' })).toBeVisible();
 
     const date = page.locator('[data-block="hero"] [data-prop="date"]');
     await date.click();
@@ -246,7 +248,7 @@ test('экспорт: вес в бюджете 190 KiB, якоря размет�
 
     // Ключевые якоря экспортированной разметки
     expect(html.toLowerCase()).toContain('<!doctype html>');
-    expect(html).toContain('data-prop="names"');
+    expect(html).toContain('data-prop="name1"');
     expect(html).toContain('data-prop="date"');
     expect(html).toContain('data-prop="title"');
 
