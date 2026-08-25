@@ -95,6 +95,9 @@ describe('data-prop якоря (STUDIO-014)', () => {
         expect(html).toContain('data-prop="lHours"');
         expect(html).toContain('data-prop="lMinutes"');
         expect(html).toContain('data-prop="lSeconds"');
+        expect(html).toContain('data-prop="letter1"');
+        expect(html).toContain('data-prop="amp"');
+        expect(html).toContain('data-prop="letter2"');
         expect(html).toContain(
             'data-countdown-target="2026-08-05T15:00:00+03:00"',
         );

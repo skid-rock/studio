@@ -41,4 +41,25 @@ describe('countdown', () => {
     it('render остаётся агностичным к React', () => {
         expect(html).not.toMatch(/React|jsx|document\.|window\./);
     });
+
+    it('содержит якоря монограммы', () => {
+        expect(html).toContain('data-prop="letter1"');
+        expect(html).toContain('data-prop="amp"');
+        expect(html).toContain('data-prop="letter2"');
+    });
+
+    it('css использует токен тени ракушки, без box-shadow', () => {
+        expect(countdownModule.css).toContain('var(--filter-shell)');
+        // Ловим именно объявление: слово box-shadow есть в комментарии CSS.
+        expect(countdownModule.css).not.toMatch(/box-shadow\s*:/);
+    });
+
+    it('рендерит фон при непустом bgUrl и скрывает при пустом', () => {
+        expect(html).toContain('s-countdown__bg');
+        const noBg = countdownModule.render(
+            { ...countdownModule.defaults, bgUrl: '' },
+            stubCtx,
+        );
+        expect(noBg).not.toContain('s-countdown__bg');
+    });
 });
