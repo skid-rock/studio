@@ -208,5 +208,5 @@ export const BLOCK_ICON: Record<string, IconName> = {
     contacts: 'phone',
     rsvp: 'clipboard',
     closing: 'pencil',
-    'closing-collage': 'grid',
+    'deco-collage': 'grid',
 };

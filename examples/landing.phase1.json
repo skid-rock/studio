@@ -123,15 +123,12 @@
       }
     },
     {
-      "id": "closing-collage-9f3e2a1b-4c5d-6e7f-8a9b-0c1d2e3f4a5b",
-      "type": "closing-collage",
+      "id": "deco-collage-9f3e2a1b-4c5d-6e7f-8a9b-0c1d2e3f4a5b",
+      "type": "deco-collage",
       "order": "a9",
       "props": {
-        "photoLeft": "/img/closing-collage/photo-left.png",
-        "photoRight": "/img/closing-collage/photo-right.png",
-        "letterLeft": "Д",
-        "amp": "&",
-        "letterRight": "М"
+        "photoLeft": "/img/deco-collage/photo-left.png",
+        "photoRight": "/img/deco-collage/photo-right.png"
       }
     }
   ]

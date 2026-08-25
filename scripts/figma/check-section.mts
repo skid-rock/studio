@@ -44,7 +44,7 @@ const SECTION_TYPES = [
     'contacts',
     'rsvp',
     'closing',
-    'closing-collage',
+    'deco-collage',
 ] as const;
 
 /** Попап RSVP — не секция лендинга; имя RSVP/Popup принято (STUDIO-056/061). */
@@ -172,7 +172,7 @@ function isContainer(node: TreeNode): boolean {
  * его клипает (`overflow: hidden`).
  *
  * Дополнительно ABSOLUTE разрешён внутри холста `stage` (коллаж с редактируемыми
- * фото/текстом — closing-collage): иначе контентные слои пришлось бы маскировать
+ * фото/текстом — deco-collage): иначе контентные слои пришлось бы маскировать
  * под `deco/*`.
  */
 function isDecoName(name: string): boolean {

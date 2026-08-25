@@ -4,9 +4,9 @@
  */
 import { createRegistry, defineBlock } from '../render-core/registry';
 import { closingModule } from './closing';
-import { closingCollageModule } from './closing-collage';
 import { contactsModule } from './contacts';
 import { countdownModule } from './countdown';
+import { decoCollageModule } from './deco-collage';
 import { dressCodeModule } from './dress-code';
 import { dressCodePearlsModule } from './dress-code-pearls';
 import { faqModule } from './details-faq';
@@ -32,5 +32,5 @@ export const defaultRegistry = createRegistry([
     defineBlock(contactsModule),
     defineBlock(rsvpModule),
     defineBlock(closingModule),
-    defineBlock(closingCollageModule),
+    defineBlock(decoCollageModule),
 ]);

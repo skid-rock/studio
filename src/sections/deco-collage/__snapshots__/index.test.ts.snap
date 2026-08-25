@@ -1,0 +1,14 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`deco-collage > стабилен по снапшоту на дефолтах 1`] = `
+"
+    <section class="s-dc">
+      <div class="s-dc__stage">
+        <div class="s-dc__photo s-dc__photo--right"><img class="s-dc__img" src="/img/deco-collage/photo-right.png" alt="" loading="lazy" /></div>
+        <div class="s-dc__photo s-dc__photo--left"><img class="s-dc__img" src="/img/deco-collage/photo-left.png" alt="" loading="lazy" /></div>
+        <img class="s-dc__deco s-dc__deco--pearl-a" src="/img/deco-collage/pearl-a.png" alt="" aria-hidden="true" loading="lazy" />
+        <img class="s-dc__deco s-dc__deco--pearl-b" src="/img/deco-collage/pearl-b.png" alt="" aria-hidden="true" loading="lazy" />
+        <img class="s-dc__deco s-dc__deco--rings" src="/img/deco-collage/rings.png" alt="" aria-hidden="true" loading="lazy" />
+      </div>
+    </section>"
+`;

@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest';
 import type { StudioDocument } from '../render-core/document';
 import { heroModule } from './hero';
 import { closingModule } from './closing';
-import { closingCollageModule } from './closing-collage';
 import { contactsModule } from './contacts';
 import { dressCodeModule } from './dress-code';
 import { faqModule } from './details-faq';
@@ -109,18 +108,5 @@ describe('data-prop якоря (STUDIO-014)', () => {
         expect(html).toContain('data-prop="ctaLabel"');
         expect(html).not.toContain('data-prop="ctaUrl"');
         expect(html).not.toContain('data-prop="decorImg"');
-    });
-
-    it('closing-collage — буквы монограммы (без data-prop на путях фото)', () => {
-        const html = closingCollageModule.render(
-            closingCollageModule.defaults,
-            stubCtx,
-        );
-
-        expect(html).toContain('data-prop="letterLeft"');
-        expect(html).toContain('data-prop="amp"');
-        expect(html).toContain('data-prop="letterRight"');
-        expect(html).not.toContain('data-prop="photoLeft"');
-        expect(html).not.toContain('data-prop="photoRight"');
     });
 });
