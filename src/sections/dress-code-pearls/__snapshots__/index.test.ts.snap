@@ -3,18 +3,17 @@
 exports[`dress-code-pearls > стабилен по снапшоту на дефолтах 1`] = `
 "
     <section class="s-dcp">
-      <div class="s-dcp__head">
-        <h2 class="s-dcp__title" data-prop="title">ДРЕСС-КОД</h2>
-        <p class="s-dcp__lead" data-prop="text">Мы подготовили цветовую палитру, которая поможет поддержать стиль нашего торжества</p>
-      </div>
-      <div class="s-dcp__palette"><div class="s-dcp__swatch"><img class="s-dcp__pearl" src="/img/dress-code/pearl-champagne.png" alt="" loading="lazy" /><p class="s-dcp__caption" data-prop="p1cap">шампань</p></div><div class="s-dcp__swatch"><img class="s-dcp__pearl" src="/img/dress-code/pearl-silver.png" alt="" loading="lazy" /><p class="s-dcp__caption" data-prop="p2cap">серебро</p></div><div class="s-dcp__swatch"><img class="s-dcp__pearl" src="/img/dress-code/pearl-lavender.png" alt="" loading="lazy" /><p class="s-dcp__caption" data-prop="p3cap">лаванда</p></div><div class="s-dcp__swatch"><img class="s-dcp__pearl" src="/img/dress-code/pearl-pistachio.png" alt="" loading="lazy" /><p class="s-dcp__caption" data-prop="p4cap">фисташка</p></div></div>
-      <div class="s-dcp__contact">
-        <p class="s-dcp__contact-text" data-prop="contactText">Если у вас возникнут вопросы, или вы готовите нам творческий подарок, обращайтесь к нашему организатору Татьяне</p>
-        <a class="s-dcp__cta" href="https://t.me/" target="_blank" rel="noopener" data-prop="ctaLabel">написать Татьяне</a>
-      </div>
-      <div class="s-dcp__card">
-        <img class="s-dcp__photo" src="/img/dress-code/photo.jpg" alt="Жених и невеста на берегу моря" loading="lazy" />
-        <img class="s-dcp__decor" src="/img/dress-code/shell-rings.png" alt="" aria-hidden="true" loading="lazy" />
+      <div class="s-dcp__inner">
+        <div class="s-dcp__head">
+          <h2 class="s-dcp__title" data-prop="title">ДРЕСС-КОД</h2>
+          <p class="s-dcp__subtitle" data-prop="subtitle">Мы подготовили цветовую палитру,
+которая поможет поддержать стиль нашего торжества</p>
+        </div>
+        <div class="s-dcp__palette"><div class="s-dcp__swatch"><img class="s-dcp__pearl" src="/img/dress-code/pearl-cream.png" alt="" loading="lazy" /><p class="s-dcp__caption" data-prop="p1cap">кремовый</p></div><div class="s-dcp__swatch"><img class="s-dcp__pearl" src="/img/dress-code/pearl-silver.png" alt="" loading="lazy" /><p class="s-dcp__caption" data-prop="p2cap">серебро</p></div><div class="s-dcp__swatch"><img class="s-dcp__pearl" src="/img/dress-code/pearl-sand.png" alt="" loading="lazy" /><p class="s-dcp__caption" data-prop="p3cap">песочный</p></div><div class="s-dcp__swatch"><img class="s-dcp__pearl" src="/img/dress-code/pearl-caramel.png" alt="" loading="lazy" /><p class="s-dcp__caption" data-prop="p4cap">карамель</p></div><div class="s-dcp__swatch"><img class="s-dcp__pearl" src="/img/dress-code/pearl-chocolate.png" alt="" loading="lazy" /><p class="s-dcp__caption" data-prop="p5cap">шоколад</p></div></div>
+        <div class="s-dcp__attire"><div class="s-dcp__group"><p class="s-dcp__group-title" data-prop="womenTitle">ДЛЯ ЖЕНЩИН</p><p class="s-dcp__group-text" data-prop="womenText">коктейльные платья, нарядные блузки, юбки
+украшения из жемчуга и драгоценных камней
+обувь на удобном каблуке</p></div><div class="s-dcp__group"><p class="s-dcp__group-title" data-prop="menTitle">ДЛЯ МУЖЧИН</p><p class="s-dcp__group-text" data-prop="menText">рубашки, поло, брюки, костюмы
+туфли или лоферы</p></div></div>
       </div>
     </section>"
 `;

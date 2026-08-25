@@ -61,7 +61,7 @@ make figma-inventory ARGS="32:127"
 make figma-inventory ARGS="32:127 --depth 2 --out /tmp/section.json"
 
 # растровый ассет в 2x (флаг --scale у самого figma-use не работает)
-make figma-export ARGS="238:2 public/img/dress-code/shell-rings.png"
+make figma-export ARGS="401:121 public/img/dress-code/pearl-cream.png"
 make figma-export ARGS="238:2 icon.svg --format SVG"
 
 # линт макета пресетом studio — перед переносом секции

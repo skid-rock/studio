@@ -1,15 +1,16 @@
 /**
- * Секция dress-code-pearls — перенос макета «4 Dress Code» из Figma (STUDIO-038).
- * Отличие от текстового `dress-code`: палитра — не плоские цветовые swatch'и, а
- * растровые образцы (жемчужины) с подписями, плюс блок контакта с кнопкой и
- * фотокарточка с паспарту и декоративным оверлеем.
+ * Секция dress-code-pearls — дресс-код морского лендинга по узлу Figma
+ * `Section/Dress Code Pearls` (32:127), перенос STUDIO-062.
  *
- * Схема плоская (в render-core нет массивов и типа «изображение»): образцы —
- * 4 пары ключей `pNimg`/`pNcap`, картинки задаются путём (как `venue.mapImage`).
- * Пустой путь/подпись деградируют — блок просто не рендерится.
+ * От исходного переноса STUDIO-038 осталась только механика палитры: схема плоская
+ * (в render-core нет ни массивов, ни типа «изображение»), поэтому образцы — пять пар
+ * ключей `pNimg`/`pNcap`, картинки задаются путём (как `venue.mapImage`). Пустой
+ * путь/подпись деградируют — образец просто не рендерится.
  *
- * Отступы взяты из макета и нормализованы к восьмёрочной шкале (30 → 32) —
- * ровно то, что предлагал линт figma-use по исходному фрейму.
+ * Блок контакта и фотокарточка выпилены: в макете их нет (решение «макет первичен»,
+ * STUDIO-058). Вместе с фотокарточкой ушла и захардкоженная тень паспарту.
+ *
+ * Переносы строк внутри текстов значащие — как в hero, держим `white-space: pre-line`.
  * Render агностичен к React.
  */
 import type { BlockModule } from '../../render-core/types';
@@ -18,7 +19,7 @@ import { defaultsFromSchema } from '../../render-core/schema';
 
 interface DressCodePearlsProps extends Record<string, unknown> {
     title: string;
-    text: string;
+    subtitle: string;
     p1img: string;
     p1cap: string;
     p2img: string;
@@ -27,12 +28,12 @@ interface DressCodePearlsProps extends Record<string, unknown> {
     p3cap: string;
     p4img: string;
     p4cap: string;
-    contactText: string;
-    ctaLabel: string;
-    ctaUrl: string;
-    photo: string;
-    photoAlt: string;
-    decorImg: string;
+    p5img: string;
+    p5cap: string;
+    womenTitle: string;
+    womenText: string;
+    menTitle: string;
+    menText: string;
 }
 
 const schema: ParamSchema = [
@@ -41,10 +42,10 @@ const schema: ParamSchema = [
         items: [
             { key: 'title', label: 'Заголовок', type: 'text', def: 'ДРЕСС-КОД' },
             {
-                key: 'text',
+                key: 'subtitle',
                 label: 'Подводка',
                 type: 'text',
-                def: 'Мы подготовили цветовую палитру, которая поможет поддержать стиль нашего торжества',
+                def: 'Мы подготовили цветовую палитру,\nкоторая поможет поддержать стиль нашего торжества',
             },
         ],
     },
@@ -55,13 +56,13 @@ const schema: ParamSchema = [
                 key: 'p1img',
                 label: 'Образец 1 — картинка',
                 type: 'text',
-                def: '/img/dress-code/pearl-champagne.png',
+                def: '/img/dress-code/pearl-cream.png',
             },
             {
                 key: 'p1cap',
                 label: 'Образец 1 — подпись',
                 type: 'text',
-                def: 'шампань',
+                def: 'кремовый',
             },
             {
                 key: 'p2img',
@@ -79,71 +80,66 @@ const schema: ParamSchema = [
                 key: 'p3img',
                 label: 'Образец 3 — картинка',
                 type: 'text',
-                def: '/img/dress-code/pearl-lavender.png',
+                def: '/img/dress-code/pearl-sand.png',
             },
             {
                 key: 'p3cap',
                 label: 'Образец 3 — подпись',
                 type: 'text',
-                def: 'лаванда',
+                def: 'песочный',
             },
             {
                 key: 'p4img',
                 label: 'Образец 4 — картинка',
                 type: 'text',
-                def: '/img/dress-code/pearl-pistachio.png',
+                def: '/img/dress-code/pearl-caramel.png',
             },
             {
                 key: 'p4cap',
                 label: 'Образец 4 — подпись',
                 type: 'text',
-                def: 'фисташка',
+                def: 'карамель',
+            },
+            {
+                key: 'p5img',
+                label: 'Образец 5 — картинка',
+                type: 'text',
+                def: '/img/dress-code/pearl-chocolate.png',
+            },
+            {
+                key: 'p5cap',
+                label: 'Образец 5 — подпись',
+                type: 'text',
+                def: 'шоколад',
             },
         ],
     },
     {
-        group: 'Контакт',
+        group: 'Что надеть',
         items: [
             {
-                key: 'contactText',
-                label: 'Текст',
+                key: 'womenTitle',
+                label: 'Женщины — заголовок',
                 type: 'text',
-                def: 'Если у вас возникнут вопросы, или вы готовите нам творческий подарок, обращайтесь к нашему организатору Татьяне',
+                def: 'ДЛЯ ЖЕНЩИН',
             },
             {
-                key: 'ctaLabel',
-                label: 'Подпись кнопки',
+                key: 'womenText',
+                label: 'Женщины — текст',
                 type: 'text',
-                def: 'написать Татьяне',
+                def: 'коктейльные платья, нарядные блузки, юбки\nукрашения из жемчуга и драгоценных камней\nобувь на удобном каблуке',
             },
             {
-                key: 'ctaUrl',
-                label: 'Ссылка кнопки',
+                key: 'menTitle',
+                label: 'Мужчины — заголовок',
                 type: 'text',
-                def: 'https://t.me/',
-            },
-        ],
-    },
-    {
-        group: 'Фотокарточка',
-        items: [
-            {
-                key: 'photo',
-                label: 'Фото (путь)',
-                type: 'text',
-                def: '/img/dress-code/photo.jpg',
+                def: 'ДЛЯ МУЖЧИН',
             },
             {
-                key: 'photoAlt',
-                label: 'Описание фото (alt)',
+                key: 'menText',
+                label: 'Мужчины — текст',
                 type: 'text',
-                def: 'Жених и невеста на берегу моря',
-            },
-            {
-                key: 'decorImg',
-                label: 'Декор поверх фото (путь)',
-                type: 'text',
-                def: '/img/dress-code/shell-rings.png',
+                def: 'рубашки, поло, брюки, костюмы\nтуфли или лоферы',
             },
         ],
     },
@@ -151,17 +147,21 @@ const schema: ParamSchema = [
 
 const css = `
 .s-dcp {
+  background: var(--color-cream);
+  color: var(--color-text);
+}
+/* Ширина и отступы — из макета: фрейм 393 при padding 32, шаг между блоками 32. */
+.s-dcp__inner {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2rem;
-  padding: var(--section-pad-y) var(--section-pad-x) 2rem;
-  background: var(--color-cream);
-  color: var(--color-text);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 24.5625rem;
+  margin: 0 auto;
+  padding: 2rem;
   text-align: center;
-  /* декор свисает за угол фотокарточки — на узких экранах не даём ему
-     растянуть страницу по горизонтали */
-  overflow: hidden;
 }
 .s-dcp__head {
   display: flex;
@@ -170,100 +170,86 @@ const css = `
   width: 100%;
 }
 .s-dcp__title {
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 9vw, 2.25rem);
-  line-height: 1;
   margin: 0;
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 400;
+  line-height: 1.11;
 }
-.s-dcp__lead {
+.s-dcp__subtitle {
+  margin: 0;
   font-family: var(--font-body);
   font-size: 1.125rem;
-  line-height: 1.11;
-  margin: 0;
+  font-weight: 300;
+  line-height: 1.28;
+  white-space: pre-line;
 }
-/* Палитра — сетка из равных долей, а не строка по содержимому: при разной
-   длине подписей кружки остаются равноудалёнными (вывод стресс-теста макета). */
+/* Палитра — сетка из равных долей, а не строка по содержимому: при разной длине
+   подписей жемчужины остаются равноудалёнными (вывод стресс-теста макета).
+   minmax(0, 1fr) — иначе min-width: auto колонки держит ширину подписи
+   и на 320 px пятый образец вылезает за край. */
 .s-dcp__palette {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.5rem;
   width: 100%;
-  max-width: 17.5rem;
 }
 .s-dcp__swatch {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  min-width: 0;
 }
+/* В макете жемчужина 48×48. Держим потолок, но даём сжиматься: пять образцов по
+   48 + четыре зазора не влезают в вьюпорт уже 320 пикселей. */
 .s-dcp__pearl {
   display: block;
   width: 100%;
-  max-width: 4rem;
+  max-width: 3rem;
   aspect-ratio: 1;
   height: auto;
 }
 .s-dcp__caption {
+  margin: 0;
   font-family: var(--font-body);
   font-size: 1rem;
-  line-height: 1.375;
-  margin: 0;
+  font-weight: 300;
+  line-height: 1.25;
+  max-width: 100%;
+  overflow-wrap: break-word;
 }
-.s-dcp__contact {
+.s-dcp__attire {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+  gap: 2rem;
   width: 100%;
-  max-width: 17.5rem;
 }
-.s-dcp__contact-text {
-  font-family: var(--font-body);
-  font-size: 1.125rem;
-  line-height: 0.95;
+.s-dcp__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.s-dcp__group-title {
   margin: 0;
-}
-.s-dcp__cta {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
   font-family: var(--font-body);
   font-size: 1.125rem;
-  line-height: 1.4;
-  color: var(--color-text);
-  background: var(--color-accent-soft);
-  text-decoration: none;
+  font-weight: 300;
+  line-height: 1.28;
 }
-/* Паспарту: рамка 12px вокруг фото + мягкая тень (в макете 4.5/-1/3). */
-.s-dcp__card {
-  position: relative;
-  width: 17.5rem;
-  max-width: 100%;
-  padding: 0.75rem;
-  background: var(--color-surface-muted);
-  box-shadow: -1px 3px 4.5px rgba(0, 0, 0, 0.25);
-}
-.s-dcp__photo {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-/* Единственный элемент вне потока (как и в макете): свисает за правый нижний
-   угол карточки. Проценты — чтобы пропорции держались при сужении карточки.
-   Поворот −4° уже «запечён» в картинке (Figma отдаёт узел вместе с поворотом,
-   размер файла = повёрнутый bbox 120×113), поэтому CSS-поворота тут нет. */
-.s-dcp__decor {
-  position: absolute;
-  right: -11.75%;
-  bottom: -8.06%;
-  width: 42.8%;
-  height: auto;
-  pointer-events: none;
+.s-dcp__group-text {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  font-weight: 300;
+  line-height: 1.28;
+  white-space: pre-line;
 }
 `;
 
 export const dressCodePearlsModule: BlockModule<DressCodePearlsProps> = {
     type: 'dress-code-pearls',
-    label: 'Дресс-код (жемчужины + фото)',
+    label: 'Дресс-код (жемчужины)',
     schema,
     defaults: defaultsFromSchema<DressCodePearlsProps>(schema),
     render: (p) => {
@@ -296,58 +282,60 @@ export const dressCodePearlsModule: BlockModule<DressCodePearlsProps> = {
             swatch(props.p2img, props.p2cap, 2),
             swatch(props.p3img, props.p3cap, 3),
             swatch(props.p4img, props.p4cap, 4),
+            swatch(props.p5img, props.p5cap, 5),
         ].join('');
 
         const palette = swatches
             ? `<div class="s-dcp__palette">${swatches}</div>`
             : '';
 
-        // Кнопка-ссылка: без подписи не рендерится; без URL остаётся текстом
-        // (в редакторе подпись правится inline через data-prop).
-        const cta =
-            props.ctaLabel.trim() === ''
-                ? ''
-                : props.ctaUrl.trim() !== ''
-                  ? `<a class="s-dcp__cta" href="${esc(props.ctaUrl)}" target="_blank" rel="noopener" data-prop="ctaLabel">${esc(props.ctaLabel)}</a>`
-                  : `<span class="s-dcp__cta" data-prop="ctaLabel">${esc(props.ctaLabel)}</span>`;
+        // Группа блока attire: заголовок и текст правятся inline через data-prop.
+        const group = (
+            title: string,
+            text: string,
+            titleKey: string,
+            textKey: string,
+        ): string => {
+            if (title.trim() === '' && text.trim() === '') {
+                return '';
+            }
 
-        const contact =
-            props.contactText.trim() !== '' || cta
-                ? `<div class="s-dcp__contact">
-        ${props.contactText.trim() !== '' ? `<p class="s-dcp__contact-text" data-prop="contactText">${esc(props.contactText)}</p>` : ''}
-        ${cta}
-      </div>`
-                : '';
+            const head =
+                title.trim() !== ''
+                    ? `<p class="s-dcp__group-title" data-prop="${titleKey}">${esc(title)}</p>`
+                    : '';
+            const body =
+                text.trim() !== ''
+                    ? `<p class="s-dcp__group-text" data-prop="${textKey}">${esc(text)}</p>`
+                    : '';
 
-        // Декор — только вместе с фото: он позиционируется относительно карточки.
-        const decor =
-            props.decorImg.trim() !== ''
-                ? `<img class="s-dcp__decor" src="${esc(props.decorImg)}" alt="" aria-hidden="true" loading="lazy" />`
-                : '';
+            return `<div class="s-dcp__group">${head}${body}</div>`;
+        };
 
-        const card =
-            props.photo.trim() !== ''
-                ? `<div class="s-dcp__card">
-        <img class="s-dcp__photo" src="${esc(props.photo)}" alt="${esc(props.photoAlt)}" loading="lazy" />
-        ${decor}
-      </div>`
-                : '';
+        const groups =
+            group(props.womenTitle, props.womenText, 'womenTitle', 'womenText') +
+            group(props.menTitle, props.menText, 'menTitle', 'menText');
+
+        const attire = groups
+            ? `<div class="s-dcp__attire">${groups}</div>`
+            : '';
 
         return `
     <section class="s-dcp">
-      <div class="s-dcp__head">
-        <h2 class="s-dcp__title" data-prop="title">${esc(props.title)}</h2>
-        <p class="s-dcp__lead" data-prop="text">${esc(props.text)}</p>
+      <div class="s-dcp__inner">
+        <div class="s-dcp__head">
+          <h2 class="s-dcp__title" data-prop="title">${esc(props.title)}</h2>
+          <p class="s-dcp__subtitle" data-prop="subtitle">${esc(props.subtitle)}</p>
+        </div>
+        ${palette}
+        ${attire}
       </div>
-      ${palette}
-      ${contact}
-      ${card}
     </section>`;
     },
     css,
 };
 
-// Экранирование в т.ч. кавычек: значения подставляются и в атрибуты (src/href/alt),
+// Экранирование в т.ч. кавычек: значения подставляются и в атрибуты (src/alt),
 // где голая кавычка вырвалась бы из значения.
 function esc(s: string): string {
     return String(s)

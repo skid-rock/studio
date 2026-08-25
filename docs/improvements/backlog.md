@@ -326,47 +326,37 @@ webfont-файлы (для Open Sans Condensed и Crimson Pro — с Google Font
 
 ## IMP-008. Хардкод теней в секциях мимо токенов `shadow.*`
 
-- **Статус:** открыто (решение STUDIO-057: не переносить сейчас).
-- **Где:** [`src/sections/dress-code-pearls/index.ts:243`](../../src/sections/dress-code-pearls/index.ts)
-  (`box-shadow: -1px 3px 4.5px rgba(0, 0, 0, 0.25)`);
-  [`src/sections/intro-envelope/styles.ts:89`](../../src/sections/intro-envelope/styles.ts)
+- **Статус:** открыто (решение STUDIO-057: не переносить сейчас). После STUDIO-062
+  в пункте остались только два `drop-shadow` в `intro-envelope`.
+- **Где:** [`src/sections/intro-envelope/styles.ts:89`](../../src/sections/intro-envelope/styles.ts)
   и [`:160`](../../src/sections/intro-envelope/styles.ts)
   (`filter: drop-shadow(...)`).
-- **Появилось в:** STUDIO-038 (pearls) и STUDIO-006 (envelope); зафиксировано
-  как IMP в STUDIO-057, когда в теме появились `--shadow-photo` / `--shadow-shell`
-  / `--shadow-button`.
+- **Появилось в:** STUDIO-006 (envelope); зафиксировано как IMP в STUDIO-057,
+  когда в теме появились `--shadow-photo` / `--shadow-shell` / `--shadow-button`.
 
 ### Симптом
 
-В теме есть категория `shadow`, а три живых тени в секциях по-прежнему литералы.
-Новые секции с морского макета смогут взять `var(--shadow-*)`; старые — нет,
-и привычка копировать значение руками остаётся рядом с правильным путём.
+В теме есть категория `shadow`, а два живых `drop-shadow` в `intro-envelope`
+по-прежнему литералы. Новые секции с морского макета смогут взять
+`var(--shadow-*)`; старые — нет, и привычка копировать значение руками
+остаётся рядом с правильным путём.
 
 ### Корень
 
-Значения **не совпадают** с тремя токенами макета, а форма у двух из трёх —
-не `box-shadow`.
+Форма — не `box-shadow`.
 
-- `dress-code-pearls` — один слой `-1px 3px 4.5px` чёрным 25%. Ни `photo`
-  (4 слоя `#665C5C`), ни `shell` (`#242323`), ни `button` (3 drop + inset)
-  так не выглядят. Подстановка `--shadow-photo` сдвинет уже перенесённую секцию.
 - `intro-envelope` — `filter: drop-shadow()` цветом navy свадебного лендинга.
   Shorthand `--shadow-*` туда не встаёт: `drop-shadow()` не принимает spread и
   inset, многослойность — цепочка функций, не запятая.
 
 ### Рекомендация и триггер
 
-Не заводить четвёртый токен под старое значение pearls и не изобретать
-`drop-shadow`-форму «на всякий случай».
+Не изобретать `drop-shadow`-форму «на всякий случай».
 
-- `box-shadow` pearls — оставить литерал, пока секцию не перенесут заново
-  с морского макета (фаза B). Если в макете у карточки будет `shadow/photo`
-  (или новый стиль) — подставить `var(--shadow-*)`, не выдумывая имя.
 - `drop-shadow` конверта — отдельный токен только если появится второй
   потребитель той же формы. Пока это специфика модуля, не темы.
 
-Триггер — перенос соответствующей секции в фазе B или появление второго
-такого же `drop-shadow` вне envelope.
+Триггер — появление второго такого же `drop-shadow` вне envelope.
 
 ---
 

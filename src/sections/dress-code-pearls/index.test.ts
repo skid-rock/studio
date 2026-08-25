@@ -13,6 +13,10 @@ const stubCtx = {
     sectionId: 's_test',
 };
 
+const schemaKeys = dressCodePearlsModule.schema.flatMap((g) =>
+    g.items.map((item) => item.key),
+);
+
 describe('dress-code-pearls', () => {
     const html = dressCodePearlsModule.render(
         dressCodePearlsModule.defaults,
@@ -25,26 +29,29 @@ describe('dress-code-pearls', () => {
 
     it('якоря data-prop на текстовых узлах, но не на путях к картинкам', () => {
         expect(html).toContain('data-prop="title"');
-        expect(html).toContain('data-prop="text"');
+        expect(html).toContain('data-prop="subtitle"');
         expect(html).toContain('data-prop="p1cap"');
-        expect(html).toContain('data-prop="contactText"');
-        expect(html).toContain('data-prop="ctaLabel"');
+        expect(html).toContain('data-prop="p5cap"');
+        expect(html).toContain('data-prop="womenTitle"');
+        expect(html).toContain('data-prop="womenText"');
+        expect(html).toContain('data-prop="menTitle"');
+        expect(html).toContain('data-prop="menText"');
         expect(html).not.toContain('data-prop="p1img"');
-        expect(html).not.toContain('data-prop="photo"');
+        expect(html).not.toContain('data-prop="p5img"');
     });
 
-    it('на дефолтах рендерит 4 образца палитры', () => {
+    it('на дефолтах рендерит 5 образцов палитры', () => {
         const swatches = html.match(/<div class="s-dcp__swatch">/g) ?? [];
-        expect(swatches).toHaveLength(4);
+        expect(swatches).toHaveLength(5);
     });
 
     it('пустой образец (и картинка, и подпись) не рендерится', () => {
         const partial = dressCodePearlsModule.render(
-            { ...dressCodePearlsModule.defaults, p4img: '', p4cap: '' },
+            { ...dressCodePearlsModule.defaults, p5img: '', p5cap: '' },
             stubCtx,
         );
         const swatches = partial.match(/<div class="s-dcp__swatch">/g) ?? [];
-        expect(swatches).toHaveLength(3);
+        expect(swatches).toHaveLength(4);
     });
 
     it('без картинок и подписей палитра не рендерится вовсе', () => {
@@ -59,6 +66,8 @@ describe('dress-code-pearls', () => {
                 p3cap: '',
                 p4img: '',
                 p4cap: '',
+                p5img: '',
+                p5cap: '',
             },
             stubCtx,
         );
@@ -66,35 +75,61 @@ describe('dress-code-pearls', () => {
         expect(empty).not.toContain('s-dcp__swatch');
     });
 
-    it('кнопка без ссылки деградирует до span, без подписи — не рендерится', () => {
-        const noUrl = dressCodePearlsModule.render(
-            { ...dressCodePearlsModule.defaults, ctaUrl: '' },
+    it('пустая группа attire не рендерится, блок без обеих групп исчезает', () => {
+        const noWomen = dressCodePearlsModule.render(
+            {
+                ...dressCodePearlsModule.defaults,
+                womenTitle: '',
+                womenText: '',
+            },
             stubCtx,
         );
-        expect(noUrl).toContain('<span class="s-dcp__cta"');
-        expect(noUrl).not.toContain('<a class="s-dcp__cta"');
+        expect(noWomen).toContain('s-dcp__attire');
+        expect(noWomen).toContain('data-prop="menTitle"');
+        expect(noWomen).not.toContain('data-prop="womenTitle"');
+        expect(noWomen).not.toContain('data-prop="womenText"');
 
-        const noLabel = dressCodePearlsModule.render(
-            { ...dressCodePearlsModule.defaults, ctaLabel: '' },
+        const noAttire = dressCodePearlsModule.render(
+            {
+                ...dressCodePearlsModule.defaults,
+                womenTitle: '',
+                womenText: '',
+                menTitle: '',
+                menText: '',
+            },
             stubCtx,
         );
-        expect(noLabel).not.toContain('s-dcp__cta');
+        expect(noAttire).not.toContain('s-dcp__attire');
+        expect(noAttire).not.toContain('s-dcp__group');
     });
 
-    it('без фото не рендерится ни карточка, ни декор поверх неё', () => {
-        const noPhoto = dressCodePearlsModule.render(
-            { ...dressCodePearlsModule.defaults, photo: '' },
-            stubCtx,
-        );
-        expect(noPhoto).not.toContain('s-dcp__card');
-        expect(noPhoto).not.toContain('s-dcp__decor');
+    it('выпиленных полей нет ни в схеме, ни в разметке', () => {
+        const removed = [
+            'contactText',
+            'ctaLabel',
+            'ctaUrl',
+            'photo',
+            'photoAlt',
+            'decorImg',
+        ];
+
+        for (const key of removed) {
+            expect(schemaKeys).not.toContain(key);
+            expect(html).not.toContain(`data-prop="${key}"`);
+        }
+
+        expect(html).not.toContain('s-dcp__contact');
+        expect(html).not.toContain('s-dcp__cta');
+        expect(html).not.toContain('s-dcp__card');
+        expect(html).not.toContain('s-dcp__photo');
+        expect(html).not.toContain('s-dcp__decor');
     });
 
     it('экранирует кавычки в значениях, попадающих в атрибуты', () => {
         const injected = dressCodePearlsModule.render(
             {
                 ...dressCodePearlsModule.defaults,
-                photo: '/img/x.jpg" onerror="alert(1)',
+                p1img: '/img/x.png" onerror="alert(1)',
             },
             stubCtx,
         );

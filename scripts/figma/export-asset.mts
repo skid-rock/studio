@@ -7,7 +7,7 @@
  * `exportAsync` через Plugin API, здесь он оформлен командой.
  *
  * Использование:
- *   npm run figma:export -- 218:17 public/img/dress-code/pearl-champagne.png
+ *   npm run figma:export -- 401:121 public/img/dress-code/pearl-cream.png
  *   npm run figma:export -- 218:17 out.png --scale 3
  *   npm run figma:export -- 218:17 out.svg --format SVG
  *
