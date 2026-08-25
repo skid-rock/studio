@@ -395,13 +395,11 @@ function byId(boxes: Box[]): Map<string, Box> {
 }
 
 /**
- * Контент коллажа внутри `stage` (фото, монограмма): при сужении абсолютные
- * слои вылезают так же штатно, как `deco/*` — секция клипает overflow.
+ * Контент коллажа внутри `stage` (фото): при сужении абсолютные слои вылезают
+ * так же штатно, как `deco/*` — секция клипает overflow.
  */
 function isCollageContentName(name: string): boolean {
-    return /^(photoLeft|photoRight|monogram|letterLeft|letterRight|amp)$/.test(
-        name,
-    );
+    return /^(photoLeft|photoRight)$/.test(name);
 }
 
 function softOverflow(name: string): boolean {
